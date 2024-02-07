@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.atlassian.commonmark:commonmark:0.17.0'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.2.2'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
