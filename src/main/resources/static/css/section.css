@@ -1,5 +1,9 @@
 section {
     width: 100%;
+    /*position: relative;*/
+    /*left: 200px;*/
+    /*padding-left: 200px;*/
+    margin-left: 210px;
 }
 
 /** 슬라이드 컨테이너 **/
@@ -11,8 +15,8 @@ section {
 .slide-container {
     overflow: auto;
     scroll-snap-type: y mandatory;
-    position: relative;
-    margin-left: 200px;
+    /*position: relative;*/
+    /*margin-left: 200px;*/
 }
 
 .slide {
