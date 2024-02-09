@@ -3,18 +3,18 @@
       xmlns:th="http://www.thymeleaf.org"
       th:fragment="nav">
 
-<nav class="nav">
+<nav>
     <a href="/"><img id="img-title" src="/img/img-title.jpg"></a>
     <li style="margin: 5px"><a id="name" href="/">이주영</a></li>
     <li style="margin: 5px">JAVA 백엔드 개발자</li>
-<!--    <li><a id="a1" href="#s-1">ABOUT</a></li>-->
-<!--    <li><a id="a2" href="#s-2">SKILLS</a></li>-->
-<!--    <li><a id="a3" href="#s-3">PROJECTS</a></li>-->
-<!--    <li><a id="a4" href="#s-4">BLOG</a></li>-->
-<!--    <li><a id="a5" href="#s-5">CONTACT</a></li>-->
-<!--    <br>-->
-    <li><a href="/board/list">JAVA</a></li>
-    <li><a href="#">SPRING</a></li>
-    <li><a href="#">DOCKER</a></li>
+    <li><a id="a1" href="/#s-1">ABOUT</a></li>
+    <li><a id="a2" href="/#s-2">SKILLS</a></li>
+    <li><a id="a3" href="/#s-3">PROJECTS</a></li>
+    <li><a id="a4" href="/#s-4">BLOG</a></li>
+    <li><a id="a5" href="/#s-5">CONTACT</a></li>
+    <br>
+    <li><a th:href="@{/board/list?category=2&subject=4}">JAVA</a></li>
+    <li><a th:href="@{/board/list?category=2&subject=5}">SPRING</a></li>
+    <li><a th:href="@{/board/list?category=2&subject=6}">DOCKER</a></li>
 </nav>
 </html>
