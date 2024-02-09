@@ -6,17 +6,24 @@
       layout:fragment="section">
 <section>
     <div class="title">LOGIN</div>
-    <form id="f" th:action="@{/login}" th:method="post">
+    <form id="f" th:action="@{/login}" th:method="post" style="width: 300px">
         <table class="table" th:object="${dto}">
-            <div id="div-error-msg" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}" th:text="${error}">아이디 혹은 패스워드를 확인해주세요.</div>
+            <!-- >>>>> sprint security 적용 전(BindingResult 사용) -->
+<!--            <div id="div-error-msg" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}" th:text="${error}">아이디 혹은 패스워드를 확인해주세요.</div>-->
             <tbody>
+            <!-- >>>>> spring security 자격 증명 실패 시 출력되는 메세지 -->
+            <tr class="alert alert-danger center" role="alert" th:if="${param.error != null}" style="margin-bottom: 20px">
+                <td colspan="2">자격 증명에 실패하였습니다.</td>
+            </tr>
             <tr>
                 <td>아이디</td>
-                <td><input type="text" id="uid" th:field="*{uid}" class="form-control"></td>
+                <td><input type="text" id="uid" name="uid" class="form-control"></td>
+<!--                <td><input type="text" id="uid" name="uid" th:field="*{uid}" class="form-control"></td>-->
             </tr>
             <tr>
                 <td>패스워드</td>
-                <td><input type="password" id="upw" th:field="*{upw}" class="form-control"></td>
+                <td><input type="password" id="upw" name="upw" class="form-control"></td>
+<!--                <td><input type="password" id="upw" name="upw" th:field="*{upw}" class="form-control"></td>-->
             </tr>
             <tr>
                 <td colspan="2" style="text-align: right"><button type="button" class="btn btn-success" th:onclick="login()">LOGIN</button></td>
@@ -38,6 +45,6 @@
         } else {
             $('#f').submit();
         }
-    };
+    }
 </script>
 </html>

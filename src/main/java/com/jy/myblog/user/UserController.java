@@ -20,23 +20,29 @@ public class UserController {
     private final UserService service;
 
     @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("dto", new UserLoginDto());
+    public String login() {
         return "/login";
     }
 
-    @PostMapping("/login")
-    public String login(@Validated @ModelAttribute(name = "dto") UserLoginDto dto, BindingResult bindingResult) {
-        int chkUser = service.chkUser(dto);
+    // >>>>> spring security 사용으로 주석 처리
+//    @GetMapping("/login")
+//    public String login(Model model) {
+//        model.addAttribute("dto", new UserLoginDto());
+//        return "/login";
+//    }
 
-        if(chkUser == 0) {
-            bindingResult.addError(new ObjectError("dto", "아이디 혹은 패스워드를 확인해주세요."));
-        }
-
-        if (bindingResult.hasErrors()) {
-            return "/login";
-        }
-
-        return "/";
-    }
+//    @PostMapping("/login")
+//    public String login(@Validated @ModelAttribute(name = "dto") UserLoginDto dto, BindingResult bindingResult) {
+//        boolean login = service.login(dto);
+//
+//        if(!login) {
+//            bindingResult.addError(new ObjectError("dto", "아이디 혹은 패스워드를 확인해주세요."));
+//        }
+//
+//        if (bindingResult.hasErrors()) {
+//            return "/login";
+//        }
+//
+//        return "/";
+//    }
 }
