@@ -40,4 +40,9 @@ public class BoardController {
         model.addAttribute("post", post);
         return "/board/read";
     }
+
+    @GetMapping("/write")
+    public String insPost() {
+        return "/board/write";
+    }
 }

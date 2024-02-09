@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default-layout}"
+      layout:fragment="section">
+<section>
+    <div class="title">LOGIN</div>
+    <form id="f" th:action="@{/login}" th:method="post">
+        <table class="table" th:object="${dto}">
+            <div id="div-error-msg" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}" th:text="${error}">아이디 혹은 패스워드를 확인해주세요.</div>
+            <tbody>
+            <tr>
+                <td>아이디</td>
+                <td><input type="text" id="uid" th:field="*{uid}" class="form-control"></td>
+            </tr>
+            <tr>
+                <td>패스워드</td>
+                <td><input type="password" id="upw" th:field="*{upw}" class="form-control"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right"><button type="button" class="btn btn-success" th:onclick="login()">LOGIN</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</section>
+
+<script>
+    function login() {
+        const uid = $('#uid');
+        const upw = $('#upw');
+
+        if(!uid.val()) {
+            alert("아이디가 입력되지 않았습니다.");
+        } else if(!upw.val()) {
+            alert("패스워드가 입력되지 않았습니다.");
+        } else {
+            $('#f').submit();
+        }
+    };
+</script>
+</html>

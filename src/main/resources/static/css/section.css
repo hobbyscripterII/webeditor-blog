@@ -1,11 +1,13 @@
 section {
+    box-sizing: border-box;
     width: 100%;
     /*position: relative;*/
     /*left: 200px;*/
     /*padding-left: 200px;*/
-    margin: 0 20px 0 220px;
+    margin: 20px 15px 0 220px;
+    padding-right: 5px;
     height: 100vh;
-    overflow: auto;
+    overflow: hidden;
 }
 
 /** 슬라이드 컨테이너 **/
@@ -65,4 +67,37 @@ section {
 
 .td-info {
     width: 100px;
+}
+
+/*#contents {*/
+/*    overflow: auto;*/
+/*    height: 100vh;*/
+/*}*/
+
+.div-btn-wrap {
+    width: 100%;
+    text-align: right;
+}
+
+.table-post-read {
+    display: block;
+    height: 80vh;
+    overflow: auto;
+}
+
+#div-error-msg {
+    height: 25px;
+    line-height: 25px;
+    color: red;
+    font-weight: bold;
+}
+
+/*#div-error-msg::before {*/
+/*    height: 25px;*/
+/*    content: " ";*/
+/*}*/
+
+.td-contents {
+    width: 50%;
+    /*height: 80vh;*/
 }

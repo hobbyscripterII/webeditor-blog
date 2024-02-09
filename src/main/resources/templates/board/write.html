@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default-layout}"
+      layout:fragment="section">
+<section>
+    <div class="title" th:text="${title}">TITLE</div>
+    <table class="table table-post-read">
+        <tr>
+            <td class="td-info">제목</td>
+            <td colspan="2"><input type="text" id="title" class="form-control"></td>
+        </tr>
+        <tr>
+            <td class="td-info">내용</td>
+            <td class="td-contents">
+                <!-- textarea 공백 있으면 공백도 치환됨 -->
+                <textarea class="form-control" id="contents" style="resize: none; height: 80vh"></textarea>
+            </td>
+            <td class="td-contents">
+                <div class="form-control" id="div-markdown" style="height: 80vh; overflow: auto"></div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="div-btn-wrap">
+        <button type="button" class="btn btn-success">등록</button>
+    </div>
+</section>
+
+<script>
+    const contents = $('#contents');
+    contents.keyup(function() {
+        document.getElementById('div-markdown').innerHTML = marked.parse(contents.val());
+    });
+</script>
+</html>

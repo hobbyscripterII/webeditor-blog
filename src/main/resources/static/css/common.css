@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Prata&display=swap');
+
 html {
     scroll-behavior: smooth;
     overflow: hidden;
+    font-family: Poppins;
 }
 
 li {
@@ -11,6 +14,7 @@ body {
     display: flex;
     margin: 0;
     width: 100%;
+    color: #333 !important;
     /* overflow: hidden; */
 }
 
@@ -25,4 +29,9 @@ body {
 a {
     text-decoration: none !important;
     color: #222 !important;
+    letter-spacing: 0px !important;
+}
+
+.table th, .table td {
+    padding: 0.5rem !important;
 }

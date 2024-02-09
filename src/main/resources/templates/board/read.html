@@ -6,7 +6,7 @@
       layout:fragment="section">
 <section>
     <div class="title" th:text="${title}">TITLE</div>
-    <table>
+    <table class="table table-post-read">
         <tr>
             <td class="td-info">제목</td>
             <td th:text="${post.title}">제목</td>
@@ -25,6 +25,11 @@
             </td>
         </tr>
     </table>
+
+    <div class="div-btn-wrap">
+        <button type="button" class="btn btn-success">수정</button>
+        <button type="button" class="btn btn-danger">삭제</button>
+    </div>
 </section>
 
 <script>

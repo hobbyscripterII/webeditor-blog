@@ -13,8 +13,10 @@
     <li><a id="a4" href="/#s-4">BLOG</a></li>
     <li><a id="a5" href="/#s-5">CONTACT</a></li>
     <br>
-    <li><a th:href="@{/board/list?category=2&subject=4}">JAVA</a></li>
-    <li><a th:href="@{/board/list?category=2&subject=5}">SPRING</a></li>
-    <li><a th:href="@{/board/list?category=2&subject=6}">DOCKER</a></li>
+    <li><a th:href="@{/board/list?subject=4}">JAVA</a></li>
+    <li><a th:href="@{/board/list?subject=5}">SPRING</a></li>
+    <li><a th:href="@{/board/list?subject=6}">DOCKER</a></li>
+    <br>
+    <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/login}'|">LOGIN</button>
 </nav>
 </html>
