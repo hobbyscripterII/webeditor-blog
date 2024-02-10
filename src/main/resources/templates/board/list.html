@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}"
       layout:fragment="section">
@@ -28,9 +29,11 @@
         </table>
     </th:block>
 
-    <div class="div-btn-wrap">
-        <!-- "|location.href='@{/login}'|" -->
-        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/write}'|">WRITE</button>
-    </div>
+    <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
+        <div class="div-btn-wrap">
+            <!-- "|location.href='@{/login}'|" -->
+            <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/write}'|">WRITE</button>
+        </div>
+    </th:block>
 </section>
 </html>

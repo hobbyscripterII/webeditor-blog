@@ -93,9 +93,15 @@ section {
 }
 
 /** spring security 에러 메세지 **/
-.table th,.table td {
+.table th, .table td {
     padding: 0.75rem;
     vertical-align: top;
     border-top: none !important;
     text-align: center;
+}
+
+#div-markdown {
+    height: 80vh;
+    overflow: auto;
+    text-align: left;
 }

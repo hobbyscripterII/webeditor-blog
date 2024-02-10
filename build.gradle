@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.2'
     implementation 'com.atlassian.commonmark:commonmark:0.17.0'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.3.0'
