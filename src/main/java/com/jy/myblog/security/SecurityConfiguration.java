@@ -1,19 +1,31 @@
 package com.jy.myblog.security;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Configuration
 public class SecurityConfiguration {
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -27,15 +39,12 @@ public class SecurityConfiguration {
                         .defaultSuccessUrl("/") // 인증 완료 후 호출되는 url
                         .permitAll())
                 .exceptionHandling(e -> e
-                        .accessDeniedPage("/error/access-denied"))
+                        .accessDeniedPage("/access-denied?error")) // 매핑 url
                 .authorizeHttpRequests(a -> a
                         // 권한없이 접근 o
                         .requestMatchers(
-                                "/",
-                                "/css/**", "/js/**", "/img/**",
-                                "/login", "/logout",
-                                "/error/**", "/error/access-denied",
-                                "/board/list/**", "/board/read/**"
+                                "/", "/css/**", "/js/**", "/img/**", "/error/**",
+                                "/login", "/logout", "/access-denied", "/board/list/**", "/board/read/**"
                         ).permitAll()
                         // 외에는 ADMIN만 접근 o
                         .anyRequest().hasRole("ADMIN")
@@ -43,20 +52,30 @@ public class SecurityConfiguration {
         return httpSecurity.build();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
-                .username("test")
-                .password("test")
-                .roles("ADMIN")
-                .build();
+    // >>>>> db 연결 전 사용 - 사용 x >>>>>
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsManager() { // InMemoryUserDetailsManager - 메모리 저장 o, 테스트 / 데모 환경에서 사용됨
+//        List<UserDetails> users = new ArrayList();
+//
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("user")
+//                .password("1234")
+//                .roles("USER")
+//                .build();
+//        users.add(user);
+//
+//        UserDetails admin = User.withDefaultPasswordEncoder()
+//                .username("admin")
+//                .password("1234")
+//                .roles("ADMIN")
+//                .build();
+//        users.add(admin);
+//
+//        return new InMemoryUserDetailsManager(users);
+//    }
 
-        // db 사용 x 메모리 사용 o 테스트 환경 / 데모 환경에서 사용됨
-        return new InMemoryUserDetailsManager(userDetails);
-    }
-
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
