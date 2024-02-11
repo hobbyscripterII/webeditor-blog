@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jy.myblog.board.BoardMapper">
-    <select id="getPost">
+    <select id="getPost" resultType="com.jy.myblog.board.model.BoardGetVo$Post">
         SELECT a.iboard, a.icategory, a.isubject, b.nm, a.title, a.created_at createdAt
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
         WHERE a.public_fl = 'Y' AND a.isubject = #{subject}
+        ORDER BY a.iboard DESC
     </select>
 
     <select id="selPost">
@@ -15,5 +16,16 @@
         INNER JOIN user b
         ON a.iuser = b.iuser
         WHERE a.iboard = #{iboard}
+    </select>
+
+    <insert id="insPost" useGeneratedKeys="true" keyProperty="iboard">
+        INSERT INTO board(isubject, iuser, title, contents) VALUES
+        (#{isubject}, #{iuser}, #{title}, #{contents})
+    </insert>
+
+    <select id="getTag">
+        SELECT itag, NAME
+        FROM tag
+        WHERE NAME LIKE('%${tag}%')
     </select>
 </mapper>

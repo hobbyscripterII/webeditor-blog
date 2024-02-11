@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}"
       layout:fragment="section">
@@ -21,21 +22,23 @@
         </tr>
         <tr>
             <td colspan="2">
-                <div id="contents" th:data-contents="${post.contents}"></div>
+                <div id="contents"></div>
             </td>
         </tr>
     </table>
 
     <div class="div-btn-wrap">
-        <button type="button" class="btn btn-success">수정</button>
-        <button type="button" class="btn btn-danger">삭제</button>
+        <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <button type="button" class="btn btn-success">수정</button>
+            <button type="button" class="btn btn-danger">삭제</button>
+        </th:block>
+        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/list(subject=${post.isubject})}'|">목록</button>
     </div>
 </section>
 
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
-        const contents = $('#contents').data('contents');
-        document.getElementById('contents').innerHTML = contents;
+        document.getElementById('contents').innerHTML = [[${post.contents}]];
     });
 </script>
 </html>

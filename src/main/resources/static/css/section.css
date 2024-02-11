@@ -94,14 +94,19 @@ section {
 
 /** spring security 에러 메세지 **/
 .table th, .table td {
-    padding: 0.75rem;
     vertical-align: top;
     border-top: none !important;
-    text-align: center;
+    /*text-align: center;*/
+    padding: 0.5rem !important;
 }
 
 #div-markdown {
     height: 80vh;
     overflow: auto;
     text-align: left;
+}
+
+#tag-list {
+    width: 100%;
+    display: none;
 }

@@ -6,11 +6,11 @@
       layout:decorate="~{layout/default-layout}"
       layout:fragment="section">
 <section>
-    <div class="title" th:text="${title}">TITLE</div>
-    <th:block th:if="${#lists.size(list) == 0}">
+    <div class="title" th:text="${list.title}">TITLE</div>
+    <th:block th:if="${#lists.size(list.posts) == 0}">
         작성된 게시글이 없습니다.
     </th:block>
-    <th:block th:if="${#lists.size(list) >= 1}">
+    <th:block th:if="${#lists.size(list.posts) >= 1}">
         <table class="table table-hover">
             <tead>
                 <tr>
@@ -20,8 +20,8 @@
                 </tr>
             </tead>
             <tbody>
-            <tr th:each="l : ${list}">
-                <td><a th:href="@{/board/read(subject=${l.isubject}, board=${l.iboard})}"><th:block th:text="${l.getTitle()}"></th:block> </a></td>
+            <tr th:each="l : ${list.posts}">
+                <td><a th:href="@{/board/read(subject=${list.isubject}, board=${l.iboard})}"><th:block th:text="${l.title}"></th:block></a></td>
                 <td th:text="${l.nm}">작성자</td>
                 <td th:text="${l.createdAt}">작성일</td>
             </tr>
@@ -32,7 +32,7 @@
     <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
         <div class="div-btn-wrap">
             <!-- "|location.href='@{/login}'|" -->
-            <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/write}'|">WRITE</button>
+            <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/write(subject=${list.isubject})}'|">WRITE</button>
         </div>
     </th:block>
 </section>
