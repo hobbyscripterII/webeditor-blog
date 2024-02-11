@@ -1,9 +1,6 @@
 package com.jy.myblog.board;
 
-import com.jy.myblog.board.model.BoardGetVo;
-import com.jy.myblog.board.model.BoardInsDto;
-import com.jy.myblog.board.model.BoardSelVo;
-import com.jy.myblog.board.model.BoardTagGetVo;
+import com.jy.myblog.board.model.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -13,5 +10,7 @@ public interface BoardMapper {
     List<BoardGetVo.Post> getPost(int isubject);
     BoardSelVo selPost(int iboard);
     int insPost(BoardInsDto dto);
+    int updPost(BoardUpdDto dto);
+    int delPost(int iboard);
     List<BoardTagGetVo> getTag(String tag);
 }

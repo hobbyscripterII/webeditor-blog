@@ -110,3 +110,9 @@ section {
     width: 100%;
     display: none;
 }
+
+.div-tag {
+    background-color: blue;
+    border-radius: 10px;
+    color: white;
+}

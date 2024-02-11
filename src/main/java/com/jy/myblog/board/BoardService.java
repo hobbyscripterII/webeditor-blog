@@ -1,12 +1,10 @@
 package com.jy.myblog.board;
 
-import com.jy.myblog.board.model.BoardGetVo;
-import com.jy.myblog.board.model.BoardInsDto;
-import com.jy.myblog.board.model.BoardSelVo;
-import com.jy.myblog.board.model.BoardTagGetVo;
+import com.jy.myblog.board.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.beans.Transient;
 import java.util.List;
@@ -25,9 +23,18 @@ public class BoardService {
         return mapper.selPost(iboard);
     }
 
-    @Transient
+    @Transactional
     public int insPost(BoardInsDto dto) {
         return mapper.insPost(dto);
+    }
+
+    @Transactional
+    public int updPost(BoardUpdDto dto) {
+        return mapper.updPost(dto);
+    }
+
+    public int delPost(int iboard) {
+        return mapper.delPost(iboard);
     }
 
     public List<BoardTagGetVo> getTag(String tag) {

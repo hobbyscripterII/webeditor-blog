@@ -23,6 +23,17 @@
         (#{isubject}, #{iuser}, #{title}, #{contents})
     </insert>
 
+    <update id="updPost">
+        UPDATE board SET
+        title = #{title},
+        contents = #{contents}
+        WHERE iboard = #{iboard}
+    </update>
+
+    <delete id="delPost">
+        DELETE FROM board WHERE iboard = #{iboard}
+    </delete>
+
     <select id="getTag">
         SELECT itag, NAME
         FROM tag

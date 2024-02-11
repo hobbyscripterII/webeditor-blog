@@ -1,9 +1,6 @@
 package com.jy.myblog.board;
 
-import com.jy.myblog.board.model.BoardGetVo;
-import com.jy.myblog.board.model.BoardInsDto;
-import com.jy.myblog.board.model.BoardSelVo;
-import com.jy.myblog.board.model.BoardTagGetVo;
+import com.jy.myblog.board.model.*;
 import com.jy.myblog.common.CommonUtil;
 import com.jy.myblog.common.SubjectToStringConverter;
 import com.jy.myblog.common.Util;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.jy.myblog.common.Const.FAIL;
+import static com.jy.myblog.common.Const.SUCCESS;
 
 @Slf4j
 @Controller
@@ -52,6 +50,7 @@ public class BoardController {
     @GetMapping("/write")
     public String insPost(@RequestParam(name = "subject") int isubject, Model model) {
         String title = new SubjectToStringConverter().convert(isubject);
+        model.addAttribute("dto", new BoardInsDto());
         model.addAttribute("title", title);
         model.addAttribute("subject", isubject);
         return "/board/write";
@@ -72,6 +71,31 @@ public class BoardController {
         } catch (Exception e) {
             throw new Exception();
         }
+    }
+
+    @GetMapping("/update")
+    public String updPost(@RequestParam(name = "board") int iboard, Model model) {
+        model.addAttribute("dto", service.selPost(iboard));
+        return "/board/write";
+    }
+
+    @ResponseBody
+    @PutMapping
+    public int updPost(@RequestBody BoardUpdDto dto) {
+        if (Util.isNotNull(service.updPost(dto))) {
+            return dto.getIboard();
+        } else {
+            return FAIL;
+        }
+    }
+
+    @ResponseBody
+    @DeleteMapping
+    public int delPost(@RequestParam(name = "iboard") int iboard) {
+        if (Util.isNotNull(service.delPost(iboard))) {
+            return SUCCESS;
+        }
+        return FAIL;
     }
 
     @ResponseBody
