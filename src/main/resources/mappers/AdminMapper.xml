@@ -2,10 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jy.myblog.admin.AdminMapper">
     <select id="getPostAdmin">
-        SELECT a.iboard, a.public_fl publicFl, a.isubject, b.nm, a.title, a.created_at createdAt
+        SELECT a.iboard, a.public_fl publicFl, a.isubject, c.name subject, b.nm, a.title, a.created_at createdAt
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
+        INNER JOIN board_subject c
+        ON a.isubject = c.isubject
         ORDER BY iboard DESC
     </select>
 

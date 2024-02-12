@@ -4,14 +4,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}"
       layout:fragment="section">
+
 <section>
     <div class="title">ADMIN</div>
-
     <div class="div-btn-wrap" style="text-align: left">
-        <!-- "|location.href='@{/login}'|" -->
         <button type="button" class="btn btn-success" th:onclick="publicFl('Y')">공개 변경</button>
         <button type="button" class="btn btn-danger" th:onclick="publicFl('N')">비공개 변경</button>
-        <!--        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/write(subject=${list.isubject})}'|">WRITE</button>-->
     </div>
 
     <table class="table table-hover table-admin">
@@ -42,35 +40,38 @@
 
 <script th:inline="javascript">
     function publicFl(fl) {
-        console.log("공개 여부 = ", fl);
-
         const arr = [];
         const checkbox = $('input[name=check-iboard]:checked');
+        const cnt = checkbox.length;
 
-        checkbox.each(function (idx) {
-            // checkbox의 부모(parent)인 td에 접근 -> 또 다시 부모(parent)인 tr에 접근 ->
-            // eq 메소드를 통해 해당 index에 해당하는 자식 요소를 찾음 -> 찾은 요소의 text 값을 가져옴 -> iboard 값에 접근
-            const td = checkbox.parent().parent().eq(idx).children().eq(1).text();
-            arr.push(td);
-        });
+        if(cnt >= 1) {
+            checkbox.each(function (idx) {
+                // checkbox의 부모(parent)인 td에 접근 -> 또 다시 부모(parent)인 tr에 접근 ->
+                // eq 메소드를 통해 해당 index에 해당하는 자식 요소를 찾음 -> 찾은 요소의 text 값을 가져옴 -> iboard 값에 접근
+                const td = checkbox.parent().parent().eq(idx).children().eq(1).text();
+                arr.push(td);
+            });
 
-        const dto = {"list" : arr, "publicFl" : fl};
+            const dto = {"list" : arr, "publicFl" : fl};
 
-        $.ajax({
-            type: 'patch',
-            url: '/admin',
-            contentType: "application/json",
-            data: JSON.stringify(dto),
-            success: function (result) {
-                console.log(result);
-                if (result === 1) {
-                    alert("정상적으로 처리되었습니다.")
-                    location.reload();
-                } else {
-                    alert("잠시 후 다시 시도하세요.")
+            $.ajax({
+                type: 'patch',
+                url: '/admin',
+                contentType: "application/json",
+                data: JSON.stringify(dto),
+                success: function (result) {
+                    console.log(result);
+                    if (result === 1) {
+                        alert('정상적으로 처리되었습니다.')
+                        location.reload();
+                    } else {
+                        alert('잠시 후 다시 시도하세요.')
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            alert('최소 1개는 선택해주세요.');
+        }
     }
 </script>
 </html>

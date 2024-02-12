@@ -22,7 +22,7 @@ public class AdminPostGetVo {
         return publicFl.equals("Y") ? Const.PUBLIC : Const.PRIVATE;
     }
 
-    public String getSubject() {
-        return new SubjectToStringConverter().convert(isubject);
-    }
+//    public String getSubject() {
+//        return new SubjectToStringConverter().convert(isubject);
+//    }
 }
