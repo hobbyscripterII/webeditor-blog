@@ -1,5 +1,6 @@
 package com.jy.myblog.security;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(c -> c.disable())
-                .formLogin(f -> f
+                .formLogin(in -> in
                         .loginPage("/login") // html 경로
                         .loginProcessingUrl("/login") // url 호출 시 security가 낚아 챔 controller에 구현할 필요 x
                         .usernameParameter("uid")
@@ -33,30 +34,21 @@ public class SecurityConfiguration {
                         // 외에는 ADMIN만 접근 o
                         .anyRequest().hasRole("ADMIN")
                 );
+        httpSecurity.logout(out -> {
+                 out.logoutUrl("/logout")
+                    .addLogoutHandler((request, response, authentication) -> {
+                        HttpSession session = request.getSession();
+                        if (session != null) {
+                            session.invalidate();
+                        }
+                    })
+                    .logoutSuccessHandler((request, response, authentication) -> {
+                        response.sendRedirect("/");
+                    });
+//                    .deleteCookies("");
+        });
         return httpSecurity.build();
     }
-
-    // >>>>> db 연결 전 사용 - 사용 x >>>>>
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsManager() { // InMemoryUserDetailsManager - 메모리 저장 o, 테스트 / 데모 환경에서 사용됨
-//        List<UserDetails> users = new ArrayList();
-//
-//        UserDetails user = User.withDefaultPasswordEncoder()
-//                .username("user")
-//                .password("1234")
-//                .roles("USER")
-//                .build();
-//        users.add(user);
-//
-//        UserDetails admin = User.withDefaultPasswordEncoder()
-//                .username("admin")
-//                .password("1234")
-//                .roles("ADMIN")
-//                .build();
-//        users.add(admin);
-//
-//        return new InMemoryUserDetailsManager(users);
-//    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

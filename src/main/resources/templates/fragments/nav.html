@@ -21,6 +21,20 @@
         <br>
         <li><a th:href="@{/admin}">ADMIN</a></li>
     </th:block>
-    <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/login}'|">LOGIN</button>
+
+    <th:block sec:authorize="isAnonymous()"> <!-- 익명 사용자일 경우 로그인 버튼 출력 -->
+        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/login}'|">LOGIN</button>
+    </th:block>
+    <th:block sec:authorize="isAuthenticated()"> <!-- 권한 관계없이 인증 완료 후 로그아웃 버튼 출력 -->
+        <button type="button" class="btn btn-primary" th:onclick="logout()">LOGOUT</button>
+    </th:block>
 </nav>
+
+<script th:inline="javascript">
+    function logout() {
+        if (confirm('로그아웃하시겠습니까?')) {
+            location.href = '/logout';
+        }
+    }
+</script>
 </html>
