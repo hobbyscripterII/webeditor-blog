@@ -1,6 +1,7 @@
 package com.jy.myblog.board;
 
 import com.jy.myblog.board.model.*;
+import com.jy.myblog.common.PageNation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ import java.util.List;
 public class BoardService {
     private final BoardMapper mapper;
 
-    public List<BoardGetVo.Post> getPost(int isubject) {
-        return mapper.getPost(isubject);
+    public List<BoardGetVo.Post> getPost(PageNation.Criteria criteria) {
+        return mapper.getPost(criteria);
     }
 
     public BoardSelVo selPost(int iboard) {
@@ -39,5 +40,9 @@ public class BoardService {
 
     public List<BoardTagGetVo> getTag(String tag) {
         return mapper.getTag(tag);
+    }
+
+    public int getPostCnt(int isubject) {
+        return mapper.getPostCnt(isubject);
     }
 }

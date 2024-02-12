@@ -9,6 +9,7 @@
         INNER JOIN board_subject c
         ON a.isubject = c.isubject
         ORDER BY iboard DESC
+        LIMIT #{pageStart}, #{amount}
     </select>
 
     <update id="updPublicFl">
@@ -30,5 +31,10 @@
     <select id="getSubject">
         SELECT isubject, NAME SUBJECT
         FROM board_subject
+    </select>
+
+    <select id="getPostCnt">
+        SELECT count(*)
+        FROM board
     </select>
 </mapper>

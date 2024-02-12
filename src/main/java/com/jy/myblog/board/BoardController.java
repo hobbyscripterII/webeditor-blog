@@ -2,6 +2,7 @@ package com.jy.myblog.board;
 
 import com.jy.myblog.board.model.*;
 import com.jy.myblog.common.CommonUtil;
+import com.jy.myblog.common.PageNation;
 import com.jy.myblog.common.SubjectToStringConverter;
 import com.jy.myblog.common.Util;
 import com.jy.myblog.security.MyUserDetails;
@@ -26,22 +27,25 @@ public class BoardController {
     private final BoardService service;
 
     @GetMapping("/list")
-    public String getPost(@RequestParam(name = "subject") int isubject, Model model) {
-        String title = new SubjectToStringConverter().convert(isubject);
-        List<BoardGetVo.Post> post = service.getPost(isubject);
-        BoardGetVo list = new BoardGetVo();
-        list.setPosts(post);
-        list.setTitle(title);
-        list.setIsubject(isubject);
+    public String getPost(PageNation.Criteria criteria, @RequestParam(name = "subject") int isubject, Model model) {
+        String title = subjectToStringConverter(isubject);
+        List<BoardGetVo.Post> posts = service.getPost(criteria);
+        BoardGetVo list = new BoardGetVo(isubject, title, posts);
+
+        int cnt = service.getPostCnt(isubject);
+        PageNation pageNation = new PageNation(criteria, cnt);
+
         model.addAttribute("list", list);
+        model.addAttribute("pageNation", pageNation);
         return "/board/list";
     }
 
     @GetMapping("/read")
     public String selPost(@RequestParam(name = "subject") int isubject, @RequestParam(name = "board") int iboard, Model model) {
-        String title = new SubjectToStringConverter().convert(isubject);
+        String title = subjectToStringConverter(isubject);
         BoardSelVo post = service.selPost(iboard);
         post.setContents(CommonUtil.markdown(post.getContents())); // 마크다운 치환
+
         model.addAttribute("title", title);
         model.addAttribute("post", post);
         return "/board/read";
@@ -49,7 +53,7 @@ public class BoardController {
 
     @GetMapping("/write")
     public String insPost(@RequestParam(name = "subject") int isubject, Model model) {
-        String title = new SubjectToStringConverter().convert(isubject);
+        String title = subjectToStringConverter(isubject);
         model.addAttribute("dto", new BoardInsDto());
         model.addAttribute("title", title);
         model.addAttribute("subject", isubject);
@@ -63,6 +67,7 @@ public class BoardController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
             dto.setIuser(myUserDetails.getIuser());
+
             if (Util.isNotNull(service.insPost(dto))) {
                 return dto.getIboard();
             } else {
@@ -96,6 +101,10 @@ public class BoardController {
             return SUCCESS;
         }
         return FAIL;
+    }
+
+    public String subjectToStringConverter(int isubject) {
+        return new SubjectToStringConverter().convert(isubject);
     }
 
     @ResponseBody

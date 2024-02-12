@@ -1,6 +1,9 @@
 package com.jy.myblog.admin;
 
+import com.jy.myblog.admin.model.AdminGetPostVo;
+import com.jy.myblog.admin.model.AdminGetSubjectVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
+import com.jy.myblog.common.PageNation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -18,9 +21,16 @@ public class AdminController {
     private final AdminService service;
 
     @GetMapping
-    public String admin(Model model) {
-        model.addAttribute("list", service.getPostAdmin());
-        model.addAttribute("subject", service.getSubject());
+    public String admin(PageNation.Criteria criteria, Model model) {
+        int cnt = service.getPostCnt();
+
+        List<AdminGetPostVo> list = service.getPostAdmin(criteria);
+        List<AdminGetSubjectVo> subject = service.getSubject();
+        PageNation pageNation = new PageNation(criteria, cnt);
+
+        model.addAttribute("list", list);
+        model.addAttribute("subject", subject);
+        model.addAttribute("pageNation", pageNation);
         return "/admin/admin";
     }
 

@@ -1,5 +1,6 @@
 package com.jy.myblog.board.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class BoardGetVo {
     private int isubject;
     private String title;

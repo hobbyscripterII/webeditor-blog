@@ -8,6 +8,7 @@
         ON a.iuser = b.iuser
         WHERE a.public_fl = 'Y' AND a.isubject = #{subject}
         ORDER BY a.iboard DESC
+        LIMIT #{pageStart}, #{amount}
     </select>
 
     <select id="selPost">
@@ -38,5 +39,11 @@
         SELECT itag, NAME
         FROM tag
         WHERE NAME LIKE('%${tag}%')
+    </select>
+
+    <select id="getPostCnt">
+        SELECT COUNT(*)
+        FROM board
+        WHERE isubject = #{isubject}
     </select>
 </mapper>
