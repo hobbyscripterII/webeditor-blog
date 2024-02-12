@@ -11,11 +11,24 @@
         ORDER BY iboard DESC
     </select>
 
-    <update id="updPrivate">
-        <foreach collection="list" item="item" separator=";">
+    <update id="updPublicFl">
+        <foreach collection="list" item="iboard" separator=";">
             UPDATE board SET
             public_fl = #{publicFl}
-            WHERE iboard = #{item}
+            WHERE iboard = #{iboard}
         </foreach>
     </update>
+
+    <update id="updSubjectFl">
+        <foreach collection="list" item="iboard" separator=";">
+            UPDATE board SET
+            isubject = #{isubject}
+            WHERE iboard = #{iboard}
+        </foreach>
+    </update>
+
+    <select id="getSubject">
+        SELECT isubject, NAME SUBJECT
+        FROM board_subject
+    </select>
 </mapper>

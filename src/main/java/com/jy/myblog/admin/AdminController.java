@@ -20,12 +20,19 @@ public class AdminController {
     @GetMapping
     public String admin(Model model) {
         model.addAttribute("list", service.getPostAdmin());
+        model.addAttribute("subject", service.getSubject());
         return "/admin/admin";
     }
 
     @ResponseBody
-    @PatchMapping
-    public int updPrivate(@RequestBody AdminUpdDto dto) throws Exception {
-        return service.updPrivate(dto);
+    @PatchMapping("/public")
+    public int updPublicFl(@RequestBody AdminUpdDto dto) throws Exception {
+        return service.updPublicFl(dto);
+    }
+
+    @ResponseBody
+    @PatchMapping("/subject")
+    public int updSubjectFl(@RequestBody AdminUpdDto dto) throws Exception {
+        return service.updSubjectFl(dto);
     }
 }

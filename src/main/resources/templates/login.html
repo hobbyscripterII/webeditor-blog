@@ -6,7 +6,7 @@
       layout:fragment="section">
 <section>
     <div class="title">LOGIN</div>
-    <form id="f" th:action="@{/login}" th:method="post" style="width: 300px">
+    <form id="f" th:action="@{/login}" th:method="post" style="width: 350px">
         <table class="table" th:object="${dto}">
             <!-- >>>>> sprint security 적용 전(BindingResult 사용) -->
 <!--            <div id="div-error-msg" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}" th:text="${error}">아이디 혹은 패스워드를 확인해주세요.</div>-->

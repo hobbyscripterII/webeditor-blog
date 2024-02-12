@@ -1,14 +1,13 @@
 package com.jy.myblog.admin.model;
 
 import com.jy.myblog.common.Const;
-import com.jy.myblog.common.SubjectToStringConverter;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 @Data
-public class AdminPostGetVo {
+public class AdminGetPostVo {
     private int iboard;
     private String publicFl;
     private int isubject;

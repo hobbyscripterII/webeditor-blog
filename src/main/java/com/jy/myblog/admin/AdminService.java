@@ -1,8 +1,8 @@
 package com.jy.myblog.admin;
 
-import com.jy.myblog.admin.model.AdminPostGetVo;
+import com.jy.myblog.admin.model.AdminGetPostVo;
+import com.jy.myblog.admin.model.AdminGetSubjectVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
-import com.jy.myblog.board.model.BoardUpdDto;
 import com.jy.myblog.common.Const;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +17,16 @@ import java.util.List;
 public class AdminService {
     private final AdminMapper mapper;
 
-    public List<AdminPostGetVo> getPostAdmin() {
+    public List<AdminGetPostVo> getPostAdmin() {
         return mapper.getPostAdmin();
     }
 
     @Transactional
-    public int updPrivate(AdminUpdDto dto) throws Exception {
+    public int updPublicFl(AdminUpdDto dto) throws Exception {
         try {
-        int rows = mapper.updPrivate(dto);
+            int rows = mapper.updPublicFl(dto);
             return Const.SUCCESS;
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Const.FAIL;
         }
@@ -41,5 +41,20 @@ public class AdminService {
 //            e.printStackTrace();
 //            throw new Exception();
 //        }
+    }
+
+    @Transactional
+    public int updSubjectFl(AdminUpdDto dto) throws Exception {
+        try {
+            int rows = mapper.updSubjectFl(dto);
+            return Const.SUCCESS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Const.FAIL;
+        }
+    }
+
+    public List<AdminGetSubjectVo> getSubject() {
+        return mapper.getSubject();
     }
 }

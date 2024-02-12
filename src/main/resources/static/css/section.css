@@ -5,7 +5,7 @@ section {
     /*left: 200px;*/
     /*padding-left: 200px;*/
     margin: 20px 15px 0 220px;
-    padding-right: 5px;
+    padding: 0 5px 0 5px;
     height: 100vh;
     overflow: hidden;
 }
