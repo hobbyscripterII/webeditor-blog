@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jy.myblog.admin.AdminMapper">
+    <select id="getPostAdmin">
+        SELECT a.iboard, a.public_fl publicFl, a.isubject, b.nm, a.title, a.created_at createdAt
+        FROM board a
+        INNER JOIN user b
+        ON a.iuser = b.iuser
+        ORDER BY iboard DESC
+    </select>
+
+    <update id="updPrivate">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE board SET
+            public_fl = #{publicFl}
+            WHERE iboard = #{item}
+        </foreach>
+    </update>
+</mapper>

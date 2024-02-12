@@ -116,3 +116,9 @@ section {
     border-radius: 10px;
     color: white;
 }
+
+.form-check-input {
+    position: static;
+    margin-top: 0;
+    margin-left: 0;
+}

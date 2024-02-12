@@ -12,13 +12,13 @@
     </th:block>
     <th:block th:if="${#lists.size(list.posts) >= 1}">
         <table class="table table-hover">
-            <tead>
+            <thead>
                 <tr>
                     <th>제목</th>
                     <th>작성자</th>
                     <th>작성일</th>
                 </tr>
-            </tead>
+            </thead>
             <tbody>
             <tr th:each="l : ${list.posts}">
                 <td><a th:href="@{/board/read(subject=${list.isubject}, board=${l.iboard})}"><th:block th:text="${l.title}"></th:block></a></td>

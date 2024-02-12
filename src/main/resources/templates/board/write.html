@@ -32,11 +32,12 @@
     </table>
 
     <div class="div-btn-wrap">
-        <th:block th:if="${dto == null}"> <!-- 수정 필요 -->
+        <!-- 추후 수정 필요 -->
+        <!-- iboard x - 게시글 등록 시에는 dto 값이 전부 null이므로 x, iboard o - 게시글 수정 시 iboard를 갖고오므로 o -->
+        <th:block th:if="${dto.iboard == 0}">
             <button type="button" class="btn btn-success" onclick="insPost()">등록</button>
         </th:block>
-        <th:block th:if="${dto != null}">
-            <div th:text="${dto}"></div>
+        <th:block th:if="${dto.iboard != 0}">
             <button type="button" class="btn btn-info" onclick="updPost()">수정</button>
         </th:block>
     </div>

@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Subject {
-    JAVA(4, "JAVA"),
-    SPRING(5, "SPRING"),
-    DOCKER(6, "DOCKER");
+    JAVA(4, Const.JAVA),
+    SPRING(5, Const.SPRING),
+    DOCKER(6, Const.DOCKER);
 
     private int subjectNum;
     private String subjectNm;

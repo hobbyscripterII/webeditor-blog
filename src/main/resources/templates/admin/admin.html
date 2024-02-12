@@ -6,5 +6,71 @@
       layout:fragment="section">
 <section>
     <div class="title">ADMIN</div>
+
+    <div class="div-btn-wrap" style="text-align: left">
+        <!-- "|location.href='@{/login}'|" -->
+        <button type="button" class="btn btn-success" th:onclick="publicFl('Y')">공개 변경</button>
+        <button type="button" class="btn btn-danger" th:onclick="publicFl('N')">비공개 변경</button>
+        <!--        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/write(subject=${list.isubject})}'|">WRITE</button>-->
+    </div>
+
+    <table class="table table-hover table-admin">
+        <thead>
+        <tr>
+            <th style="width: 100px">체크 여부</th>
+            <th>글 번호</th>
+            <th>공개 여부</th>
+            <th>말머리</th>
+            <th>작성자</th>
+            <th>제목</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="l : ${list}">
+            <td><input class="form-check-input" name="check-iboard" type="checkbox" th:value="${l.iboard}"></td>
+            <td th:text="${l.iboard}">글 번호</td>
+            <td th:text="${l.publicFl}">공개 여부</td>
+            <td th:text="${l.subject}">말머리</td>
+            <td th:text="${l.nm}">작성자</td>
+            <td th:text="${l.title}">제목</td>
+            <td th:text="${l.createdAt}">작성일</td>
+        </tr>
+        </tbody>
+    </table>
 </section>
+
+<script th:inline="javascript">
+    function publicFl(fl) {
+        console.log("공개 여부 = ", fl);
+
+        const arr = [];
+        const checkbox = $('input[name=check-iboard]:checked');
+
+        checkbox.each(function (idx) {
+            // checkbox의 부모(parent)인 td에 접근 -> 또 다시 부모(parent)인 tr에 접근 ->
+            // eq 메소드를 통해 해당 index에 해당하는 자식 요소를 찾음 -> 찾은 요소의 text 값을 가져옴 -> iboard 값에 접근
+            const td = checkbox.parent().parent().eq(idx).children().eq(1).text();
+            arr.push(td);
+        });
+
+        const dto = {"list" : arr, "publicFl" : fl};
+
+        $.ajax({
+            type: 'patch',
+            url: '/admin',
+            contentType: "application/json",
+            data: JSON.stringify(dto),
+            success: function (result) {
+                console.log(result);
+                if (result === 1) {
+                    alert("정상적으로 처리되었습니다.")
+                    location.reload();
+                } else {
+                    alert("잠시 후 다시 시도하세요.")
+                }
+            }
+        });
+    }
+</script>
 </html>
