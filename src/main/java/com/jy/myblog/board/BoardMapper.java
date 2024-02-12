@@ -1,14 +1,14 @@
 package com.jy.myblog.board;
 
 import com.jy.myblog.board.model.*;
-import com.jy.myblog.common.PageNation;
+import com.jy.myblog.common.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface BoardMapper {
-    List<BoardGetVo.Post> getPost(PageNation.Criteria criteria);
+    List<BoardGetVo.Post> getPost(Pagination.Criteria criteria);
     BoardSelVo selPost(int iboard);
     int insPost(BoardInsDto dto);
     int updPost(BoardUpdDto dto);

@@ -2,7 +2,7 @@ package com.jy.myblog.board;
 
 import com.jy.myblog.board.model.*;
 import com.jy.myblog.common.CommonUtil;
-import com.jy.myblog.common.PageNation;
+import com.jy.myblog.common.Pagination;
 import com.jy.myblog.common.SubjectToStringConverter;
 import com.jy.myblog.common.Util;
 import com.jy.myblog.security.MyUserDetails;
@@ -27,16 +27,16 @@ public class BoardController {
     private final BoardService service;
 
     @GetMapping("/list")
-    public String getPost(PageNation.Criteria criteria, @RequestParam(name = "subject") int isubject, Model model) {
+    public String getPost(Pagination.Criteria criteria, @RequestParam(name = "subject") int isubject, Model model) {
         String title = subjectToStringConverter(isubject);
         List<BoardGetVo.Post> posts = service.getPost(criteria);
         BoardGetVo list = new BoardGetVo(isubject, title, posts);
 
         int cnt = service.getPostCnt(isubject);
-        PageNation pageNation = new PageNation(criteria, cnt);
+        Pagination pagination = new Pagination(criteria, cnt);
 
         model.addAttribute("list", list);
-        model.addAttribute("pageNation", pageNation);
+        model.addAttribute("pagination", pagination);
         return "/board/list";
     }
 

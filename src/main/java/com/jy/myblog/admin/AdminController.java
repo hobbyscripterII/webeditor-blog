@@ -3,7 +3,7 @@ package com.jy.myblog.admin;
 import com.jy.myblog.admin.model.AdminGetPostVo;
 import com.jy.myblog.admin.model.AdminGetSubjectVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
-import com.jy.myblog.common.PageNation;
+import com.jy.myblog.common.Pagination;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,16 +21,16 @@ public class AdminController {
     private final AdminService service;
 
     @GetMapping
-    public String admin(PageNation.Criteria criteria, Model model) {
+    public String admin(Pagination.Criteria criteria, Model model) {
         int cnt = service.getPostCnt();
 
         List<AdminGetPostVo> list = service.getPostAdmin(criteria);
         List<AdminGetSubjectVo> subject = service.getSubject();
-        PageNation pageNation = new PageNation(criteria, cnt);
+        Pagination pagination = new Pagination(criteria, cnt);
 
         model.addAttribute("list", list);
         model.addAttribute("subject", subject);
-        model.addAttribute("pageNation", pageNation);
+        model.addAttribute("pagination", pagination);
         return "/admin/admin";
     }
 

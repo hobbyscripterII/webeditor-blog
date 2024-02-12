@@ -1,13 +1,12 @@
 package com.jy.myblog.board;
 
 import com.jy.myblog.board.model.*;
-import com.jy.myblog.common.PageNation;
+import com.jy.myblog.common.Pagination;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.List;
 
 @Slf4j
@@ -16,7 +15,7 @@ import java.util.List;
 public class BoardService {
     private final BoardMapper mapper;
 
-    public List<BoardGetVo.Post> getPost(PageNation.Criteria criteria) {
+    public List<BoardGetVo.Post> getPost(Pagination.Criteria criteria) {
         return mapper.getPost(criteria);
     }
 

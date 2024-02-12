@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-public class PageNation {
+public class Pagination {
     private int start; // 페이지네이션 시작 번호
     private int end; // 페이지네이션 끝 번호
     private int realEnd; // 실제 끝 번호
@@ -17,7 +17,7 @@ public class PageNation {
     private int pageCnt = 5; // 페이지네이션 개수
     private Criteria criteria;
 
-    public PageNation(Criteria criteria, int total) {
+    public Pagination(Criteria criteria, int total) {
         this.page = criteria.getPage();
         this.amount = criteria.getAmount();
         this.total = total;

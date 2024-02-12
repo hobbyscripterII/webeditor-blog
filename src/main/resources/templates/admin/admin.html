@@ -58,13 +58,13 @@
     </table>
 
     <div class="pagination">
-        <a class="page-link" th:if="${1 < pageNation.start}" th:href="@{/admin(page=1)}">&laquo;</a>
-        <a class="page-link" th:if="${1 < pageNation.start}" th:href="@{/admin(page=${pageNation.start - pageNation.pageCnt})}">&lt;</a>
-        <div class="page-item" th:each="page, i : ${#numbers.sequence(pageNation.start, pageNation.end)}">
+        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=1)}">&laquo;</a>
+        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=${pagination.start - pagination.pageCnt})}">&lt;</a>
+        <div class="page-item" th:each="page, i : ${#numbers.sequence(pagination.start, pagination.end)}">
             <a class="page-link" th:href="@{/admin(page=${i.current})}" th:text="${i.current}"></a>
         </div>
-        <a class="page-link" th:if="${pageNation.end < pageNation.realEnd}" th:href="@{/admin(page=${pageNation.page + pageNation.pageCnt}, amount=${pageNation.amount})}">&gt;</a>
-        <a class="page-link" th:if="${pageNation.end < pageNation.realEnd}" th:href="@{/admin(page=${pageNation.realEnd}, amount=${pageNation.amount})}">&raquo;</a>
+        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.end + 1}, amount=${pagination.amount})}">&gt;</a>
+        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.realEnd}, amount=${pagination.amount})}">&raquo;</a>
     </div>
 </section>
 

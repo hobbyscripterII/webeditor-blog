@@ -4,7 +4,7 @@ import com.jy.myblog.admin.model.AdminGetPostVo;
 import com.jy.myblog.admin.model.AdminGetSubjectVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
 import com.jy.myblog.common.Const;
-import com.jy.myblog.common.PageNation;
+import com.jy.myblog.common.Pagination;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
 public class AdminService {
     private final AdminMapper mapper;
 
-    public List<AdminGetPostVo> getPostAdmin(PageNation.Criteria criteria) {
+    public List<AdminGetPostVo> getPostAdmin(Pagination.Criteria criteria) {
         return mapper.getPostAdmin(criteria);
     }
 

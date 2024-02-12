@@ -122,3 +122,8 @@ section {
     margin-top: 0;
     margin-left: 0;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
