@@ -7,7 +7,7 @@
 ## ✍️기획 의도
 > 백엔드 학습 역량과 SSR 구현 역량을 키우기위해 해당 프로젝트를 기획하게 되었습니다. <br>
 
-## 👼구현 기능
+## ✍️구현 기능
 - 게시글 작성 시 velog처럼 마크다운 미리보기 기능
 - Spring Security를 활용한 SSR 방식의 login, logout 기능
 - Spring Security 인증 후 권한에 따른 HTML 렌더링
@@ -36,3 +36,10 @@
 <img src="https://img.shields.io/badge/POSTMAN-FF6C37?style=for-the-badge&logo=Postman&logoColor=white"/></a>
 <img src="https://img.shields.io/badge/ERD CLOUD-8D8BD9?style=for-the-badge&logoColor=white"/></a>
 <img src="https://img.shields.io/badge/OBSIDIAN-7C3AED?style=for-the-badge&logo=Obsidian&logoColor=white"/></a>
+
+## 📷 구현 기능 캡처
+<img src="https://velog.velcdn.com/images/wruoma/post/b39e3f89-ca4e-45d9-9ee0-7f3f3f50dbda/image.png"/></a>
+<img src="https://velog.velcdn.com/images/wruoma/post/8a75fcb9-3ba7-4942-ace2-1b9dfd181a71/image.png"/></a>
+<img src="https://velog.velcdn.com/images/wruoma/post/62062909-c797-4674-b9aa-1bc232ecd39e/image.png"/></a>
+<img src="https://velog.velcdn.com/images/wruoma/post/845387c8-b3a8-4ad0-956f-7e239b8b56fd/image.png"/></a>
+
