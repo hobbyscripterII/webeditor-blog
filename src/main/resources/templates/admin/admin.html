@@ -5,11 +5,27 @@
       layout:decorate="~{layout/default-layout}"
       layout:fragment="section">
 
+<style>
+    .btn-group {
+        margin-right: 2px;
+    }
+</style>
+
 <section>
     <div class="title">ADMIN</div>
     <div class="div-btn-wrap" style="text-align: left; display: flex">
+        <!-- 카테고리 선택 -->
+        <div class="form-group">
+            <select class="form-select">
+                <option>카테고리 선택</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <button type="button" class="btn btn-info">말머리 변경</button>
+            <button type="button" class="btn btn-info">카테고리 변경</button>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-info dropdown-toggle show" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
                 <div class="dropdown-menu" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 50px);" data-popper-placement="bottom-start">
@@ -30,6 +46,8 @@
                 </div>
             </div>
         </div>
+
+        <button type="button" class="btn btn-danger" th:onclick="deleteFl()">게시글 삭제</button>
     </div>
 
     <table class="table table-hover table-admin">
@@ -69,6 +87,32 @@
 </section>
 
 <script th:inline="javascript">
+    function deleteFl() {
+        const arr = getIboardArr();
+
+        if(arr.length === 0) {
+            alert('최소 1개는 선택해주세요.');
+            return false;
+        } else {
+            const dto = {"list" : arr};
+
+            $.ajax({
+                type: 'delete',
+                url: '/admin',
+                contentType: "application/json",
+                data: JSON.stringify(dto),
+                success: function (result) {
+                    if (result === 1) {
+                        alert('정상적으로 삭제되었습니다.')
+                        location.reload();
+                    } else {
+                        alert('잠시 후 다시 시도하세요.')
+                    }
+                }
+            });
+        }
+    }
+
     function subjectFl(isubject) {
         const arr = getIboardArr();
 
@@ -84,7 +128,6 @@
                 contentType: "application/json",
                 data: JSON.stringify(dto),
                 success: function (result) {
-                    console.log(result);
                     if (result === 1) {
                         alert('정상적으로 처리되었습니다.')
                         location.reload();
@@ -111,7 +154,6 @@
                 contentType: "application/json",
                 data: JSON.stringify(dto),
                 success: function (result) {
-                    console.log(result);
                     if (result === 1) {
                         alert('정상적으로 처리되었습니다.')
                         location.reload();

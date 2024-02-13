@@ -21,7 +21,8 @@ public class AdminController {
     private final AdminService service;
 
     @GetMapping
-    public String admin(Pagination.Criteria criteria, Model model) {
+    public String admin(@RequestParam(name = "subject", required = false) Integer isubject, Pagination.Criteria criteria, Model model) {
+        log.info("isubject = {}", isubject);
         int cnt = service.getPostCnt();
 
         List<AdminGetPostVo> list = service.getPostAdmin(criteria);
@@ -38,6 +39,12 @@ public class AdminController {
     @PatchMapping("/public")
     public int updPublicFl(@RequestBody AdminUpdDto dto) throws Exception {
         return service.updPublicFl(dto);
+    }
+
+    @ResponseBody
+    @DeleteMapping()
+    public int delPostFl(@RequestBody AdminUpdDto dto) throws Exception {
+        return service.delPostFl(dto);
     }
 
     @ResponseBody

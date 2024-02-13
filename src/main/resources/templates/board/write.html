@@ -11,10 +11,10 @@
             <td class="td-info">제목</td>
             <td colspan="2"><input type="text" id="title" th:field="*{title}" class="form-control"></td>
         </tr>
-<!--        <tr>-->
-<!--            <td class="td-info">태그</td>-->
-<!--            <td colspan="2"><input type="text" id="tag" class="form-control"></td>-->
-<!--        </tr>-->
+        <tr>
+            <td class="td-info">태그</td>
+            <td colspan="2"><input type="text" id="tag" class="form-control"></td>
+        </tr>
         <tr>
             <td class="td-info"></td>
             <td colspan="3"><div class="form-control" id="tag-list"><div id="tag-list-child"></div></div></td>
@@ -49,27 +49,29 @@
         document.getElementById('div-markdown').innerHTML = marked.parse(contents.val());
     });
 
-    // const tag = $('#tag');
-    // tag.keyup(function() {
-    //     $('#tag-list-child *').remove();
-    //
-    //     $.ajax({
-    //         type: 'get',
-    //         url: '/board/tag',
-    //         data: {"tag" : tag.val()},
-    //         success: function (data) {
-    //             console.log("data.length = ", data.length);
-    //             console.log("data = ", data);
-    //
-    //             $('#tag-list').css('display', 'block');
-    //             data.forEach(function(data, idx) {
-    //                 // $('#tag-list-child').prepend('div-tag-' + idx);
-    //                 $('#tag-list-child').append(data.name);
-    //                 // $('.div-tag-' + idx).html(data.name);
-    //             })
-    //         }
-    //     })
-    // });
+    const tag = $('#tag');
+    tag.keyup(function() {
+        $('#tag-list-child *').remove();
+
+        // <span className="badge bg-primary">Primary</span>
+
+        $.ajax({
+            type: 'get',
+            url: '/board/tag',
+            data: {"tag" : tag.val()},
+            success: function (data) {
+                console.log("data.length = ", data.length);
+                console.log("data = ", data);
+
+                $('#tag-list').css('display', 'block');
+                data.forEach(function(data, idx) {
+                    // $('#tag-list-child').prepend('div-tag-' + idx);
+                    $('#tag-list-child').append(data.name);
+                    // $('.div-tag-' + idx).html(data.name);
+                })
+            }
+        })
+    });
 
     function insPost() {
         const dto = {

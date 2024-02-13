@@ -8,7 +8,12 @@
         ON a.iuser = b.iuser
         INNER JOIN board_subject c
         ON a.isubject = c.isubject
-        ORDER BY iboard DESC
+        <where>
+            <if test="subject != 0">
+                a.isubject = #{subject}
+            </if>
+        </where>
+        ORDER BY a.iboard DESC
         LIMIT #{pageStart}, #{amount}
     </select>
 
@@ -27,6 +32,12 @@
             WHERE iboard = #{iboard}
         </foreach>
     </update>
+
+    <delete id="delPostFl">
+        <foreach collection="list" item="iboard" separator=";">
+            DELETE FROM board WHERE iboard = #{iboard}
+        </foreach>
+    </delete>
 
     <select id="getSubject">
         SELECT isubject, NAME SUBJECT

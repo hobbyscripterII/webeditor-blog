@@ -28,7 +28,6 @@ public class AdminService {
             int rows = mapper.updPublicFl(dto);
             return Const.SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
             return Const.FAIL;
         }
 
@@ -50,7 +49,16 @@ public class AdminService {
             int rows = mapper.updSubjectFl(dto);
             return Const.SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
+            return Const.FAIL;
+        }
+    }
+
+    @Transactional
+    public int delPostFl(AdminUpdDto dto) throws Exception {
+        try {
+            int rows = mapper.delPostFl(dto);
+            return Const.SUCCESS;
+        } catch(Exception e) {
             return Const.FAIL;
         }
     }

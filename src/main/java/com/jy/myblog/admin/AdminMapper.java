@@ -13,6 +13,7 @@ public interface AdminMapper {
     List<AdminGetPostVo> getPostAdmin(Pagination.Criteria criteria);
     int updPublicFl(AdminUpdDto dto);
     int updSubjectFl(AdminUpdDto dto);
+    int delPostFl(AdminUpdDto dto);
     List<AdminGetSubjectVo> getSubject();
     int getPostCnt();
 }

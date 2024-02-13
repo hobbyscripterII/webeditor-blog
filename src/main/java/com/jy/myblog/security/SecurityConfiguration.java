@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                         // 권한없이 접근 o
                         .requestMatchers(
                                 "/", "/css/**", "/js/**", "/img/**", "/error/**",
-                                "/login", "/logout", "/access-denied", "/board/list/**", "/board/read/**"
+                                "/login", "/logout", "/access-denied?error", "/board/list/**", "/board/read/**"
                         ).permitAll()
                         // 외에는 ADMIN만 접근 o
                         .anyRequest().hasRole("ADMIN")
