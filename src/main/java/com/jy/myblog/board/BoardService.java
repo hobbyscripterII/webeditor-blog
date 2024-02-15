@@ -41,7 +41,7 @@ public class BoardService {
         return mapper.getTag(tag);
     }
 
-    public int getPostCnt(int isubject) {
-        return mapper.getPostCnt(isubject);
+    public int getPostCnt(BoardGetCntDto dto) {
+        return mapper.getPostCnt(dto);
     }
 }

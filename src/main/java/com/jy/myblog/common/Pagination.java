@@ -52,6 +52,7 @@ public class Pagination {
         private int subject; // 게시판 카테고리
         private int page; // 페이지 번호
         private int amount; // 한 페이지당 보여 줄 게시글 개수
+        private String keyword;
 
         // 기본값 설정
         public Criteria() {

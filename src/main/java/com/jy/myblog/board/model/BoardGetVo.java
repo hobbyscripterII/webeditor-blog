@@ -12,6 +12,7 @@ import java.util.List;
 public class BoardGetVo {
     private int isubject;
     private String title;
+    private String keyword;
     private List<BoardGetVo.Post> posts;
 
     @Data

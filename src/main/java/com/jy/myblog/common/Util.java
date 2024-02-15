@@ -1,10 +1,10 @@
 package com.jy.myblog.common;
 
-import static com.jy.myblog.common.Const.SUCCESS;
+import static com.jy.myblog.common.Const.FAIL;
 
 public class Util {
     public static boolean isNotNull(int val) {
-        return val == SUCCESS;
+        return val != FAIL;
     }
 
     public static boolean isNotNull(String str) {

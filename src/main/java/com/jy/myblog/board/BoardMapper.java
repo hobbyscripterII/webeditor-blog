@@ -14,5 +14,5 @@ public interface BoardMapper {
     int updPost(BoardUpdDto dto);
     int delPost(int iboard);
     List<BoardTagGetVo> getTag(String tag);
-    int getPostCnt(int isubject);
+    int getPostCnt(BoardGetCntDto dto);
 }

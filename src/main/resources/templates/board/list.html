@@ -35,20 +35,20 @@
         </table>
 
         <div class="pagination">
-            <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/board/list(subject=${list.isubject}, page=1)}">&laquo;</a>
-            <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/board/list(subject=${list.isubject}, page=${pagination.start - pagination.pageCnt})}">&lt;</a>
+            <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/board/list(subject=${list.isubject}, page=1, keyword=${list.keyword})}">&laquo;</a>
+            <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/board/list(subject=${list.isubject}, page=${pagination.start - pagination.pageCnt}, keyword=${list.keyword})}">&lt;</a>
             <div class="page-item" th:each="page, i : ${#numbers.sequence(pagination.start, pagination.end)}">
-                <a class="page-link" th:href="@{/board/list(subject=${list.isubject}, page=${i.current})}" th:text="${i.current}"></a>
+                <a class="page-link" th:href="@{/board/list(subject=${list.isubject}, page=${i.current}, keyword=${list.keyword})}" th:text="${i.current}"></a>
             </div>
-            <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/board/list(subject=${list.isubject}, page=${pagination.end + 1}, amount=${pagination.amount})}">&gt;</a>
-            <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/board/list(subject=${list.isubject}, page=${pagination.realEnd}, amount=${pagination.amount})}">&raquo;</a>
+            <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/board/list(subject=${list.isubject}, page=${pagination.end + 1}, amount=${pagination.amount}, keyword=${list.keyword})}">&gt;</a>
+            <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/board/list(subject=${list.isubject}, page=${pagination.realEnd}, amount=${pagination.amount}, keyword=${list.keyword})}">&raquo;</a>
         </div>
     </th:block>
 
     <div style="width: 100%; display: flex; justify-content: center">
         <div class="input-group mb-3" style="width: 500px">
-            <input type="search" class="form-control" placeholder="검색어를 입력해주세요." aria-describedby="button-addon2" style="margin-right: 5px">
-            <button class="btn btn-primary" type="button" id="button-addon2">SEARCH</button>
+            <input type="search" class="form-control" id="keyword" placeholder="검색어를 입력해주세요." aria-describedby="button-addon2" style="margin-right: 5px">
+            <button class="btn btn-primary" type="button" id="button-addon2" th:onclick="search()">SEARCH</button>
         </div>
     </div>
 
@@ -59,4 +59,24 @@
         </div>
     </th:block>
 </section>
+
+<script th:inline="javascript">
+    function search() {
+        const keyword = $('#keyword').val();
+
+        if(!keyword) {
+            alert('검색어를 입력해주세요.');
+        } else {
+            const link = '/board/list?keyword=' + keyword;
+            location.href = link;
+
+            // let page = [[${param.page}]];
+            // if(page == null) {
+            //     page = 1;
+            // }
+            // const link = '/board/list?page=' + page + '&keyword=' + keyword;
+            // location.href = link;
+        }
+    }
+</script>
 </html>

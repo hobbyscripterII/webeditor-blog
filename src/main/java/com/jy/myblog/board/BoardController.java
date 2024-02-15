@@ -27,12 +27,24 @@ public class BoardController {
     private final BoardService service;
 
     @GetMapping("/list")
-    public String getPost(Pagination.Criteria criteria, @RequestParam(name = "subject") int isubject, Model model) {
-        String title = subjectToStringConverter(isubject);
-        List<BoardGetVo.Post> posts = service.getPost(criteria);
-        BoardGetVo list = new BoardGetVo(isubject, title, posts);
+    public String getPost(@RequestParam(name = "subject", required = false, defaultValue = "0") int isubject, Pagination.Criteria criteria, Model model) {
+        String title = null;
 
-        int cnt = service.getPostCnt(isubject);
+        if (Util.isNotNull(isubject)) {
+            title = subjectToStringConverter(isubject);
+        } else {
+            title = "\'" + criteria.getKeyword() + "\' 검색 결과"; // 'N+1' 검색 결과
+        }
+
+        List<BoardGetVo.Post> posts = service.getPost(criteria);
+        BoardGetVo list = new BoardGetVo(isubject, title, criteria.getKeyword(), posts);
+
+        BoardGetCntDto dto = BoardGetCntDto
+                .builder()
+                .isubject(isubject)
+                .keyword(criteria.getKeyword())
+                .build();
+        int cnt = service.getPostCnt(dto);
         Pagination pagination = new Pagination(criteria, cnt);
 
         model.addAttribute("list", list);
@@ -54,6 +66,7 @@ public class BoardController {
     @GetMapping("/write")
     public String insPost(@RequestParam(name = "subject") int isubject, Model model) {
         String title = subjectToStringConverter(isubject);
+
         model.addAttribute("dto", new BoardInsDto());
         model.addAttribute("title", title);
         model.addAttribute("subject", isubject);

@@ -6,7 +6,15 @@
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
-        WHERE a.public_fl = 'Y' AND a.isubject = #{subject}
+        <where>
+            a.public_fl = 'Y'
+            <if test="subject != 0">
+                AND a.isubject = #{subject}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND title LIKE ('%${keyword}%')
+            </if>
+        </where>
         ORDER BY a.iboard DESC
         LIMIT #{pageStart}, #{amount}
     </select>
@@ -44,6 +52,13 @@
     <select id="getPostCnt">
         SELECT COUNT(*)
         FROM board
-        WHERE isubject = #{isubject}
+        <where>
+            <if test="isubject != 0">
+                isubject = #{isubject}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                title LIKE '%${keyword}%'
+            </if>
+        </where>
     </select>
 </mapper>
