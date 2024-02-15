@@ -45,6 +45,13 @@
         </div>
     </th:block>
 
+    <div style="width: 100%; display: flex; justify-content: center">
+        <div class="input-group mb-3" style="width: 500px">
+            <input type="search" class="form-control" placeholder="검색어를 입력해주세요." aria-describedby="button-addon2" style="margin-right: 5px">
+            <button class="btn btn-primary" type="button" id="button-addon2">SEARCH</button>
+        </div>
+    </div>
+
     <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
         <div class="div-btn-wrap">
             <!-- "|location.href='@{/login}'|" -->
