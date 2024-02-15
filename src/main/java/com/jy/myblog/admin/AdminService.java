@@ -67,7 +67,7 @@ public class AdminService {
         return mapper.getSubject();
     }
 
-    public int getPostCnt() {
-        return mapper.getPostCnt();
+    public int getPostCnt(int isubject) {
+        return mapper.getPostCnt(isubject);
     }
 }

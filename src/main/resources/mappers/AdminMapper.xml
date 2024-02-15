@@ -47,5 +47,10 @@
     <select id="getPostCnt">
         SELECT count(*)
         FROM board
+        <where>
+            <if test="isubject != 0">
+                isubject = #{isubject}
+            </if>
+        </where>
     </select>
 </mapper>

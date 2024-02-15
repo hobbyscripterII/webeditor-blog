@@ -4,6 +4,7 @@ import com.jy.myblog.admin.model.AdminGetPostVo;
 import com.jy.myblog.admin.model.AdminGetSubjectVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
 import com.jy.myblog.common.Pagination;
+import com.jy.myblog.common.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,16 +22,17 @@ public class AdminController {
     private final AdminService service;
 
     @GetMapping
-    public String admin(@RequestParam(name = "subject", required = false) Integer isubject, Pagination.Criteria criteria, Model model) {
-        log.info("isubject = {}", isubject);
-        int cnt = service.getPostCnt();
+    public String admin(@RequestParam(name = "subject", required = false, defaultValue = "0") int isubject, Pagination.Criteria criteria, Model model) {
+        int cnt = service.getPostCnt(isubject);
+        log.info("cnt = {}", cnt);
 
         List<AdminGetPostVo> list = service.getPostAdmin(criteria);
-        List<AdminGetSubjectVo> subject = service.getSubject();
+        List<AdminGetSubjectVo> subjects = service.getSubject();
         Pagination pagination = new Pagination(criteria, cnt);
 
         model.addAttribute("list", list);
-        model.addAttribute("subject", subject);
+        model.addAttribute("subject", criteria.getSubject());
+        model.addAttribute("subjects", subjects);
         model.addAttribute("pagination", pagination);
         return "/admin/admin";
     }

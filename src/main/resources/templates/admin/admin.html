@@ -16,12 +16,11 @@
     <div class="div-btn-wrap" style="text-align: left; display: flex">
         <!-- 카테고리 선택 -->
         <div class="form-group">
-            <select class="form-select">
+            <select class="form-select" id="select-subject">
                 <option>카테고리 선택</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+                <th:block th:each="s : ${subjects}">
+                    <option id="option-subject" th:value="${s.isubject}" th:text="${s.subject}"></option>
+                </th:block>
             </select>
         </div>
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
@@ -29,7 +28,7 @@
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-info dropdown-toggle show" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
                 <div class="dropdown-menu" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 50px);" data-popper-placement="bottom-start">
-                    <th:block th:each="s : ${subject}">
+                    <th:block th:each="s : ${subjects}">
                         <a class="dropdown-item" th:iboard="${s.isubject}" th:onclick="subjectFl(this.getAttribute('iboard'))" th:text="${s.subject}"></a>
                     </th:block>
                 </div>
@@ -76,17 +75,22 @@
     </table>
 
     <div class="pagination">
-        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=1)}">&laquo;</a>
-        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=${pagination.start - pagination.pageCnt})}">&lt;</a>
+        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=1, subject=${subject})}">&laquo;</a>
+        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=${pagination.start - pagination.pageCnt}, subject=${subject})}">&lt;</a>
         <div class="page-item" th:each="page, i : ${#numbers.sequence(pagination.start, pagination.end)}">
-            <a class="page-link" th:href="@{/admin(page=${i.current})}" th:text="${i.current}"></a>
+            <a class="page-link" th:href="@{/admin(page=${i.current}, subject=${subject})}" th:text="${i.current}"></a>
         </div>
-        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.end + 1}, amount=${pagination.amount})}">&gt;</a>
-        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.realEnd}, amount=${pagination.amount})}">&raquo;</a>
+        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.end + 1}, amount=${pagination.amount}, subject=${subject})}">&gt;</a>
+        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.realEnd}, amount=${pagination.amount}, subject=${subject})}">&raquo;</a>
     </div>
 </section>
 
 <script th:inline="javascript">
+    $('#select-subject').change(function () {
+        const subject = $(this).val();
+        location.href = '/admin?subject=' + subject;
+    });
+
     function deleteFl() {
         const arr = getIboardArr();
 
