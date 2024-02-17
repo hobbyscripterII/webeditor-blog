@@ -35,7 +35,13 @@
 
     <delete id="delPostFl">
         <foreach collection="list" item="iboard" separator=";">
-            DELETE FROM board WHERE iboard = #{iboard}
+            DELETE FROM board where iboard = #{iboard}
+        </foreach>
+    </delete>
+
+    <delete id="delPostPicFl">
+        <foreach collection="list" item="iboard" separator=";">
+            DELETE FROM board_pic where iboard = #{iboard}
         </foreach>
     </delete>
 

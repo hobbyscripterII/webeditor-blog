@@ -14,11 +14,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.jy.myblog.common.Const.FAIL;
 import static com.jy.myblog.common.Const.SUCCESS;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Controller
@@ -32,6 +36,8 @@ public class BoardController {
     @RequestMapping("/imageupload")
     public ModelAndView imageUpload(@RequestParam(name = "iboard") int iboard, MultipartHttpServletRequest request) throws Exception {
         try {
+//            uploadUtil.delDirTrigger(iboard); // 글 등록, 수정 시 원래있던 사진 삭제 후 재업로드
+
             ModelAndView mv = new ModelAndView("jsonView");
             // local에 이미지 업로드 후 UUID + 확장자 얻어냄
             String uploadPath = uploadUtil.imageUpload(iboard, request);
@@ -45,16 +51,16 @@ public class BoardController {
                     .uuidName(uuidName)
                     .build();
 
-            int result = service.insPostPic(dto);
+            int rows = service.insPostPic(dto);
 
-            if(Util.isNotNull(result)) {
+            if (Util.isNotNull(rows)) {
                 mv.addObject("uploaded", true);
                 mv.addObject("url", uploadPath);
                 return mv;
             } else {
                 throw new Exception();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new Exception();
         }
     }
@@ -119,8 +125,6 @@ public class BoardController {
         }
     }
 
-
-
     @GetMapping("/update")
     public String updPost(@RequestParam(name = "board") int iboard, Model model) {
         model.addAttribute("dto", service.selPost(iboard));
@@ -129,10 +133,25 @@ public class BoardController {
 
     @ResponseBody
     @PutMapping
-    public int updPost(@RequestBody BoardUpdDto dto) {
-        if (Util.isNotNull(service.updPost(dto))) {
+    public int updPost(@RequestBody BoardUpdDto dto) throws Exception {
+        try {
+            int result = service.updPost(dto);
+            // pk로 db에 저장된 사진 uuid 가져옴
+            List<String> getPostPics = service.getPostPics(dto.getIboard());
+            // 해당 게시글에 없는 사진만 뽑아냄(db, 디렉토리 정리용)
+            List<String> isNullPics = getPostPics.stream()
+                    // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
+                    .filter(pic -> !dto.getContents().contains(pic))
+                    .collect(toList()); // 후처리
+
+            // 해당 게시글에 없는 사진만 삭제
+            for (String pic : isNullPics) {
+                service.delPostPic(pic); // db 사진 삭제
+                uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
+            }
             return dto.getIboard();
-        } else {
+
+        } catch (Exception e) {
             return FAIL;
         }
     }
@@ -147,7 +166,7 @@ public class BoardController {
             } else {
                 throw new Exception(); // rollback
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new Exception();
         }
     }

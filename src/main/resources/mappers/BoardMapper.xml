@@ -19,6 +19,12 @@
         LIMIT #{pageStart}, #{amount}
     </select>
 
+    <select id="getPostPics">
+        SELECT uuid_name
+        FROM board_pic
+        WHERE iboard = #{iboard}
+    </select>
+
     <select id="selPost">
         SELECT a.iboard, a.isubject, a.title, a.contents, b.nm, a.created_at createdAt
         FROM board a
@@ -50,6 +56,10 @@
 
     <delete id="delPost">
         DELETE FROM board WHERE iboard = #{iboard}
+    </delete>
+
+    <delete id="delPostPic">
+        DELETE FROM board_pic WHERE uuid_name = #{uuidName}
     </delete>
 
     <select id="getTag">

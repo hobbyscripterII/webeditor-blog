@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import static com.jy.myblog.common.Const.SUCCESS;
+
 @Slf4j
 @Component
 public class UploadUtil {
@@ -30,6 +32,7 @@ public class UploadUtil {
         // webconfig에서 해당 경로로 접근하면 외부 리소스에 접근시켜놓음
         // 외부 리소스 접근 시 /upload/는 yaml에 설정한 경로까지만 접근하기 때문에 뒤에 이동 경로를 지정해주지 않으면 resource 접근 x
         String uploadPath = "/upload/" + iboard + "/" + fileName;
+        log.info("uploadPath = {}", uploadPath);
         uploadFile(savePath, uploadFile);
         return uploadPath;
     }
@@ -90,6 +93,17 @@ public class UploadUtil {
                 }
             }
             dir.delete();
+        }
+    }
+
+    public int deleteFile(String suffixPath) throws Exception {
+        try {
+            File file = new File(prefixPath + suffixPath);
+            file.delete();
+            return SUCCESS;
+
+        } catch (Exception e) {
+            throw new Exception();
         }
     }
 }

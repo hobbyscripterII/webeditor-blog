@@ -5,12 +5,15 @@ import com.jy.myblog.admin.model.AdminGetSubjectVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
 import com.jy.myblog.common.Const;
 import com.jy.myblog.common.Pagination;
+import com.jy.myblog.common.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.jy.myblog.common.Const.SUCCESS;
 
 @Slf4j
 @Service
@@ -26,7 +29,7 @@ public class AdminService {
     public int updPublicFl(AdminUpdDto dto) throws Exception {
         try {
             int rows = mapper.updPublicFl(dto);
-            return Const.SUCCESS;
+            return SUCCESS;
         } catch (Exception e) {
             return Const.FAIL;
         }
@@ -44,22 +47,18 @@ public class AdminService {
     }
 
     @Transactional
-    public int updSubjectFl(AdminUpdDto dto) throws Exception {
-        try {
-            int rows = mapper.updSubjectFl(dto);
-            return Const.SUCCESS;
-        } catch (Exception e) {
-            return Const.FAIL;
-        }
+    public int updSubjectFl(AdminUpdDto dto) {
+        return mapper.updSubjectFl(dto);
     }
 
     @Transactional
     public int delPostFl(AdminUpdDto dto) throws Exception {
         try {
-            int rows = mapper.delPostFl(dto);
-            return Const.SUCCESS;
-        } catch(Exception e) {
-            return Const.FAIL;
+            mapper.delPostFl(dto);
+            mapper.delPostPicFl(dto);
+            return SUCCESS;
+        } catch (Exception e) {
+            throw new Exception();
         }
     }
 

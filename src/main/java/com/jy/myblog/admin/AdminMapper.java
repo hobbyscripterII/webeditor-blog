@@ -14,6 +14,7 @@ public interface AdminMapper {
     int updPublicFl(AdminUpdDto dto);
     int updSubjectFl(AdminUpdDto dto);
     int delPostFl(AdminUpdDto dto);
+    int delPostPicFl(AdminUpdDto dto);
     List<AdminGetSubjectVo> getSubject();
     int getPostCnt(int isubject);
 }

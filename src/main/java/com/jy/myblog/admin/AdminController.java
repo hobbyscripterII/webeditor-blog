@@ -3,7 +3,9 @@ package com.jy.myblog.admin;
 import com.jy.myblog.admin.model.AdminGetPostVo;
 import com.jy.myblog.admin.model.AdminGetSubjectVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
+import com.jy.myblog.common.Const;
 import com.jy.myblog.common.Pagination;
+import com.jy.myblog.common.UploadUtil;
 import com.jy.myblog.common.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.jy.myblog.common.Const.FAIL;
+import static com.jy.myblog.common.Const.SUCCESS;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -20,6 +25,7 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService service;
+    private final UploadUtil uploadUtil;
 
     @GetMapping
     public String admin(@RequestParam(name = "subject", required = false, defaultValue = "0") int isubject, Pagination.Criteria criteria, Model model) {
@@ -44,9 +50,25 @@ public class AdminController {
     }
 
     @ResponseBody
-    @DeleteMapping()
+    @DeleteMapping
     public int delPostFl(@RequestBody AdminUpdDto dto) throws Exception {
-        return service.delPostFl(dto);
+        try {
+            int result = service.delPostFl(dto);
+
+            log.info("result = {}", result);
+            log.info("dto = {}", dto);
+
+            if (Util.isNotNull(result)) {
+                for (Integer iboard : dto.getList()) {
+                    uploadUtil.delDirTrigger(iboard);
+                }
+                return SUCCESS;
+            } else {
+                return FAIL;
+            }
+        } catch (Exception e) {
+            throw new Exception();
+        }
     }
 
     @ResponseBody

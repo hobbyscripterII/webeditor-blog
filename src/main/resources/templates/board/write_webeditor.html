@@ -7,7 +7,7 @@
 
 <style>
     .ck.ck-editor__main>.ck-editor__editable {
-        height: 745px;
+        height: 725px;
         margin-bottom: 10px;
     }
 </style>
@@ -33,9 +33,8 @@
     </div>
 
     <div class="div-btn-wrap">
-        <!-- 추후 수정 필요 -->
-        <!-- iboard x - 게시글 등록 시에는 dto 값이 전부 null이므로 x, iboard o - 게시글 수정 시 iboard를 갖고오므로 o -->
-        <th:block th:if="${iboard != 0}">
+        <!-- iboard는 String으로 넘어오기 때문에 null로 비교 o -->
+        <th:block th:if="${iboard != null}">
             <button type="button" class="btn btn-success" onclick="updPost('insert')">등록</button>
         </th:block>
         <th:block th:if="${dto.iboard != 0}">
@@ -49,6 +48,9 @@
     let iboard;
     let dto = [[${dto}]];
     let contents = [[${dto.contents}]];
+
+    console.log('iboard = ' +[[${iboard}]]);
+    console.log('dto.iboard =' + [[${dto.iboard}]]);
 
     if([[${iboard}]] == null) {
         iboard = [[${dto.iboard}]];

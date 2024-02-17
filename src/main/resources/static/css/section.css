@@ -75,8 +75,8 @@ section {
 }
 
 .table-post-read {
+    height: 740px;
     display: block;
-    height: 745px;
     overflow: auto;
 }
 
