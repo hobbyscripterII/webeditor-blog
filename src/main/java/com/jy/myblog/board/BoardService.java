@@ -24,8 +24,18 @@ public class BoardService {
     }
 
     @Transactional
-    public int insPost(BoardInsDto dto) {
-        return mapper.insPost(dto);
+    public int insNullPost(BoardInsDto dto) {
+        return mapper.insNullPost(dto);
+    }
+
+//    @Transactional
+//    public int insPost(BoardInsDto dto) {
+//        return mapper.insPost(dto);
+//    }
+
+    @Transactional
+    public int insPostPic(BoardInsPicDto dto) {
+        return mapper.insPostPic(dto);
     }
 
     @Transactional
@@ -33,6 +43,7 @@ public class BoardService {
         return mapper.updPost(dto);
     }
 
+    @Transactional
     public int delPost(int iboard) {
         return mapper.delPost(iboard);
     }

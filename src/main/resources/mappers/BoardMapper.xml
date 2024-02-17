@@ -27,9 +27,18 @@
         WHERE a.iboard = #{iboard}
     </select>
 
-    <insert id="insPost" useGeneratedKeys="true" keyProperty="iboard">
+    <insert id="insNullPost" useGeneratedKeys="true" keyProperty="iboard">
         INSERT INTO board(isubject, iuser, title, contents) VALUES
-        (#{isubject}, #{iuser}, #{title}, #{contents})
+        (#{isubject}, #{iuser}, ' ', ' ')
+    </insert>
+
+<!--    <insert id="insPost" useGeneratedKeys="true" keyProperty="iboard">-->
+<!--        INSERT INTO board(isubject, iuser, title, contents) VALUES-->
+<!--        (#{isubject}, #{iuser}, #{title}, #{contents})-->
+<!--    </insert>-->
+
+    <insert id="insPostPic">
+        INSERT INTO board_pic(iboard, original_name, uuid_name) VALUES (#{iboard}, #{originalName}, #{uuidName})
     </insert>
 
     <update id="updPost">

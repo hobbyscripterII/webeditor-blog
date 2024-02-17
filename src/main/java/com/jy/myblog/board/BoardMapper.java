@@ -10,8 +10,10 @@ import java.util.List;
 public interface BoardMapper {
     List<BoardGetVo.Post> getPost(Pagination.Criteria criteria);
     BoardSelVo selPost(int iboard);
-    int insPost(BoardInsDto dto);
+    int insNullPost(BoardInsDto dto);
+//    int insPost(BoardInsDto dto);
     int updPost(BoardUpdDto dto);
+    int insPostPic(BoardInsPicDto dto);
     int delPost(int iboard);
     List<BoardTagGetVo> getTag(String tag);
     int getPostCnt(BoardGetCntDto dto);
