@@ -74,7 +74,7 @@ section {
     text-align: right;
 }
 
-.table-post-read {
+{
     height: 740px;
     display: block;
     overflow: auto;
@@ -126,4 +126,9 @@ section {
 .pagination {
     display: flex;
     justify-content: center;
+}
+
+#contents {
+    height: 605px;
+    overflow: auto;
 }
