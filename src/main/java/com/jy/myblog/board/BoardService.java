@@ -35,9 +35,13 @@ public class BoardService {
     public BoardSelVo selPost(int iboard) {
         BoardSelVo vo = mapper.selPost(iboard);
         List<BoardSelVo.File> files = mapper.getPostFile(iboard);
-        log.info("files = {}", files);
-        vo.setFiles(files);
-        log.info("vo.getFiles = {}", vo.getFiles());
+
+        if (files.size() > 0) {
+            vo.setFiles(files);
+            log.info("files = {}", files);
+            log.info("vo.getFiles = {}", vo.getFiles());
+        }
+
         return vo;
     }
 
@@ -82,7 +86,8 @@ public class BoardService {
             mapper.delPost(iboard);
             mapper.delPostPics(iboard);
             return SUCCESS;
-        } catch(Exception e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception();
         }
     }

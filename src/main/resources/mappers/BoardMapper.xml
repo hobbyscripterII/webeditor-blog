@@ -69,9 +69,9 @@
         DELETE FROM board WHERE iboard = #{iboard}
     </delete>
 
-<!--    <delete id="delPostPics">-->
-<!--        DELETE FROM board_pic WHERE iboard = #{iboard}-->
-<!--    </delete>-->
+    <delete id="delPostPics">
+        DELETE FROM board_pic WHERE iboard = #{iboard}
+    </delete>
 
     <delete id="delPostPic">
         DELETE FROM board_pic WHERE uuid_name = #{uuidName}

@@ -173,10 +173,6 @@ public class BoardController {
             // >>>>> 추후 첨부파일 수정 fl 추가
 
 
-
-
-
-
             return dto.getIboard();
         } catch (Exception e) {
             e.printStackTrace();
@@ -225,7 +221,8 @@ public class BoardController {
                 return FAIL;
             }
         } catch (Exception e) {
-            throw new Exception();
+            e.printStackTrace();
+            return FAIL;
         }
     }
 
