@@ -3,7 +3,6 @@ package com.jy.myblog.admin;
 import com.jy.myblog.admin.model.AdminGetPostVo;
 import com.jy.myblog.admin.model.AdminGetSubjectVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
-import com.jy.myblog.common.Const;
 import com.jy.myblog.common.Pagination;
 import com.jy.myblog.common.UploadUtil;
 import com.jy.myblog.common.Util;
@@ -52,9 +51,6 @@ public class AdminController {
     public int delPostFl(@RequestBody AdminUpdDto dto) throws Exception {
         try {
             int result = service.delPostFl(dto);
-
-            log.info("result = {}", result);
-            log.info("dto = {}", dto);
 
             if (Util.isNotNull(result)) {
                 for (Integer iboard : dto.getList()) {

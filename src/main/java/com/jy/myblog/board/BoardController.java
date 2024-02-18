@@ -14,15 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.jy.myblog.common.Const.FAIL;
 import static com.jy.myblog.common.Const.SUCCESS;
-import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Controller
@@ -142,18 +138,20 @@ public class BoardController {
             int result = service.updPost(dto);
 
             // >>>>> 첨부파일 fl
-            String path = "file/" + dto.getIboard();
-            String uploadPath = uploadUtil.fileUpload(path, file);
-            String originalName = file.getOriginalFilename();
+            if (file != null) {
+                String path = "file/" + dto.getIboard();
+                String uploadPath = uploadUtil.fileUpload(path, file);
+                String originalName = file.getOriginalFilename();
 //            String uuidName = uploadPath.substring(4); // db 저장용 이름 / resource 접근 경로 날림
 
-            BoardInsFileDto insFileDto = BoardInsFileDto.builder()
-                    .iboard(dto.getIboard())
-                    .originalName(originalName)
-                    .uuidName(uploadPath)
-                    .build();
+                BoardInsFileDto insFileDto = BoardInsFileDto.builder()
+                        .iboard(dto.getIboard())
+                        .originalName(originalName)
+                        .uuidName(uploadPath)
+                        .build();
 
-            int rows = service.insPostFile(insFileDto);
+                int rows = service.insPostFile(insFileDto);
+            }
 
             // >>>>> 이미지 수정 fl
             // pk로 db에 저장된 사진 uuid 가져옴
@@ -162,16 +160,26 @@ public class BoardController {
             List<String> isNullPics = getPostPics.stream()
                     // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
                     .filter(pic -> !dto.getContents().contains(pic))
-                    .collect(toList()); // 후처리
+                    .toList(); // 후처리
 
-            // 해당 게시글에 없는 사진만 삭제
-            for (String pic : isNullPics) {
-                service.delPostPic(pic); // db 사진 삭제
-                uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
+            if (Util.isNotNull(isNullPics.size())) {
+                // 해당 게시글에 없는 사진만 삭제
+                for (String pic : isNullPics) {
+                    service.delPostPic(pic); // db 사진 삭제
+                    uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
+                }
             }
-            return dto.getIboard();
 
+            // >>>>> 추후 첨부파일 수정 fl 추가
+
+
+
+
+
+
+            return dto.getIboard();
         } catch (Exception e) {
+            e.printStackTrace();
             return FAIL;
         }
     }

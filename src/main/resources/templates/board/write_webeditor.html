@@ -28,7 +28,6 @@
         <div style="display: flex; margin-bottom: 10px">
             <label class="td-info" style="text-align: center; margin: auto">제목</label>
             <input type="text" id="title" th:field="*{title}" class="form-control">
-            <input type="text" id="file" th:field="*{file}" class="form-control">
         </div>
 
         <!--        <tr>-->
@@ -74,9 +73,9 @@
         iboard = [[${iboard}]];
     }
 
-    console.log(contents);
+    console.log('contents = ' + contents);
     console.log('/board/imageupload?iboard=' + iboard);
-    console.log([[${iboard}]]);
+    console.log('iboard = ' + [[${iboard}]]);
 
     DecoupledEditor
         .create(document.querySelector('#editor'), {
@@ -130,7 +129,7 @@
             processData: false, // contentType false로 줬을 때 query string 생기는 것을 해제시킴
             data: formData,
             success: function (iboard) {
-                console.log(iboard);
+                console.log('iboard = ' + iboard);
                 if (iboard !== 0) {
                     if(confirm('게시글 ' + msg +'이 완료되었습니다. ' + msg +'된 게시글을 확인하시겠습니까?')) {
                         location.href='/board/read?subject=' + [[${dto.isubject}]] + '&board=' + iboard;

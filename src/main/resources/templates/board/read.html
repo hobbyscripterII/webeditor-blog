@@ -8,7 +8,7 @@
 
 <style>
     #contents {
-        height: 605px;
+        height: 565px;
     }
 </style>
 
@@ -29,9 +29,12 @@
         </tr>
         <tr>
             <td class="td-info">첨부파일</td>
-            <th:block th:each="f:${post.files}">
-                <td><a th:href="${f.getUuidName()}" th:text="${f.originalName}"></a></td>
-            </th:block>
+            <td style="background-color: #f7f7f7">
+                <th:block th:each="f:${post.files}">
+                    <a th:href="${f.getUuidName()}" th:text="${f.originalName}"></a>
+                </th:block>
+            </td>
+
         </tr>
         <tr>
             <td colspan="2">
