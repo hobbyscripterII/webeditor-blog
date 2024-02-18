@@ -23,15 +23,26 @@ public class UploadUtil {
         this.prefixPath = prefixPath;
     }
 
-    public String imageUpload(int iboard, MultipartHttpServletRequest request) {
+    public String imageUpload(String path, MultipartHttpServletRequest request) {
         MultipartFile uploadFile = request.getFile("upload");
         String fileName = getFileName(uploadFile);
-        String realPath = getPath(iboard, request);
+        String realPath = getPath(path);
         Path savePath_ = Paths.get(realPath, fileName);
         String savePath = String.valueOf(savePath_);
         // webconfig에서 해당 경로로 접근하면 외부 리소스에 접근시켜놓음
         // 외부 리소스 접근 시 /upload/는 yaml에 설정한 경로까지만 접근하기 때문에 뒤에 이동 경로를 지정해주지 않으면 resource 접근 x
-        String uploadPath = "/upload/" + iboard + "/" + fileName;
+        String uploadPath = "/upload/" + path + "/" + fileName;
+        log.info("uploadPath = {}", uploadPath);
+        uploadFile(savePath, uploadFile);
+        return uploadPath;
+    }
+
+    public String fileUpload(String path, MultipartFile uploadFile) {
+        String fileName = getFileName(uploadFile);
+        String realPath = getPath(path);
+        Path savePath_ = Paths.get(realPath, fileName);
+        String savePath = String.valueOf(savePath_);
+        String uploadPath = "/upload/" + path + "/" + fileName;
         log.info("uploadPath = {}", uploadPath);
         uploadFile(savePath, uploadFile);
         return uploadPath;
@@ -49,10 +60,10 @@ public class UploadUtil {
     }
 
     // 경로 반환
-    private String getPath(int iboard, MultipartHttpServletRequest request) {
-        String iboardToString = String.valueOf(iboard);
-        Path directoryPath_ = Paths.get(prefixPath, iboardToString);
+    private String getPath(String path) {
+        Path directoryPath_ = Paths.get(prefixPath, path);
         String directoryPath = String.valueOf(directoryPath_.toAbsolutePath());
+        log.info("directoryPath = {}", directoryPath);
 
         if (!Files.exists(directoryPath_)) { // 해당 경로에 디렉토리 없으면 생성
             try {
@@ -71,8 +82,8 @@ public class UploadUtil {
     }
 
     // 디렉토리 + 파일 삭제 트리거
-    public void delDirTrigger(int iboard) {
-        deleteDirectory(prefixPath + iboard);
+    public void delDirTrigger(String suffixPath) {
+        deleteDirectory(prefixPath + suffixPath);
     }
 
     // '하위 디렉토리 > 파일' 삭제

@@ -6,13 +6,19 @@
       layout:fragment="section">
 
 <style>
-    .ck.ck-editor__main>.ck-editor__editable {
-        height: 680px;
-        margin-bottom: 10px;
-    }
+    /*.ck.ck-editor__main>.ck-editor__editable {*/
+    /*    height: 660px;*/
+    /*    margin-bottom: 10px;*/
+    /*}*/
 
     .ck.ck-editor {
         position: static;
+    }
+
+    .ck.ck-editor__editable.ck-rounded-corners:not(.ck-editor__nested-editable) {
+        border: 1px solid lightgray;
+        /*height: 650px;*/
+        height: 585px;
     }
 </style>
 
@@ -22,6 +28,7 @@
         <div style="display: flex; margin-bottom: 10px">
             <label class="td-info" style="text-align: center; margin: auto">제목</label>
             <input type="text" id="title" th:field="*{title}" class="form-control">
+            <input type="text" id="file" th:field="*{file}" class="form-control">
         </div>
 
         <!--        <tr>-->
@@ -33,7 +40,11 @@
         <!--            <td colspan="3"><div class="form-control" id="tag-list"><div id="tag-list-child"></div></div></td>-->
         <!--        </tr>-->
 
+        <div id="toolbar-container"></div>
         <div id="editor" class="table table-post-read"></div>
+        <form id="f">
+            <input class="form-control" type="file" style="margin-bottom: 15px">
+        </form>
     </div>
 
     <div class="div-btn-wrap">
@@ -54,7 +65,8 @@
     let contents = [[${dto.contents}]];
 
     console.log('iboard = ' +[[${iboard}]]);
-    console.log('dto.iboard =' + [[${dto.iboard}]]);
+    console.log('dto.iboard = ' + [[${dto.iboard}]]);
+    console.log('dto = ' + dto);
 
     if([[${iboard}]] == null) {
         iboard = [[${dto.iboard}]];
@@ -66,7 +78,7 @@
     console.log('/board/imageupload?iboard=' + iboard);
     console.log([[${iboard}]]);
 
-    ClassicEditor
+    DecoupledEditor
         .create(document.querySelector('#editor'), {
             ckfinder: {
                 uploadUrl: '/board/imageupload?iboard=' + iboard
@@ -74,8 +86,10 @@
         })
         .then(e => {
             editor = e;
+            const toolbarContainer = document.querySelector('#toolbar-container');
+            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
 
-            if(dto != null) {
+            if(contents != null) {
                 editor.setData(contents);
             }
 
@@ -97,17 +111,24 @@
             iboard = [[${dto.iboard}]];
         }
 
+        // form id 접근 -> input type - file인 0번째 요소 접근 -> 해당 file에 접근
+        const file = $('#f input[type=file]')[0].files[0];
         const dto = {
             "iboard" : iboard,
             "title" : $('#title').val(),
-            "contents" : editor.getData()
+            "contents" : editor.getData(),
         };
+
+        const formData = new FormData(); // controller에서 @RequestPart로 받아야 함
+        formData.append("file", file); // @RequestPart의 value 속성으로 key 값을 가져올 수 있음
+        formData.append("dto", new Blob([JSON.stringify(dto)], {type: "application/json"}));
 
         $.ajax({
             type: 'put',
             url: '/board',
-            contentType: "application/json",
-            data: JSON.stringify(dto),
+            contentType: false, // x-www-form-urlencoded로 파싱 x
+            processData: false, // contentType false로 줬을 때 query string 생기는 것을 해제시킴
+            data: formData,
             success: function (iboard) {
                 console.log(iboard);
                 if (iboard !== 0) {
@@ -121,6 +142,25 @@
                 }
             }
         });
+
+        // $.ajax({
+        //     type: 'put',
+        //     url: '/board',
+        //     contentType: "application/json",
+        //     data: JSON.stringify(dto), form,
+        //     success: function (iboard) {
+        //         console.log(iboard);
+        //         // if (iboard !== 0) {
+        //         //     if(confirm('게시글 ' + msg +'이 완료되었습니다. ' + msg +'된 게시글을 확인하시겠습니까?')) {
+        //         //         location.href='/board/read?subject=' + [[${dto.isubject}]] + '&board=' + iboard;
+        //         //     } else {
+        //         //         location.href='/board/list?subject=' + [[${dto.isubject}]]
+        //         //     }
+        //         // } else {
+        //         //     alert("게시글 ' + msg +'에 실패하였습니다. 잠시 후 다시 시도해주세요.");
+        //         // }
+        //     }
+        // });
     }
 
     // >>>>> 태그 출력(보류)

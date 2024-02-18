@@ -7,7 +7,9 @@
       layout:fragment="section">
 
 <style>
-
+    #contents {
+        height: 605px;
+    }
 </style>
 
 <section>
@@ -24,6 +26,12 @@
         <tr>
             <td class="td-info">작성일</td>
             <td th:text="${post.createdAt}">작성일</td>
+        </tr>
+        <tr>
+            <td class="td-info">첨부파일</td>
+            <th:block th:each="f:${post.files}">
+                <td><a th:href="${f.getUuidName()}" th:text="${f.originalName}"></a></td>
+            </th:block>
         </tr>
         <tr>
             <td colspan="2">

@@ -3,6 +3,7 @@ package com.jy.myblog.board;
 import com.jy.myblog.board.model.*;
 import com.jy.myblog.common.Const;
 import com.jy.myblog.common.Pagination;
+import com.jy.myblog.common.UploadUtil;
 import com.jy.myblog.common.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,6 @@ import static com.jy.myblog.common.Const.SUCCESS;
 public class BoardService {
     private final BoardMapper mapper;
 
-
     public List<BoardGetVo.Post> getPost(Pagination.Criteria criteria) {
         return mapper.getPost(criteria);
     }
@@ -28,8 +28,17 @@ public class BoardService {
         return mapper.getPostPics(iboard);
     }
 
+    public List<BoardSelVo.File> getPostFile(int iboard) {
+        return mapper.getPostFile(iboard);
+    }
+
     public BoardSelVo selPost(int iboard) {
-        return mapper.selPost(iboard);
+        BoardSelVo vo = mapper.selPost(iboard);
+        List<BoardSelVo.File> files = mapper.getPostFile(iboard);
+        log.info("files = {}", files);
+        vo.setFiles(files);
+        log.info("vo.getFiles = {}", vo.getFiles());
+        return vo;
     }
 
     @Transactional
@@ -45,6 +54,11 @@ public class BoardService {
     @Transactional
     public int insPostPic(BoardInsPicDto dto) {
         return mapper.insPostPic(dto);
+    }
+
+    @Transactional
+    public int insPostFile(BoardInsFileDto dto) {
+        return mapper.insPostFile(dto);
     }
 
     @Transactional

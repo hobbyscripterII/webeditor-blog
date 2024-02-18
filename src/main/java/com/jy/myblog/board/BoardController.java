@@ -39,16 +39,17 @@ public class BoardController {
 //            uploadUtil.delDirTrigger(iboard); // 글 등록, 수정 시 원래있던 사진 삭제 후 재업로드
 
             ModelAndView mv = new ModelAndView("jsonView");
+            String path = "image/" + iboard; // 이미지 저장시엔 'image' 경로 반환 / 파일 업로드는 'file' 경로 반환
             // local에 이미지 업로드 후 UUID + 확장자 얻어냄
-            String uploadPath = uploadUtil.imageUpload(iboard, request);
+            String uploadPath = uploadUtil.imageUpload(path, request);
             MultipartFile file = request.getFile("upload");
             String originalName = file.getOriginalFilename();
-            String uuidName = uploadPath.substring(7); // db 저장용 이름 / resource 접근 경로 날림
+//            String uuidName = uploadPath.substring(6); // db 저장용 이름 / resource 접근 경로 날림
 
             BoardInsPicDto dto = BoardInsPicDto.builder()
                     .iboard(iboard)
                     .originalName(originalName)
-                    .uuidName(uuidName)
+                    .uuidName(uploadPath)
                     .build();
 
             int rows = service.insPostPic(dto);
@@ -106,6 +107,8 @@ public class BoardController {
     public String insPost(@RequestParam(name = "subject") int isubject, Model model) {
         try {
             String title = subjectToStringConverter(isubject);
+            // >>>>> 첨부파일 구현 후 주석 해제
+            // 글 작성 버튼 클릭 시 pk 값 +
             BoardInsDto dto = BoardInsDto.builder()
                     .iuser(getUserPk())
                     .isubject(isubject)
@@ -116,7 +119,8 @@ public class BoardController {
 
             model.addAttribute("dto", new BoardInsDto());
             model.addAttribute("title", title);
-            model.addAttribute("iboard", iboard);
+            model.addAttribute("iboard", iboard); // >>>>> 첨부파일 구현 후 주석 해제
+//            model.addAttribute("iboard", 1000); // >>>>> 첨부파일 테스터용
             model.addAttribute("subject", isubject); // *
 
             return "/board/write_webeditor";
@@ -133,9 +137,25 @@ public class BoardController {
 
     @ResponseBody
     @PutMapping
-    public int updPost(@RequestBody BoardUpdDto dto) throws Exception {
+    public int updPost(@RequestPart("dto") BoardUpdDto dto, @RequestPart(value = "file", required = false) MultipartFile file) throws Exception {
         try {
             int result = service.updPost(dto);
+
+            // >>>>> 첨부파일 fl
+            String path = "file/" + dto.getIboard();
+            String uploadPath = uploadUtil.fileUpload(path, file);
+            String originalName = file.getOriginalFilename();
+//            String uuidName = uploadPath.substring(4); // db 저장용 이름 / resource 접근 경로 날림
+
+            BoardInsFileDto insFileDto = BoardInsFileDto.builder()
+                    .iboard(dto.getIboard())
+                    .originalName(originalName)
+                    .uuidName(uploadPath)
+                    .build();
+
+            int rows = service.insPostFile(insFileDto);
+
+            // >>>>> 이미지 수정 fl
             // pk로 db에 저장된 사진 uuid 가져옴
             List<String> getPostPics = service.getPostPics(dto.getIboard());
             // 해당 게시글에 없는 사진만 뽑아냄(db, 디렉토리 정리용)
@@ -156,12 +176,42 @@ public class BoardController {
         }
     }
 
+//    @ResponseBody
+//    @PutMapping
+//    public int updPost(@RequestBody BoardUpdDto dto, @RequestParam(name = "file") MultipartFile file) throws Exception {
+//        try {
+//            log.info("dto = {}", dto);
+//            log.info("file = {}", file);
+//
+////            int result = service.updPost(dto);
+////            // pk로 db에 저장된 사진 uuid 가져옴
+////            List<String> getPostPics = service.getPostPics(dto.getIboard());
+////            // 해당 게시글에 없는 사진만 뽑아냄(db, 디렉토리 정리용)
+////            List<String> isNullPics = getPostPics.stream()
+////                    // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
+////                    .filter(pic -> !dto.getContents().contains(pic))
+////                    .collect(toList()); // 후처리
+////
+////            // 해당 게시글에 없는 사진만 삭제
+////            for (String pic : isNullPics) {
+////                service.delPostPic(pic); // db 사진 삭제
+////                uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
+////            }
+////            return dto.getIboard();
+//            return SUCCESS;
+//
+//        } catch (Exception e) {
+//            return FAIL;
+//        }
+//    }
+
     @ResponseBody
     @DeleteMapping
     public int delPost(@RequestParam(name = "iboard") int iboard) throws Exception {
         try {
             if (Util.isNotNull(service.delPost(iboard))) {
-                uploadUtil.delDirTrigger(iboard);
+                uploadUtil.delDirTrigger("/image/" + iboard);
+                uploadUtil.delDirTrigger("/file/" + iboard);
                 return SUCCESS;
             } else {
                 return FAIL;

@@ -7,7 +7,7 @@
         INNER JOIN user b
         ON a.iuser = b.iuser
         <where>
-            a.public_fl = 'Y'
+            a.public_fl = 'Y' AND title != '' AND contents != ''
             <if test="subject != 0">
                 AND a.isubject = #{subject}
             </if>
@@ -22,6 +22,12 @@
     <select id="getPostPics">
         SELECT uuid_name
         FROM board_pic
+        WHERE iboard = #{iboard}
+    </select>
+
+    <select id="getPostFile">
+        SELECT original_name originalName, uuid_name uuidName
+        FROM board_file
         WHERE iboard = #{iboard}
     </select>
 
@@ -45,6 +51,11 @@
 
     <insert id="insPostPic">
         INSERT INTO board_pic(iboard, original_name, uuid_name) VALUES (#{iboard}, #{originalName}, #{uuidName})
+    </insert>
+
+    <insert id="insPostFile">
+        INSERT INTO board_file(iboard, original_name, uuid_name) VALUES
+        (#{iboard}, #{originalName}, #{uuidName})
     </insert>
 
     <update id="updPost">

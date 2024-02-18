@@ -58,7 +58,8 @@ public class AdminController {
 
             if (Util.isNotNull(result)) {
                 for (Integer iboard : dto.getList()) {
-                    uploadUtil.delDirTrigger(iboard);
+                    uploadUtil.delDirTrigger("/image/" + iboard);
+                    uploadUtil.delDirTrigger("/file/" + iboard);
                 }
                 return SUCCESS;
             } else {
