@@ -23,6 +23,7 @@
                 </th:block>
             </select>
         </div>
+
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             <button type="button" class="btn btn-info">카테고리 변경</button>
             <div class="btn-group" role="group">
@@ -52,7 +53,7 @@
     <table class="table table-hover table-admin">
         <thead>
         <tr>
-            <th style="width: 100px">체크 여부</th>
+            <th style="width: 170px">체크박스 전체 선택 <input type="checkbox" class="form-check-input" id="input-check-flag" th:onclick="checkFl()"> </th>
             <th>글 번호</th>
             <th>공개 여부</th>
             <th>카테고리</th>
@@ -68,7 +69,7 @@
             <td th:text="${l.publicFl}">공개 여부</td>
             <td th:text="${l.subject}">카테고리</td>
             <td th:text="${l.nm}">작성자</td>
-            <td th:text="${l.title}">제목</td>
+            <td><a th:href="@{/board/read(subject=${l.isubject}, board=${l.iboard})}"><th:block th:text="${l.title}"></th:block></a></td>
             <td th:text="${l.createdAt}">작성일</td>
         </tr>
         </tbody>
@@ -186,6 +187,21 @@
         }
         // 없으면 없는대로 반환함, fl용
         return arr;
+    }
+
+    function checkFl() {
+        const isChecked = $('#input-check-flag').is(':checked');
+        const checkbox = $('input[name=check-iboard]');
+
+        if (isChecked) {
+            checkbox.each(function () {
+                checkbox.prop('checked', true);
+            });
+        } else {
+            checkbox.each(function () {
+                checkbox.prop('checked', false);
+            });
+        }
     }
 </script>
 </html>

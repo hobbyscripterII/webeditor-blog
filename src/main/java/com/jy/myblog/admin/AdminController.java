@@ -30,8 +30,6 @@ public class AdminController {
     @GetMapping
     public String admin(@RequestParam(name = "subject", required = false, defaultValue = "0") int isubject, Pagination.Criteria criteria, Model model) {
         int cnt = service.getPostCnt(isubject);
-        log.info("cnt = {}", cnt);
-
         List<AdminGetPostVo> list = service.getPostAdmin(criteria);
         List<AdminGetSubjectVo> subjects = service.getSubject();
         Pagination pagination = new Pagination(criteria, cnt);

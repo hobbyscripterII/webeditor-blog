@@ -164,7 +164,7 @@ public class BoardController {
                 uploadUtil.delDirTrigger(iboard);
                 return SUCCESS;
             } else {
-                throw new Exception(); // rollback
+                return FAIL;
             }
         } catch (Exception e) {
             throw new Exception();

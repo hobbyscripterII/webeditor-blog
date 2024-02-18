@@ -63,8 +63,14 @@ public class BoardService {
     }
 
     @Transactional
-    public int delPost(int iboard) {
-        return mapper.delPost(iboard);
+    public int delPost(int iboard) throws Exception {
+        try {
+            mapper.delPost(iboard);
+            mapper.delPostPics(iboard);
+            return SUCCESS;
+        } catch(Exception e) {
+            throw new Exception();
+        }
     }
 
     @Transactional

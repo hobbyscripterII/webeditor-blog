@@ -17,6 +17,7 @@ public interface BoardMapper {
     int insPostPic(BoardInsPicDto dto);
     int delPost(int iboard);
     int delPostPic(String uuidName);
+    int delPostPics(int iboard);
     List<BoardTagGetVo> getTag(String tag);
     int getPostCnt(BoardGetCntDto dto);
 }
