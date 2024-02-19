@@ -2,7 +2,7 @@
 
 <!-- <img src="https://velog.velcdn.com/images/wruoma/post/5cc3d467-11db-4ee0-919d-df6527eb665a/image.png" width="600" height=""/></a> -->
 
-### 📅 프로젝트 기간 2024.02.07 ~ 2024.02.17
+### 📅 프로젝트 기간 2024.02.07 ~ 2024.02.19
 
 ## ✍️기획 의도
 > 백엔드 학습 역량과 SSR 구현 역량을 키우기위해 해당 프로젝트를 기획하게 되었습니다. <br>
