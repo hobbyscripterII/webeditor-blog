@@ -33,10 +33,12 @@ public class BoardController {
     private final BoardService service;
     private final UploadUtil uploadUtil;
 
-    @GetMapping("/file/download/{iboardfile}")
-    public ResponseEntity<Resource> download(@PathVariable int iboardfile) throws Exception {
+    @GetMapping("/file/download")
+    public ResponseEntity<Resource> download(@RequestParam(name = "iboardfile") int iboardfile) throws Exception {
         try {
+            log.info("iboardfile = {}", iboardfile);
             BoardSelVo.File file = service.selPostFile(iboardfile);
+            log.info("file = {}", file);
             String downloadPath = uploadUtil.getDownloadPath(file.getUuidName());
             Resource resource = new UrlResource(Paths.get(downloadPath).toUri());
 

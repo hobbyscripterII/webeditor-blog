@@ -25,6 +25,7 @@ public class UploadUtil {
 
     public String getDownloadPath(String uuidName) {
         uuidName = uuidName.substring(7);
+        log.info("uuidName = {}", uuidName);
         Path path = Paths.get(prefixPath, uuidName);
         log.info("path = {}", path.toAbsolutePath());
         return String.valueOf(path.toAbsolutePath());
