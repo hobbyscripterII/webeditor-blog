@@ -31,7 +31,7 @@
             <td class="td-info">첨부파일</td>
             <td style="background-color: #f7f7f7">
                 <th:block th:each="f:${post.files}">
-                    <a th:href="${f.getUuidName()}" th:text="${f.originalName}"></a>
+                    <a th:href="@{'file/download/' + ${f.iboardfile}}" th:text="${f.originalName}"></a>
                 </th:block>
             </td>
 

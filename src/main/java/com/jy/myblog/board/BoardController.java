@@ -5,6 +5,10 @@ import com.jy.myblog.common.*;
 import com.jy.myblog.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriUtils;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -27,6 +32,21 @@ import static com.jy.myblog.common.Const.SUCCESS;
 public class BoardController {
     private final BoardService service;
     private final UploadUtil uploadUtil;
+
+    @GetMapping("/file/download/{iboardfile}")
+    public ResponseEntity<Resource> download(@PathVariable int iboardfile) throws Exception {
+        try {
+            BoardSelVo.File file = service.selPostFile(iboardfile);
+            String downloadPath = uploadUtil.getDownloadPath(file.getUuidName());
+            Resource resource = new UrlResource(Paths.get(downloadPath).toUri());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + UriUtils.encode(file.getOriginalName(), "UTF-8") + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
 
     // 웹에디터 이미지 첨부 시 해당 controller로 이동
     @RequestMapping("/imageupload")

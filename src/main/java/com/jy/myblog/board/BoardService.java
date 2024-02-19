@@ -45,6 +45,10 @@ public class BoardService {
         return vo;
     }
 
+    public BoardSelVo.File selPostFile(int iboardfile) {
+        return mapper.selPostFile(iboardfile);
+    }
+
     @Transactional
     public int insNullPost(BoardInsDto dto) {
         return mapper.insNullPost(dto);

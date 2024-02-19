@@ -23,6 +23,13 @@ public class UploadUtil {
         this.prefixPath = prefixPath;
     }
 
+    public String getDownloadPath(String uuidName) {
+        uuidName = uuidName.substring(7);
+        Path path = Paths.get(prefixPath, uuidName);
+        log.info("path = {}", path.toAbsolutePath());
+        return String.valueOf(path.toAbsolutePath());
+    }
+
     public String imageUpload(String path, MultipartHttpServletRequest request) {
         MultipartFile uploadFile = request.getFile("upload");
         String fileName = getFileName(uploadFile);

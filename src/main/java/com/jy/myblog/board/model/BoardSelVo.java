@@ -16,6 +16,8 @@ public class BoardSelVo {
 
     @Data
     public static class File {
+        private int iboardfile;
+        private int iboard;
         private String originalName;
         private String uuidName;
     }

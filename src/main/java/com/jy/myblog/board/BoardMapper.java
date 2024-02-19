@@ -12,6 +12,7 @@ public interface BoardMapper {
     List<String> getPostPics(int iboard);
     List<BoardSelVo.File> getPostFile(int iboard);
     BoardSelVo selPost(int iboard);
+    BoardSelVo.File selPostFile(int iboardfile);
     int insNullPost(BoardInsDto dto);
 //    int insPost(BoardInsDto dto);
     int updPost(BoardUpdDto dto);

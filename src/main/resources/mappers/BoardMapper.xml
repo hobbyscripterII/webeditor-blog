@@ -26,9 +26,15 @@
     </select>
 
     <select id="getPostFile">
-        SELECT original_name originalName, uuid_name uuidName
+        SELECT iboard, iboardfile, original_name originalName, uuid_name uuidName
         FROM board_file
         WHERE iboard = #{iboard}
+    </select>
+
+    <select id="selPostFile">
+        SELECT iboard, original_name originalName, uuid_name uuidName
+        FROM board_file
+        WHERE iboardfile = #{iboardfile}
     </select>
 
     <select id="selPost">
