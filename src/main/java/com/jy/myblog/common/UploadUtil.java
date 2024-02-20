@@ -46,14 +46,19 @@ public class UploadUtil {
     }
 
     public String fileUpload(String path, MultipartFile uploadFile) {
-        String fileName = getFileName(uploadFile);
-        String realPath = getPath(path);
-        Path savePath_ = Paths.get(realPath, fileName);
-        String savePath = String.valueOf(savePath_);
-        String uploadPath = "/upload/" + path + "/" + fileName;
-        log.info("uploadPath = {}", uploadPath);
-        uploadFile(savePath, uploadFile);
-        return uploadPath;
+        try {
+            String fileName = getFileName(uploadFile);
+            String realPath = getPath(path);
+            Path savePath_ = Paths.get(realPath, fileName);
+            String savePath = String.valueOf(savePath_);
+            String uploadPath = "/upload/" + path + "/" + fileName;
+            log.info("uploadPath = {}", uploadPath);
+            uploadFile(savePath, uploadFile);
+            return uploadPath;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // 파일, 이미지 저장

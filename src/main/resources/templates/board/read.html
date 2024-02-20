@@ -27,15 +27,16 @@
             <td class="td-info">작성일</td>
             <td th:text="${post.createdAt}">작성일</td>
         </tr>
-        <tr>
-            <td class="td-info">첨부파일</td>
-            <td style="background-color: #f7f7f7">
-                <th:block th:each="f:${post.files}">
-                    <a th:href="@{file/download(iboardfile=${f.iboardfile})}" th:text="${f.originalName}"></a>
-                </th:block>
-            </td>
-
-        </tr>
+        <th:block th:if="${post.files != null}">
+            <tr>
+                <td class="td-info">첨부파일</td>
+                <td style="background-color: #f7f7f7">
+                    <th:block th:if="${#lists.size(post.files) != 0}"  th:each="f:${post.files}">
+                        <a th:href="@{'file/download/' + ${f.iboardfile}}" th:text="${f.originalName}"></a>
+                    </th:block>
+                </td>
+            </tr>
+        </th:block>
         <tr>
             <td colspan="2">
                 <div id="contents"></div>

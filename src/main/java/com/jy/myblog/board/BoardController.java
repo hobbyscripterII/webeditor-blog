@@ -163,6 +163,12 @@ public class BoardController {
             if (file != null) {
                 String path = "file/" + dto.getIboard();
                 String uploadPath = uploadUtil.fileUpload(path, file);
+
+                if(Util.isNotNull(uploadPath)) {
+                    uploadUtil.delDirTrigger("/file/" + dto.getIboard());
+                    return 2; // 추후 수정
+                }
+
                 String originalName = file.getOriginalFilename();
 //            String uuidName = uploadPath.substring(4); // db 저장용 이름 / resource 접근 경로 날림
 

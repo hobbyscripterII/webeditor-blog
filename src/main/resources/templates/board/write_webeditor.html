@@ -130,14 +130,16 @@
             data: formData,
             success: function (iboard) {
                 console.log('iboard = ' + iboard);
-                if (iboard !== 0) {
+                if ( iboard == 0) {
+                    alert("게시글 ' + msg +'에 실패하였습니다. 잠시 후 다시 시도해주세요.");
+                } else if(iboard == 2) {
+                    alert("첨부파일 용량이 초과했습니다. 다른 파일을 선택해주세요.");
+                } else if(iboard !== 0) {
                     if(confirm('게시글 ' + msg +'이 완료되었습니다. ' + msg +'된 게시글을 확인하시겠습니까?')) {
                         location.href='/board/read?subject=' + [[${dto.isubject}]] + '&board=' + iboard;
                     } else {
                         location.href='/board/list?subject=' + [[${dto.isubject}]]
                     }
-                } else {
-                    alert("게시글 ' + msg +'에 실패하였습니다. 잠시 후 다시 시도해주세요.");
                 }
             }
         });
