@@ -1,6 +1,6 @@
 # 개인 프로젝트 '기술 블로그'✍️
 
-<!-- <img src="https://velog.velcdn.com/images/wruoma/post/5cc3d467-11db-4ee0-919d-df6527eb665a/image.png" width="600" height=""/></a> -->
+![image](https://github.com/hobbyscripterII/webeditor-blog/assets/135996109/03378c5b-857f-4117-9cdd-79afab05e0af)
 
 ### 📅 프로젝트 기간 2024.02.07 ~ 2024.02.19
 
