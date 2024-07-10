@@ -107,7 +107,7 @@ public class BoardController {
 
         model.addAttribute("list", list);
         model.addAttribute("pagination", pagination);
-        return "/board/list";
+        return "board/list";
     }
 
     @GetMapping("/read")
@@ -118,7 +118,7 @@ public class BoardController {
 
         model.addAttribute("title", title);
         model.addAttribute("post", post);
-        return "/board/read";
+        return "board/read";
     }
 
     @GetMapping("/write")
@@ -141,7 +141,7 @@ public class BoardController {
 //            model.addAttribute("iboard", 1000); // >>>>> 첨부파일 테스터용
             model.addAttribute("subject", isubject); // *
 
-            return "/board/write_webeditor";
+            return "board/write_webeditor";
         } catch (Exception e) {
             throw new RuntimeException("failed insert post", e);
         }
@@ -150,7 +150,7 @@ public class BoardController {
     @GetMapping("/update")
     public String updPost(@RequestParam(name = "board") int iboard, Model model) {
         model.addAttribute("dto", service.selPost(iboard));
-        return "/board/write_webeditor";
+        return "board/write_webeditor";
     }
 
     @ResponseBody
@@ -203,7 +203,6 @@ public class BoardController {
 
             return dto.getIboard();
         } catch (Exception e) {
-            e.printStackTrace();
             return FAIL;
         }
     }

@@ -13,13 +13,13 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "/login";
+        return "login";
     }
 
     // 권한 없을 경우 해당 페이지 출력 - (예) admin ...
     @GetMapping("/access-denied")
     public String accessDenied() {
-        return "/error/access-denied";
+        return "error/access-denied";
     }
 
     // >>>>> spring security 적용 전 방법 - 사용 x >>>>>

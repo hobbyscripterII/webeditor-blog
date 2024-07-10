@@ -37,7 +37,7 @@ public class AdminController {
         model.addAttribute("subject", criteria.getSubject());
         model.addAttribute("subjects", subjects);
         model.addAttribute("pagination", pagination);
-        return "/admin/admin";
+        return "admin/admin";
     }
 
     @ResponseBody
