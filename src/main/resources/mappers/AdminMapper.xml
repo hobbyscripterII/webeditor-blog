@@ -33,16 +33,20 @@
         </foreach>
     </update>
 
-    <delete id="delPostFl">
-        <foreach collection="list" item="iboard" separator=";">
-            DELETE FROM board where iboard = #{iboard}
+    <delete id="delPostPicFl">
+        DELETE FROM board_pic WHERE iboard IN(
+        <foreach collection="list" item="iboard" separator=",">
+            #{iboard}
         </foreach>
+        )
     </delete>
 
-    <delete id="delPostPicFl">
-        <foreach collection="list" item="iboard" separator=";">
-            DELETE FROM board_pic where iboard = #{iboard}
+    <delete id="delPostFl">
+        DELETE FROM board WHERE iboard IN(
+        <foreach collection="list" item="iboard" separator=",">
+            #{iboard}
         </foreach>
+        )
     </delete>
 
     <select id="getSubject">

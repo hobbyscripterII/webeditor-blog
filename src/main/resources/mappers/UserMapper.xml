@@ -3,7 +3,7 @@
 <mapper namespace="com.jy.myblog.user.UserMapper">
     <select id="getUser">
         SELECT iuser, uid, upw, nm, role
-        FROM USER
+        FROM user
         WHERE uid = #{uid}
     </select>
 </mapper>

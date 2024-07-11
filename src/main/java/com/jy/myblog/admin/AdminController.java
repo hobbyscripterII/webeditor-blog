@@ -49,8 +49,11 @@ public class AdminController {
     @ResponseBody
     @DeleteMapping
     public int delPostFl(@RequestBody AdminUpdDto dto) throws Exception {
+        log.info("dto = {}", dto);
+
         try {
             int result = service.delPostFl(dto);
+            log.info("result = {}", result);
 
             if (Util.isNotNull(result)) {
                 for (Integer iboard : dto.getList()) {

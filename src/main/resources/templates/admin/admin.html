@@ -99,22 +99,24 @@
             alert('최소 1개는 선택해주세요.');
             return false;
         } else {
-            const dto = {"list" : arr};
+            if(confirm('삭제된 게시글은 복구할 수 없습니다. 정말로 삭제하시겠습니까?')) {
+                const dto = {"list" : arr};
 
-            $.ajax({
-                type: 'delete',
-                url: '/admin',
-                contentType: "application/json",
-                data: JSON.stringify(dto),
-                success: function (result) {
-                    if (result === 1) {
-                        alert('정상적으로 삭제되었습니다.')
-                        location.reload();
-                    } else {
-                        alert('잠시 후 다시 시도하세요.')
+                $.ajax({
+                    type: 'delete',
+                    url: '/admin',
+                    contentType: "application/json",
+                    data: JSON.stringify(dto),
+                    success: function (result) {
+                        if (result === 1) {
+                            alert('정상적으로 삭제되었습니다.')
+                            location.reload();
+                        } else {
+                            alert('잠시 후 다시 시도하세요.')
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 

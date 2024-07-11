@@ -53,8 +53,8 @@ public class AdminService {
     @Transactional
     public int delPostFl(AdminUpdDto dto) throws Exception {
         try {
-            mapper.delPostFl(dto);
             mapper.delPostPicFl(dto);
+            mapper.delPostFl(dto);
             return SUCCESS;
         } catch (Exception e) {
             throw new Exception();
