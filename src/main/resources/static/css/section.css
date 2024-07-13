@@ -1,134 +1,24 @@
-section {
-    box-sizing: border-box;
-    width: 100%;
-    /*position: relative;*/
-    /*left: 200px;*/
-    /*padding-left: 200px;*/
-    margin: 20px 15px 0 220px;
-    padding: 0 5px 0 5px;
-    height: 100vh;
-    overflow: hidden;
-}
+section { box-sizing: border-box; width: 100%; position: relative; top: 44px; overflow: hidden; padding: 15px; }
+#memoji { width: 300px; }
+.template { width: 100%; height: 100%; }
+.title { font-size: 50px; font-weight: bold; }
 
-/** 슬라이드 컨테이너 **/
-.slide-container, .slide {
-    height: 1000px;
-    margin: 0 auto;
-}
+.div-btn-wrap { width: 100%; text-align: right; }
 
-.slide-container {
-    overflow: auto;
-    scroll-snap-type: y mandatory;
-    /*position: relative;*/
-    /*margin-left: 200px;*/
-}
+#div-error-msg { height: 25px; line-height: 25px; color: red; font-weight: bold; }
 
-.slide {
-    scroll-snap-align: start;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 1s;
-}
+.td-contents { width: 50%; }
 
-.slide:nth-of-type(1) {
-    /* border: 3px solid red; */
-}
+/** Spring Security 에러 메세지 **/
+.table th, .table td { vertical-align: top; border-top: none !important; padding: 0.5rem !important; }
 
-.slide:nth-of-type(2) {
-    /* border: 3px solid orange; */
-}
+/** 마크다운 **/
+#div-markdown { height: 80vh; overflow: auto; text-align: left; }
 
-.slide:nth-of-type(3) {
-    /* border: 3px solid yellow; */
-}
+/** 태그 **/
+#tag-list { width: 100%; display: none; }
+.div-tag { background-color: blue; border-radius: 10px; color: white; }
 
-.slide:nth-of-type(4) {
-    /* border: 3px solid green; */
-}
-
-.slide:nth-of-type(5) {
-    /* border: 3px solid blue; */
-}
-
-.template {
-    /* border: 1px solid gray; */
-    width: 100%;
-    height: 100%;
-}
-
-/** 상단 타이틀 텍스트 **/
-.title {
-    /*padding-left: 20px;*/
-    font-family: Poppins;
-    font-size: 50px;
-    font-weight: bold;
-}
-
-.td-info {
-    width: 100px;
-}
-
-.div-btn-wrap {
-    width: 100%;
-    text-align: right;
-}
-
-{
-    height: 740px;
-    display: block;
-    overflow: auto;
-}
-
-#div-error-msg {
-    height: 25px;
-    line-height: 25px;
-    color: red;
-    font-weight: bold;
-}
-
-.td-contents {
-    width: 50%;
-    /*height: 80vh;*/
-}
-
-/** spring security 에러 메세지 **/
-.table th, .table td {
-    vertical-align: top;
-    border-top: none !important;
-    /*text-align: center;*/
-    padding: 0.5rem !important;
-}
-
-#div-markdown {
-    height: 80vh;
-    overflow: auto;
-    text-align: left;
-}
-
-#tag-list {
-    width: 100%;
-    display: none;
-}
-
-.div-tag {
-    background-color: blue;
-    border-radius: 10px;
-    color: white;
-}
-
-.form-check-input {
-    position: static;
-    margin-top: 0;
-    margin-left: 0;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-}
-
-#contents {
-    height: 680px;
-    overflow: auto;
-}
+.form-check-input { position: static; margin-top: 0; margin-left: 0; }
+.pagination { display: flex; justify-content: center; }
+#contents { height: 680px; overflow: auto; }

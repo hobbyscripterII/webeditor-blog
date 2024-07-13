@@ -3,38 +3,27 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="nav">
-
 <nav>
-    <a href="/"><img id="img-title" src="/img/img-title.jpg"></a>
-    <li style="margin: 5px"><a id="name" href="/">이주영</a></li>
-    <li style="margin: 5px">JAVA 백엔드 개발자</li>
-    <li><a id="a1" href="/#s-1">ABOUT</a></li>
-    <li><a id="a2" href="/#s-2">SKILLS</a></li>
-    <li><a id="a3" href="/#s-3">PROJECTS</a></li>
-<!--    <li><a id="a4" href="/#s-4">BLOG</a></li>-->
-    <li><a id="a5" href="/#s-5">CONTACT</a></li>
-    <br>
-    <li><a th:href="@{/board/list?subject=4}">JAVA</a></li>
-    <li><a th:href="@{/board/list?subject=5}">SPRING</a></li>
-    <li><a th:href="@{/board/list?subject=6}">DOCKER</a></li>
+    <a href="/" id="nav-title">나의 블로그.</a>
+    <a href="#" class="nav-menu">공지</a>
+    <a th:href="@{/board/list?subject=5}" class="nav-menu">개발</a>
+    <a href="#" class="nav-menu">일기</a>
+    <a href="#" class="nav-menu">SONY A6000</a>
+    <a href="#" class="nav-menu">방명록</a>
     <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
-        <br>
-        <li><a th:href="@{/admin}">ADMIN</a></li>
+        <a th:href="@{/admin}" class="nav-menu">관리인 페이지</a>
     </th:block>
-
     <th:block sec:authorize="isAnonymous()"> <!-- 익명 사용자일 경우 로그인 버튼 출력 -->
-        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/login}'|">LOGIN</button>
+        <a th:href="@{/login}" class="nav-menu">로그인</a>
     </th:block>
     <th:block sec:authorize="isAuthenticated()"> <!-- 권한 관계없이 인증 완료 후 로그아웃 버튼 출력 -->
-        <button type="button" class="btn btn-primary" th:onclick="logout()">LOGOUT</button>
+        <a class="nav-menu" th:onclick="logout()">로그아웃</a>
     </th:block>
 </nav>
 
 <script th:inline="javascript">
     function logout() {
-        if (confirm('로그아웃하시겠습니까?')) {
-            location.href = '/logout';
-        }
+        if (confirm('로그아웃하시겠습니까?')) { alert('로그아웃이 완료되었습니다.'); location.href = '/logout'; }
     }
 </script>
 </html>
