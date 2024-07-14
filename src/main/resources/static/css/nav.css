@@ -1,6 +1,5 @@
-/** #FAEBD7 **/
 nav { position: fixed; width: 100%; display: flex; padding: 3px; z-index: 999; background-color: #FFF; }
 nav > * { width: 15%; }
 #nav-title { font-size: 1.5rem; font-weight: bold; padding-left: 10px; }
 .nav-menu { text-align: center; align-content: space-around; cursor: pointer; }
-.nav-menu:hover { background-color: #000; color: #FFF; }
+.nav-menu:hover { background-color: #000; color: #FFF; transition: 0.8s; }
