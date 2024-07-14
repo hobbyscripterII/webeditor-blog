@@ -5,19 +5,19 @@
       th:fragment="nav">
 <nav>
     <a href="/" id="nav-title">My Blog.</a>
-    <a href="#" class="nav-menu">Notice</a>
-    <a th:href="@{/board/list?subject=5}" class="nav-menu">Dev</a>
-    <a href="#" class="nav-menu">Diary</a>
-    <a href="#" class="nav-menu">SONY A6000</a>
-    <a href="#" class="nav-menu">Guest Book</a>
+    <a th:href="@{/board/list?category=1}" class="nav-menu">NOTICE</a>
+    <a th:href="@{/board/list?category=2}" class="nav-menu">DEV</a>
+    <a th:href="@{/board/list?category=3}" class="nav-menu">DIARY</a>
+    <a th:href="@{/board/list?category=4}" class="nav-menu">SONY A6000</a>
+    <a th:href="@{/board/list?category=5}" class="nav-menu">GUEST BOOK</a>
     <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
-        <a th:href="@{/admin}" class="nav-menu">Admin</a>
+        <a th:href="@{/admin}" class="nav-menu">ADMIN</a>
     </th:block>
     <th:block sec:authorize="isAnonymous()"> <!-- 익명 사용자일 경우 로그인 버튼 출력 -->
-        <a th:href="@{/login}" class="nav-menu">Login</a>
+        <a th:href="@{/login}" class="nav-menu">LOGIN</a>
     </th:block>
     <th:block sec:authorize="isAuthenticated()"> <!-- 권한 관계없이 인증 완료 후 로그아웃 버튼 출력 -->
-        <a class="nav-menu" th:onclick="logout()">Logout</a>
+        <a class="nav-menu" th:onclick="logout()">LOGOUT</a>
     </th:block>
 </nav>
 

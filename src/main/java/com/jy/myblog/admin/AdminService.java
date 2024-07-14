@@ -1,7 +1,7 @@
 package com.jy.myblog.admin;
 
 import com.jy.myblog.admin.model.AdminGetPostVo;
-import com.jy.myblog.admin.model.AdminGetSubjectVo;
+import com.jy.myblog.admin.model.AdminGetCategoryVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
 import com.jy.myblog.common.Const;
 import com.jy.myblog.common.Pagination;
@@ -61,8 +61,8 @@ public class AdminService {
         }
     }
 
-    public List<AdminGetSubjectVo> getSubject() {
-        return mapper.getSubject();
+    public List<AdminGetCategoryVo> getCategory() {
+        return mapper.getCategory();
     }
 
     public int getPostCnt(int isubject) {

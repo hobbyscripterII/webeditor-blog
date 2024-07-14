@@ -1,7 +1,7 @@
 package com.jy.myblog.admin;
 
 import com.jy.myblog.admin.model.AdminGetPostVo;
-import com.jy.myblog.admin.model.AdminGetSubjectVo;
+import com.jy.myblog.admin.model.AdminGetCategoryVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
 import com.jy.myblog.common.Pagination;
 import org.apache.ibatis.annotations.Mapper;
@@ -15,6 +15,6 @@ public interface AdminMapper {
     int updSubjectFl(AdminUpdDto dto);
     int delPostFl(AdminUpdDto dto);
     int delPostPicFl(AdminUpdDto dto);
-    List<AdminGetSubjectVo> getSubject();
+    List<AdminGetCategoryVo> getCategory();
     int getPostCnt(int isubject);
 }

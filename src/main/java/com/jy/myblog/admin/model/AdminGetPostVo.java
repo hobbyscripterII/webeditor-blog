@@ -9,9 +9,9 @@ import java.time.LocalDate;
 @Data
 public class AdminGetPostVo {
     private int iboard;
+    private int icategory;
     private String publicFl;
-    private int isubject;
-    public String subject;
+    public String category;
     private String nm;
     private String title;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -20,8 +20,4 @@ public class AdminGetPostVo {
     public String getPublicFl() {
         return publicFl.equals("Y") ? Const.PUBLIC : Const.PRIVATE;
     }
-
-//    public String getSubject() {
-//        return new SubjectToStringConverter().convert(isubject);
-//    }
 }

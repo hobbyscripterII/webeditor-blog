@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BoardInsDto {
     private int iboard;
-    private int isubject;
+    private int icategory;
     private int iuser;
     private String title;
     private String contents;

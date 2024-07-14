@@ -7,9 +7,7 @@
       layout:fragment="section">
 
 <style>
-    #contents {
-        height: 565px;
-    }
+    #contents { height: 565px; }
 </style>
 
 <section>
@@ -49,7 +47,7 @@
             <button type="button" class="btn btn-success" th:onclick="|location.href='@{/board/update(board=${post.iboard})}'|">수정</button>
             <button type="button" class="btn btn-danger" th:onclick="delPost()">삭제</button>
         </th:block>
-        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/list(subject=${post.isubject})}'|">목록</button>
+        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/list(category=${post.icategory})}'|">목록</button>
     </div>
 </section>
 
@@ -70,7 +68,7 @@
                     success: function (result) {
                         if (result !== 0) {
                             alert('게시글이 정상적으로 삭제되었습니다.');
-                            location.href='/board/list?subject=' + [[${post.isubject}]]
+                            location.href='/board/list?category=' + [[${post.icategory}]]
                         } else {
                             alert("게시글 삭제에 실패하였습니다. 잠시 후 다시 시도해주세요.");
                         }

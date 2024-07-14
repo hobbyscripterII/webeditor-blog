@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class BoardSelVo {
     private int iboard;
-    private int isubject;
+    private int icategory;
     private String title;
     private String contents;
     private List<BoardSelVo.File> files;

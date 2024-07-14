@@ -6,34 +6,24 @@
       layout:fragment="section">
 
 <style>
-    .btn-group {
-        margin-right: 2px;
-    }
+    .btn-group { margin-right: 2px; }
 </style>
 
 <section>
     <div class="title">ADMIN</div>
     <div class="div-btn-wrap" style="text-align: left; display: flex">
-        <!-- 카테고리 선택 -->
         <div class="form-group">
-            <select class="form-select" id="select-subject">
-                <option>카테고리 선택</option>
-                <th:block th:each="s : ${subjects}">
-                    <option id="option-subject" th:value="${s.isubject}" th:text="${s.subject}"></option>
+            <select class="form-select" id="select-category">
+                <th:block th:if="${category == 0}"><option>게시판 선택</option></th:block>
+                <th:block th:if="${category == 1}"><option>NOTICE</option></th:block>
+                <th:block th:if="${category == 2}"><option>DEV</option></th:block>
+                <th:block th:if="${category == 3}"><option>DIARY</option></th:block>
+                <th:block th:if="${category == 4}"><option>SONY A6000</option></th:block>
+                <th:block th:if="${category == 5}"><option>GUEST BOOK</option></th:block>
+                <th:block th:each="c : ${categories}">
+                    <option id="option-category" th:value="${c.icategory}" th:text="${c.category}"></option>
                 </th:block>
             </select>
-        </div>
-
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <button type="button" class="btn btn-info">카테고리 변경</button>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-info dropdown-toggle show" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
-                <div class="dropdown-menu" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 50px);" data-popper-placement="bottom-start">
-                    <th:block th:each="s : ${subjects}">
-                        <a class="dropdown-item" th:iboard="${s.isubject}" th:onclick="subjectFl(this.getAttribute('iboard'))" th:text="${s.subject}"></a>
-                    </th:block>
-                </div>
-            </div>
         </div>
 
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
@@ -46,7 +36,6 @@
                 </div>
             </div>
         </div>
-
         <button type="button" class="btn btn-danger" th:onclick="deleteFl()">게시글 삭제</button>
     </div>
 
@@ -67,38 +56,34 @@
             <td><input class="form-check-input" name="check-iboard" type="checkbox" th:value="${l.iboard}"></td>
             <td th:text="${l.iboard}">글 번호</td>
             <td th:text="${l.publicFl}">공개 여부</td>
-            <td th:text="${l.subject}">카테고리</td>
+            <td th:text="${l.category}">카테고리</td>
             <td th:text="${l.nm}">작성자</td>
-            <td><a th:href="@{/board/read(subject=${l.isubject}, board=${l.iboard})}"><th:block th:text="${l.title}"></th:block></a></td>
+            <td><a th:href="@{/board/read(category=${l.icategory}, post=${l.iboard})}"><th:block th:text="${l.title}"></th:block></a></td>
             <td th:text="${l.createdAt}">작성일</td>
         </tr>
         </tbody>
     </table>
 
     <div class="pagination">
-        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=1, subject=${subject})}">&laquo;</a>
-        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=${pagination.start - pagination.pageCnt}, subject=${subject})}">&lt;</a>
+        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=1, category=${category})}">&laquo;</a>
+        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=${pagination.start - pagination.pageCnt}, category=${category})}">&lt;</a>
         <div class="page-item" th:each="page, i : ${#numbers.sequence(pagination.start, pagination.end)}">
-            <a class="page-link" th:href="@{/admin(page=${i.current}, subject=${subject})}" th:text="${i.current}"></a>
+            <a class="page-link" th:href="@{/admin(page=${i.current}, category=${category})}" th:text="${i.current}"></a>
         </div>
-        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.end + 1}, amount=${pagination.amount}, subject=${subject})}">&gt;</a>
-        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.realEnd}, amount=${pagination.amount}, subject=${subject})}">&raquo;</a>
+        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.end + 1}, amount=${pagination.amount}, category=${category})}">&gt;</a>
+        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.realEnd}, amount=${pagination.amount}, category=${category})}">&raquo;</a>
     </div>
 </section>
 
 <script th:inline="javascript">
-    $('#select-subject').change(function () {
-        const subject = $(this).val();
-        location.href = '/admin?subject=' + subject;
-    });
+    // 특정 게시판 선택
+    $('#select-category').change(function () { location.href = '/admin?category=' + $(this).val(); });
 
     function deleteFl() {
         const arr = getIboardArr();
 
-        if(arr.length === 0) {
-            alert('최소 1개는 선택해주세요.');
-            return false;
-        } else {
+        if(arr.length === 0) { alert('최소 1개는 선택해주세요.'); return false; }
+        else {
             if(confirm('삭제된 게시글은 복구할 수 없습니다. 정말로 삭제하시겠습니까?')) {
                 const dto = {"list" : arr};
 
@@ -108,51 +93,19 @@
                     contentType: "application/json",
                     data: JSON.stringify(dto),
                     success: function (result) {
-                        if (result === 1) {
-                            alert('정상적으로 삭제되었습니다.')
-                            location.reload();
-                        } else {
-                            alert('잠시 후 다시 시도하세요.')
-                        }
+                        if (result === 1) { alert('정상적으로 삭제되었습니다.'); location.reload(); }
+                        else { alert('잠시 후 다시 시도하세요.') }
                     }
                 });
             }
         }
     }
 
-    function subjectFl(isubject) {
-        const arr = getIboardArr();
-
-        if(arr.length === 0) {
-            alert('최소 1개는 선택해주세요.');
-            return false;
-        } else {
-            const dto = {"list" : arr, "isubject" : isubject};
-
-            $.ajax({
-                type: 'patch',
-                url: '/admin/subject',
-                contentType: "application/json",
-                data: JSON.stringify(dto),
-                success: function (result) {
-                    if (result === 1) {
-                        alert('정상적으로 처리되었습니다.')
-                        location.reload();
-                    } else {
-                        alert('잠시 후 다시 시도하세요.')
-                    }
-                }
-            });
-        }
-    }
-
     function publicFl(fl) {
         const arr = getIboardArr();
 
-        if(arr.length === 0) {
-            alert('최소 1개는 선택해주세요.');
-            return false;
-        } else {
+        if(arr.length === 0) { alert('최소 1개는 선택해주세요.'); return false; }
+        else {
             const dto = {"list" : arr, "publicFl" : fl};
 
             $.ajax({
@@ -161,12 +114,8 @@
                 contentType: "application/json",
                 data: JSON.stringify(dto),
                 success: function (result) {
-                    if (result === 1) {
-                        alert('정상적으로 처리되었습니다.')
-                        location.reload();
-                    } else {
-                        alert('잠시 후 다시 시도하세요.')
-                    }
+                    if (result === 1) { alert('정상적으로 처리되었습니다.'); location.reload(); }
+                    else { alert('잠시 후 다시 시도하세요.'); }
                 }
             });
         }

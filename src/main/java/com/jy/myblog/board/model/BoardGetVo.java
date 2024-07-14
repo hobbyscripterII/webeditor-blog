@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class BoardGetVo {
-    private int isubject;
+    private int icategory;
     private String title;
     private String keyword;
     private List<BoardGetVo.Post> posts;

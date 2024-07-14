@@ -8,6 +8,6 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class BoardGetCntDto {
-    private int isubject;
+    private int icategory;
     private String keyword;
 }

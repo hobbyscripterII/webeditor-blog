@@ -36,15 +36,13 @@ public class BoardController {
     @GetMapping("/file/download")
     public ResponseEntity<Resource> download(@RequestParam(name = "iboardfile") int iboardfile) throws Exception {
         try {
-            log.info("iboardfile = {}", iboardfile);
             BoardSelVo.File file = service.selPostFile(iboardfile);
-            log.info("file = {}", file);
             String downloadPath = uploadUtil.getDownloadPath(file.getUuidName());
             Resource resource = new UrlResource(Paths.get(downloadPath).toUri());
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + UriUtils.encode(file.getOriginalName(), "UTF-8") + "\"")
-                    .body(resource);
+                                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + UriUtils.encode(file.getOriginalName(), "UTF-8") + "\"")
+                                 .body(resource);
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -62,7 +60,6 @@ public class BoardController {
             String uploadPath = uploadUtil.imageUpload(path, request);
             MultipartFile file = request.getFile("upload");
             String originalName = file.getOriginalFilename();
-//            String uuidName = uploadPath.substring(6); // db 저장용 이름 / resource 접근 경로 날림
 
             BoardInsPicDto dto = BoardInsPicDto.builder()
                     .iboard(iboard)
@@ -85,24 +82,27 @@ public class BoardController {
     }
 
     @GetMapping("/list")
-    public String getPost(@RequestParam(name = "subject", required = false, defaultValue = "0") int isubject, Pagination.Criteria criteria, Model model) {
+    public String getPost(@RequestParam(name = "category", required = false, defaultValue = "0") int icategory, Pagination.Criteria criteria, Model model) {
         String title = null;
+        criteria.setIcategory(icategory);
 
-        if (Util.isNotNull(isubject)) {
-            title = subjectToStringConverter(isubject);
+        if (Util.isNotNull(icategory)) {
+            title = categoryToStringConverter(icategory);
         } else {
-            title = "\'" + criteria.getKeyword() + "\' 검색 결과"; // 'N+1' 검색 결과
+            title = "\'" + criteria.getKeyword() + "\' 검색 결과";
         }
 
         List<BoardGetVo.Post> posts = service.getPost(criteria);
-        BoardGetVo list = new BoardGetVo(isubject, title, criteria.getKeyword(), posts);
+        BoardGetVo list = new BoardGetVo(icategory, title, criteria.getKeyword(), posts);
 
         BoardGetCntDto dto = BoardGetCntDto
                 .builder()
-                .isubject(isubject)
+                .icategory(icategory)
                 .keyword(criteria.getKeyword())
                 .build();
+
         int cnt = service.getPostCnt(dto);
+
         Pagination pagination = new Pagination(criteria, cnt);
 
         model.addAttribute("list", list);
@@ -111,10 +111,9 @@ public class BoardController {
     }
 
     @GetMapping("/read")
-    public String selPost(@RequestParam(name = "subject") int isubject, @RequestParam(name = "board") int iboard, Model model) {
-        String title = subjectToStringConverter(isubject);
+    public String selPost(@RequestParam(name = "category") int icategory, @RequestParam(name = "post") int iboard, Model model) {
+        String title = categoryToStringConverter(icategory);
         BoardSelVo post = service.selPost(iboard);
-//        post.setContents(CommonUtil.markdown(post.getContents())); // 마크다운 치환
 
         model.addAttribute("title", title);
         model.addAttribute("post", post);
@@ -122,14 +121,13 @@ public class BoardController {
     }
 
     @GetMapping("/write")
-    public String insPost(@RequestParam(name = "subject") int isubject, Model model) {
+    public String insPost(@RequestParam(name = "category") int icategory, Model model) {
         try {
-            String title = subjectToStringConverter(isubject);
-            // >>>>> 첨부파일 구현 후 주석 해제
-            // 글 작성 버튼 클릭 시 pk 값 +
+            String title = categoryToStringConverter(icategory);
+
             BoardInsDto dto = BoardInsDto.builder()
                     .iuser(getUserPk())
-                    .isubject(isubject)
+                    .icategory(icategory)
                     .build();
 
             service.insNullPost(dto);
@@ -138,10 +136,9 @@ public class BoardController {
             model.addAttribute("dto", new BoardInsDto());
             model.addAttribute("title", title);
             model.addAttribute("iboard", iboard); // >>>>> 첨부파일 구현 후 주석 해제
-//            model.addAttribute("iboard", 1000); // >>>>> 첨부파일 테스터용
-            model.addAttribute("subject", isubject); // *
+            model.addAttribute("category", icategory); // *
 
-            return "board/write_webeditor";
+            return "board/write";
         } catch (Exception e) {
             throw new RuntimeException("failed insert post", e);
         }
@@ -150,7 +147,7 @@ public class BoardController {
     @GetMapping("/update")
     public String updPost(@RequestParam(name = "board") int iboard, Model model) {
         model.addAttribute("dto", service.selPost(iboard));
-        return "board/write_webeditor";
+        return "board/write";
     }
 
     @ResponseBody
@@ -159,18 +156,11 @@ public class BoardController {
         try {
             int result = service.updPost(dto);
 
-            // >>>>> 첨부파일 fl
             if (file != null) {
                 String path = "file/" + dto.getIboard();
                 String uploadPath = uploadUtil.fileUpload(path, file);
 
-                if(Util.isNotNull(uploadPath)) {
-                    uploadUtil.delDirTrigger("/file/" + dto.getIboard());
-                    return 2; // 추후 수정
-                }
-
                 String originalName = file.getOriginalFilename();
-//            String uuidName = uploadPath.substring(4); // db 저장용 이름 / resource 접근 경로 날림
 
                 BoardInsFileDto insFileDto = BoardInsFileDto.builder()
                         .iboard(dto.getIboard())
@@ -193,48 +183,16 @@ public class BoardController {
             if (Util.isNotNull(isNullPics.size())) {
                 // 해당 게시글에 없는 사진만 삭제
                 for (String pic : isNullPics) {
-                    service.delPostPic(pic); // db 사진 삭제
+                    service.delPostPic(pic); // DB 사진 삭제
                     uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
                 }
             }
-
-            // >>>>> 추후 첨부파일 수정 fl 추가
-
 
             return dto.getIboard();
         } catch (Exception e) {
             return FAIL;
         }
     }
-
-//    @ResponseBody
-//    @PutMapping
-//    public int updPost(@RequestBody BoardUpdDto dto, @RequestParam(name = "file") MultipartFile file) throws Exception {
-//        try {
-//            log.info("dto = {}", dto);
-//            log.info("file = {}", file);
-//
-////            int result = service.updPost(dto);
-////            // pk로 db에 저장된 사진 uuid 가져옴
-////            List<String> getPostPics = service.getPostPics(dto.getIboard());
-////            // 해당 게시글에 없는 사진만 뽑아냄(db, 디렉토리 정리용)
-////            List<String> isNullPics = getPostPics.stream()
-////                    // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
-////                    .filter(pic -> !dto.getContents().contains(pic))
-////                    .collect(toList()); // 후처리
-////
-////            // 해당 게시글에 없는 사진만 삭제
-////            for (String pic : isNullPics) {
-////                service.delPostPic(pic); // db 사진 삭제
-////                uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
-////            }
-////            return dto.getIboard();
-//            return SUCCESS;
-//
-//        } catch (Exception e) {
-//            return FAIL;
-//        }
-//    }
 
     @ResponseBody
     @DeleteMapping
@@ -248,53 +206,18 @@ public class BoardController {
                 return FAIL;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return FAIL;
         }
     }
 
-    // spring security session에 저장된 userPk
+    // Spring Security Session에 저장된 회원 PK
     public int getUserPk() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         return myUserDetails.getIuser();
     }
 
-    // subject int -> String 타입으로 converter
-    public String subjectToStringConverter(int isubject) {
-        return new SubjectToStringConverter().convert(isubject);
+    public String categoryToStringConverter(int isubject) {
+        return new CategoryToStringConverter().convert(isubject);
     }
-
-//    @ResponseBody
-//    @GetMapping("/tag")
-//    public List<BoardTagGetVo> getTag(@RequestParam(name = "tag") String tag) {
-//        return service.getTag(tag);
-//    }
-
-    // >>>>> markdown
-//    @GetMapping("/write")
-//    public String insPost(@RequestParam(name = "subject") int isubject, Model model) {
-//        String title = subjectToStringConverter(isubject);
-//
-//        model.addAttribute("dto", new BoardInsDto());
-//        model.addAttribute("title", title);
-//        model.addAttribute("subject", isubject);
-//        return "/board/write";
-//    }
-
-//    @ResponseBody
-//    @PostMapping("/write")
-//    public int insPost(@RequestBody BoardInsDto dto) throws Exception {
-//        try {
-//            dto.setIuser(getUserPk());
-//
-//            if (Util.isNotNull(service.insPost(dto))) {
-//                return dto.getIboard();
-//            } else {
-//                return FAIL;
-//            }
-//        } catch (Exception e) {
-//            throw new Exception();
-//        }
-//    }
 }

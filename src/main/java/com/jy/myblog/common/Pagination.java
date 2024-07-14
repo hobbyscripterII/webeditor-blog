@@ -1,10 +1,12 @@
 package com.jy.myblog.common;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class Pagination {
     private int start; // 페이지네이션 시작 번호
     private int end; // 페이지네이션 끝 번호
@@ -48,8 +50,9 @@ public class Pagination {
     // 페이징 처리
     @Getter
     @Setter
+    @ToString
     public static class Criteria {
-        private int subject; // 게시판 카테고리
+        private int icategory; // 게시판 카테고리 PK
         private int page; // 페이지 번호
         private int amount; // 한 페이지당 보여 줄 게시글 개수
         private String keyword;

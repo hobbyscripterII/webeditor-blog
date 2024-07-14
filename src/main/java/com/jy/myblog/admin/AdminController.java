@@ -1,7 +1,7 @@
 package com.jy.myblog.admin;
 
 import com.jy.myblog.admin.model.AdminGetPostVo;
-import com.jy.myblog.admin.model.AdminGetSubjectVo;
+import com.jy.myblog.admin.model.AdminGetCategoryVo;
 import com.jy.myblog.admin.model.AdminUpdDto;
 import com.jy.myblog.common.Pagination;
 import com.jy.myblog.common.UploadUtil;
@@ -27,15 +27,16 @@ public class AdminController {
     private final UploadUtil uploadUtil;
 
     @GetMapping
-    public String admin(@RequestParam(name = "subject", required = false, defaultValue = "0") int isubject, Pagination.Criteria criteria, Model model) {
-        int cnt = service.getPostCnt(isubject);
+    public String admin(@RequestParam(name = "category", required = false, defaultValue = "0") int icategory, Pagination.Criteria criteria, Model model) {
+        int cnt = service.getPostCnt(icategory);
+        criteria.setIcategory(icategory);
         List<AdminGetPostVo> list = service.getPostAdmin(criteria);
-        List<AdminGetSubjectVo> subjects = service.getSubject();
+        List<AdminGetCategoryVo> categories = service.getCategory();
         Pagination pagination = new Pagination(criteria, cnt);
 
         model.addAttribute("list", list);
-        model.addAttribute("subject", criteria.getSubject());
-        model.addAttribute("subjects", subjects);
+        model.addAttribute("category", criteria.getIcategory());
+        model.addAttribute("categories", categories);
         model.addAttribute("pagination", pagination);
         return "admin/admin";
     }
@@ -49,11 +50,8 @@ public class AdminController {
     @ResponseBody
     @DeleteMapping
     public int delPostFl(@RequestBody AdminUpdDto dto) throws Exception {
-        log.info("dto = {}", dto);
-
         try {
             int result = service.delPostFl(dto);
-            log.info("result = {}", result);
 
             if (Util.isNotNull(result)) {
                 for (Integer iboard : dto.getList()) {
