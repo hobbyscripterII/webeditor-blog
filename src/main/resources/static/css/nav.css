@@ -1,7 +1,8 @@
 @font-face { font-family: 'Pretendard-Regular'; src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff'); font-weight: 100; font-style: normal; }
 
-nav { position: fixed; width: 100%; background-color: #FAEBD7; border: 1px solid #000; display: flex; font-family: 'Pretendard-Regular'; padding: 3px; z-index: 999; }
+/** #FAEBD7 **/
+nav { position: fixed; width: 100%; display: flex; padding: 3px; z-index: 999; }
 nav > * { width: 15%; }
 #nav-title { font-size: 1.5rem; font-weight: bold; padding-left: 10px; }
 .nav-menu { text-align: center; align-content: space-around; cursor: pointer; }
-.nav-menu:hover { font-weight: bold; background-color: #000; color: #FFF; }
+.nav-menu:hover { background-color: #000; color: #FFF; }
