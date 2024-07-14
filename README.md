@@ -1,8 +1,10 @@
-# 개인 프로젝트 '기술 블로그'✍️
+# 개인 프로젝트 '블로그'✍️
 
-![image](https://github.com/hobbyscripterII/webeditor-blog/assets/135996109/03378c5b-857f-4117-9cdd-79afab05e0af)
+![image](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbQVd1N%2FbtsIzrtuk9d%2Fdj5hLUCvXnUfkj0JNNRDJk%2Fimg.png)
+![image](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FyBHWA%2FbtsIzMqC3qm%2FyDQAKru5WqKdU6hoDtUIBK%2Fimg.png)
+![image](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FsgFLp%2FbtsIyJuCPyL%2FJQOe18lEJBrSZiieAV3Cd1%2Fimg.png)
 
-### 📅 프로젝트 기간 2024.02.07 ~ 2024.02.19
+<!-- ### 📅 프로젝트 기간 2024.02.07 ~ 2024.02.19 -->
 
 ## ✍️기획 의도
 > 백엔드 학습 역량과 SSR 구현 역량을 키우기위해 해당 프로젝트를 기획하게 되었습니다. <br>
@@ -20,12 +22,14 @@
 <img src="https://img.shields.io/badge/JQUERY-0769AD?style=for-the-badge&logo=jQuery&logoColor=white"/></a>
 <img src="https://img.shields.io/badge/BOOTSTRAP-7952B3?style=for-the-badge&logo=Bootstrap&logoColor=white"/></a>
 <img src="https://img.shields.io/badge/CKEditor5-0287D0?style=for-the-badge&logo=CkEditor4&logoColor=ffffff"/></a>
+<!--
 <img src="https://img.shields.io/badge/MARKDOWN-000000?style=for-the-badge&logo=Markdown&logoColor=white"/></a>
 <img src="https://img.shields.io/badge/PRISM JS-ffffff?style=for-the-badge&logo=&logoColor=000000"/></a>
+-->
 
 <img src="https://img.shields.io/badge/INTELIJ IDEA-black?style=for-the-badge&logo=Intellij IDEA&logoColor=white"/></a>
 <img src="https://img.shields.io/badge/ERD CLOUD-8D8BD9?style=for-the-badge&logoColor=white"/></a>
-<img src="https://img.shields.io/badge/OBSIDIAN-7C3AED?style=for-the-badge&logo=Obsidian&logoColor=white"/></a>
+<!-- <img src="https://img.shields.io/badge/OBSIDIAN-7C3AED?style=for-the-badge&logo=Obsidian&logoColor=white"/></a> -->
 
 
 ## ✍️구현 기능
