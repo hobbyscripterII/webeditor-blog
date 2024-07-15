@@ -12,6 +12,14 @@ section { box-sizing: border-box; width: 100%; height: auto; position: relative;
 /* 게시판 */
 #contents { height: 100%; overflow: auto; }
 
+/* 댓글 */
+#div-comment-wrap, #div-comment-list-wrap { margin: 10px 0px 10px 10px; }
+/*.card-body { display: flex; }*/
+.card-header { font-size: 2rem; }
+.card-text { display: flex; }
+.card-text > span { align-content: center; }
+.card-text > button { font-size: 0.875rem; }
+
 /* 홈 화면 */
 .span-home-title { font-size: 1.5rem; text-decoration: underline; }
 .p-home-text { margin-left: 10px; }
