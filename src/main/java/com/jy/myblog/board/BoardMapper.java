@@ -28,7 +28,7 @@ public interface BoardMapper {
 
     // 댓글
     int insComment(BoardCommentInsDto dto);
-    List<BoardCommentGetVo> getComment(int iboard);
+    List<BoardSelVo.Comment> getComment(int iboard);
     int updComment(BoardCommentUpdDto dto);
     String getCommentPassword(int icomment);
 }

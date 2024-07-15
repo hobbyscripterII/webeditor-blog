@@ -13,7 +13,9 @@ public class BoardSelVo {
     private String contents;
     private String createdAt;
     private List<BoardSelVo.File> files;
-    private List<BoardCommentGetVo> comments;
+    private List<BoardSelVo.Comment> comments;
+    private int fileCnt;
+    private int commentCnt;
 
     @Data
     public static class File {
@@ -21,5 +23,14 @@ public class BoardSelVo {
         private int iboard;
         private String originalName;
         private String uuidName;
+    }
+
+    @Data
+    public static class Comment {
+        private int icomment;
+        private String unm;
+        private String upw;
+        private String contents;
+        private String created_at;
     }
 }

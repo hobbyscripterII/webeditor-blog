@@ -30,17 +30,15 @@ public class BoardService {
         return mapper.getPostPics(iboard);
     }
 
-    public List<BoardSelVo.File> getPostFile(int iboard) {
-        return mapper.getPostFile(iboard);
-    }
+//    public List<BoardSelVo.File> getPostFile(int iboard) {
+//        return mapper.getPostFile(iboard);
+//    }
 
     public BoardSelVo selPost(int iboard) {
         BoardSelVo vo = mapper.selPost(iboard);
-        List<BoardSelVo.File> files = mapper.getPostFile(iboard);
-        List<BoardCommentGetVo> comments = mapper.getComment(iboard);
 
-        if (files.size() > 0) { vo.setFiles(files); }
-        else if(comments.size() > 0) { vo.setComments(comments); }
+        if (vo.getFileCnt() > 0) { vo.setFiles(mapper.getPostFile(iboard)); }
+        else if(vo.getCommentCnt() > 0) { vo.setComments(mapper.getComment(iboard)); }
 
         return vo;
     }
@@ -96,13 +94,7 @@ public class BoardService {
 
     public int insComment(BoardCommentInsDto dto) {
         try {
-            String hashedPwd = BCrypt.hashpw(dto.getUpw(), BCrypt.gensalt());
-
-            log.info("hashedPwd = {}", hashedPwd);
-
-            dto.setUpw(hashedPwd);
-
-            log.info("dto = {}", dto);
+            dto.setUpw(BCrypt.hashpw(dto.getUpw(), BCrypt.gensalt()));
 
             if(Util.isNotNull(mapper.insComment(dto))) {
                 return SUCCESS;

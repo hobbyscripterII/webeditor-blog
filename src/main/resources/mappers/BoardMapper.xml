@@ -38,7 +38,9 @@
     </select>
 
     <select id="selPost">
-        SELECT a.iboard, a.icategory, a.title, a.contents, b.nm, a.created_at createdAt
+        SELECT a.iboard, a.icategory, a.title, b.nm, a.contents, a.created_at createdAt,
+        (SELECT COUNT(*) FROM board_file WHERE iboard = a.iboard) fileCnt,
+        (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard) commentCnt
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
