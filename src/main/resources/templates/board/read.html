@@ -5,11 +5,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}"
       layout:fragment="section">
-
 <style>
-    #contents { height: 565px; }
+    section { height: auto; }
+    footer { position: relative; top: 44px; }
 </style>
-
 <section>
     <div class="title" th:text="${title}">TITLE</div>
     <table class="table table-post-read">
