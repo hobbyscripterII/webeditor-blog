@@ -45,7 +45,7 @@
     <div class="div-btn-wrap">
         <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
             <button type="button" class="btn btn-success" th:onclick="|location.href='@{/board/update(board=${post.iboard})}'|">수정</button>
-            <button type="button" class="btn btn-danger" th:onclick="delPost()">삭제</button>
+            <button type="button" class="btn btn-danger" onclick="delPost()">삭제</button>
         </th:block>
         <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/list(category=${post.icategory})}'|">목록</button>
     </div>
@@ -54,43 +54,89 @@
     <div id="div-comment-list-wrap">
         <div class="card border-secondary mb-3">
             <div class="card-header">COMMENT LIST</div>
-<!--            <div class="card-body">-->
-<!--                <p class="card-text">-->
-<!--                    등록된 댓글이 없습니다.-->
-<!--                </p>-->
-<!--            </div>-->
 
-            <div class="card-body">
-                <p class="card-text">
-                    <span>닉네임: </span><span>비공개</span>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" style="margin-left: 10px">수정</button>
-                    <button type="button" class="btn btn-outline-danger btn-sm" style="margin-left: 10px">삭제</button>
-                </p>
-                <p>CSS 작업 중입니다!</p>
-            </div>
+            <th:block th:if="${post.comments == null}">
+                <div class="card-body">
+                    <p class="card-text">
+                        등록된 댓글이 없습니다.
+                    </p>
+                </div>
+            </th:block>
+
+            <th:block th:if="${post.comments != null}">
+                <div class="card-body">
+                    <th:block th:each="c : ${post.comments}">
+                        <p class="card-text">
+                            <span th:text="'닉네임:' + ${c.unm}"></span> &nbsp; <span style="font-size: small; color: gray" th:text="${c.created_at}"></span>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" style="margin-left: 10px">수정</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" style="margin-left: 10px">삭제</button>
+                        </p>
+                        <p th:text="${c.contents}"></p>
+                    </th:block>
+                </div>
+            </th:block>
         </div>
     </div>
+
     <!-- 댓글 작성 -->
     <div id="div-comment-wrap">
         <div class="card border-secondary mb-3">
             <div class="card-header">COMMENT</div>
             <div class="card-body">
                 <p class="card-text">
-                    <span>닉네임: </span><span><input class="form-control form-control-sm" type="text" placeholder="닉네임"></span>
-                    <span style="margin-left: 10px">패스워드: </span><span><input class="form-control form-control-sm" type="password" placeholder="패스워드"></span>
-                    <button type="button" class="btn btn-outline-success btn-sm" style="margin-left: 10px">등록</button>
+                    <span>닉네임: </span><span><input class="form-control form-control-sm" id="unm" type="text" placeholder="닉네임"></span>
+                    <span style="margin-left: 10px">패스워드: </span><span><input class="form-control form-control-sm" id="upw" type="password" placeholder="패스워드"></span>
+                    <button type="button" class="btn btn-outline-success btn-sm" style="margin-left: 10px" onclick="insComment()">등록</button>
                 </p>
-                <p><textarea class="form-control" rows="3" placeholder="내용을 입력해주세요." style="resize: none"></textarea></p>
+                <p><textarea class="form-control" id="comment-contents" rows="3" placeholder="내용을 입력해주세요." style="resize: none"></textarea></p>
             </div>
         </div>
     </div>
 </section>
 
 <script th:inline="javascript">
+    // 게시글 출력(html 코드이기 때문에 innerHTML로 객체에 있는 값을 출력)
     $(document).ready(function () {
         document.getElementById('contents').innerHTML = [[${post.contents}]];
     });
 
+    // 댓글 작성
+    function insComment() {
+        let unm = $('#unm');
+        let upw = $('#upw');
+        let commentContents = $('#comment-contents');
+        let iboard = [[${param.post}]];
+
+        if(!unm.val()) {
+            alert('닉네임을 입력해주세요.');
+            unm.focus();
+            return false;
+        } else if(!upw.val()) {
+            alert('패스워드를 입력해주세요.');
+            upw.focus();
+            return false;
+        } else if(!commentContents.val()) {
+            alert('내용을 입력해주세요.');
+            commentContents.focus();
+            return false;
+        } else {
+            if(confirm('댓글을 등록하시겠습니까?')) {
+                $.ajax({
+                    type: 'post',
+                    url: '/board/comment/write',
+                    data: {'iboard' : iboard, 'unm' : unm.val(), 'upw' : upw.val(), 'contents' : commentContents.val() },
+                    success: function (result) {
+                        const SUCCESS = 1;
+
+                        if(result === SUCCESS) { alert('댓글이 정상적으로 등록되었습니다.'); location.reload(); }
+                        else { alert('댓글 등록에 실패하였습니다.'); }
+                    }
+                });
+            }
+        }
+    }
+
+    // 게시글 삭제
     function delPost() {
         const iboard = [[${post.iboard}]];
 
@@ -99,7 +145,7 @@
                 $.ajax({
                     type: 'delete',
                     url: '/board',
-                    data: {"iboard" : iboard},
+                    data: { "iboard" : iboard },
                     success: function (result) {
                         if (result !== 0) {
                             alert('게시글이 정상적으로 삭제되었습니다.');

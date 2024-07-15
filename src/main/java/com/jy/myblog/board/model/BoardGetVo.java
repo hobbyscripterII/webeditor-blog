@@ -20,6 +20,7 @@ public class BoardGetVo {
         private int iboard;
         private String nm;
         private String title;
+        private int commentCnt;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate createdAt;
     }

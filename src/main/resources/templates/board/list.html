@@ -24,7 +24,12 @@
             </thead>
             <tbody>
             <tr th:each="l : ${list.posts}">
-                <td><a th:href="@{/board/read(category=${list.icategory}, post=${l.iboard})}"><th:block th:text="${l.title}"></th:block></a></td>
+                <td>
+                    <a th:href="@{/board/read(category=${list.icategory}, post=${l.iboard})}"><th:block th:text="${l.title}" /></a>
+                    <th:block th:if="${l.commentCnt != 0}">
+                        <span id="span-comment-cnt" th:text="'(' + ${l.commentCnt} + ')'" />
+                    </th:block>
+                </td>
                 <td th:text="${l.nm}">작성자</td>
                 <td th:text="${l.createdAt}">작성일</td>
             </tr>

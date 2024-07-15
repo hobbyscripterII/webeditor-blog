@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/", "/css/**", "/js/**", "/img/**", "/error/**",
                                 "/login", "/logout", "/access-denied?error",
-                                "/board/list/**", "/board/read/**", "/board/file/download/**", "/upload/**", "/download/**", "/file/**"
+                                "/board/list/**", "/board/read/**", "/board/file/download/**", "/upload/**", "/download/**", "/file/**", "/board/comment/**"
                         ).permitAll()
                         // 외에는 ADMIN만 접근 o
                         .anyRequest().hasRole("ADMIN")

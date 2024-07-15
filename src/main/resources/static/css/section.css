@@ -11,6 +11,7 @@ section { box-sizing: border-box; width: 100%; height: auto; position: relative;
 
 /* 게시판 */
 #contents { height: 100%; overflow: auto; }
+#span-comment-cnt { font-size: 12px; color: gray; }
 
 /* 댓글 */
 #div-comment-wrap, #div-comment-list-wrap { margin: 10px 0px 10px 10px; }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jy.myblog.board.BoardMapper">
     <select id="getPost" resultType="com.jy.myblog.board.model.BoardGetVo$Post">
-        SELECT a.iboard, a.icategory, b.nm, a.title, a.created_at createdAt
+        SELECT a.iboard, a.icategory, b.nm, a.title, (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard) commentCnt, a.created_at createdAt
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
@@ -50,18 +50,12 @@
         (#{icategory}, #{iuser}, ' ', ' ')
     </insert>
 
-<!--    <insert id="insPost" useGeneratedKeys="true" keyProperty="iboard">-->
-<!--        INSERT INTO board(isubject, iuser, title, contents) VALUES-->
-<!--        (#{isubject}, #{iuser}, #{title}, #{contents})-->
-<!--    </insert>-->
-
     <insert id="insPostPic">
         INSERT INTO board_pic(iboard, original_name, uuid_name) VALUES (#{iboard}, #{originalName}, #{uuidName})
     </insert>
 
     <insert id="insPostFile">
-        INSERT INTO board_file(iboard, original_name, uuid_name) VALUES
-        (#{iboard}, #{originalName}, #{uuidName})
+        INSERT INTO board_file(iboard, original_name, uuid_name) VALUES (#{iboard}, #{originalName}, #{uuidName})
     </insert>
 
     <update id="updPost">
@@ -100,5 +94,25 @@
                 title LIKE '%${keyword}%'
             </if>
         </where>
+    </select>
+
+    <insert id="insComment">
+        INSERT board_comment(iboard, unm, upw, contents) VALUES(#{iboard}, #{unm}, #{upw}, #{contents})
+    </insert>
+
+    <select id="getComment">
+        SELECT icomment, unm, upw, contents, created_at FROM board_comment WHERE iboard = #{iboard} AND public_fl = 'Y'
+    </select>
+
+    <update id="updComment">
+        UPDATE board_comment SET contents = #{contents} WHERE icomment = #{icomment}
+    </update>
+
+    <update id="delComment">
+        UPDATE board_comment SET public_fl = 'N' WHERE icomment = #{icomment}
+    </update>
+
+    <select id="getCommentPassword">
+        SELECT upw FROM board_comment WHERE icomment = #{icomment}
     </select>
 </mapper>

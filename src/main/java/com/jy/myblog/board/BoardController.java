@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,8 @@ import java.util.List;
 import static com.jy.myblog.common.Const.FAIL;
 import static com.jy.myblog.common.Const.SUCCESS;
 
+// * 예외 처리 수정 필요
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -34,7 +37,7 @@ public class BoardController {
     private final UploadUtil uploadUtil;
 
     @GetMapping("/file/download")
-    public ResponseEntity<Resource> download(@RequestParam(name = "iboardfile") int iboardfile) throws Exception {
+    public ResponseEntity<Resource> download(@RequestParam(name = "iboardfile") int iboardfile) {
         try {
             BoardSelVo.File file = service.selPostFile(iboardfile);
             String downloadPath = uploadUtil.getDownloadPath(file.getUuidName());
@@ -52,22 +55,16 @@ public class BoardController {
     @RequestMapping("/imageupload")
     public ModelAndView imageUpload(@RequestParam(name = "iboard") int iboard, MultipartHttpServletRequest request) throws Exception {
         try {
-//            uploadUtil.delDirTrigger(iboard); // 글 등록, 수정 시 원래있던 사진 삭제 후 재업로드
-
             ModelAndView mv = new ModelAndView("jsonView");
             String path = "image/" + iboard; // 이미지 저장시엔 'image' 경로 반환 / 파일 업로드는 'file' 경로 반환
-            // local에 이미지 업로드 후 UUID + 확장자 얻어냄
-            String uploadPath = uploadUtil.imageUpload(path, request);
+            String uploadPath = uploadUtil.imageUpload(path, request); // local에 이미지 업로드 후 UUID + 확장자 얻어냄
             MultipartFile file = request.getFile("upload");
             String originalName = file.getOriginalFilename();
-
-            BoardInsPicDto dto = BoardInsPicDto.builder()
-                    .iboard(iboard)
-                    .originalName(originalName)
-                    .uuidName(uploadPath)
-                    .build();
-
-            int rows = service.insPostPic(dto);
+            int rows = service.insPostPic(BoardInsPicDto.builder()
+                                                        .iboard(iboard)
+                                                        .originalName(originalName)
+                                                        .uuidName(uploadPath)
+                                                        .build());
 
             if (Util.isNotNull(rows)) {
                 mv.addObject("uploaded", true);
@@ -77,7 +74,19 @@ public class BoardController {
                 throw new Exception();
             }
         } catch (Exception e) {
-            throw new Exception();
+            throw new Exception(); // 수정 필요
+        }
+    }
+
+    @PostMapping("/comment/write")
+    @ResponseBody
+    public int insComment(BoardCommentInsDto dto) {
+        int insCommentRows = service.insComment(dto);
+
+        if(Util.isNotNull(insCommentRows)) {
+            return SUCCESS;
+        } else {
+            return FAIL;
         }
     }
 
@@ -94,15 +103,10 @@ public class BoardController {
 
         List<BoardGetVo.Post> posts = service.getPost(criteria);
         BoardGetVo list = new BoardGetVo(icategory, title, criteria.getKeyword(), posts);
-
-        BoardGetCntDto dto = BoardGetCntDto
-                .builder()
-                .icategory(icategory)
-                .keyword(criteria.getKeyword())
-                .build();
-
-        int cnt = service.getPostCnt(dto);
-
+        int cnt = service.getPostCnt(BoardGetCntDto.builder()
+                                                   .icategory(icategory)
+                                                   .keyword(criteria.getKeyword())
+                                                   .build());
         Pagination pagination = new Pagination(criteria, cnt);
 
         model.addAttribute("list", list);
@@ -114,7 +118,6 @@ public class BoardController {
     public String selPost(@RequestParam(name = "category") int icategory, @RequestParam(name = "post") int iboard, Model model) {
         String title = categoryToStringConverter(icategory);
         BoardSelVo post = service.selPost(iboard);
-
         model.addAttribute("title", title);
         model.addAttribute("post", post);
         return "board/read";
@@ -124,23 +127,19 @@ public class BoardController {
     public String insPost(@RequestParam(name = "category") int icategory, Model model) {
         try {
             String title = categoryToStringConverter(icategory);
-
             BoardInsDto dto = BoardInsDto.builder()
-                    .iuser(getUserPk())
-                    .icategory(icategory)
-                    .build();
-
+                                         .iuser(getUserPk())
+                                         .icategory(icategory)
+                                         .build();
             service.insNullPost(dto);
-            int iboard = dto.getIboard();
-
             model.addAttribute("dto", new BoardInsDto());
             model.addAttribute("title", title);
-            model.addAttribute("iboard", iboard); // >>>>> 첨부파일 구현 후 주석 해제
-            model.addAttribute("category", icategory); // *
+            model.addAttribute("iboard", dto.getIboard());
+            model.addAttribute("category", icategory);
 
             return "board/write";
         } catch (Exception e) {
-            throw new RuntimeException("failed insert post", e);
+            throw new RuntimeException("failed insert post", e); // 수정 필요
         }
     }
 
@@ -152,23 +151,19 @@ public class BoardController {
 
     @ResponseBody
     @PutMapping
-    public int updPost(@RequestPart("dto") BoardUpdDto dto, @RequestPart(value = "file", required = false) MultipartFile file) throws Exception {
+    public int updPost(@RequestPart("dto") BoardUpdDto dto, @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
-            int result = service.updPost(dto);
+            int result = service.updPost(dto); // 수정 필요
 
             if (file != null) {
                 String path = "file/" + dto.getIboard();
                 String uploadPath = uploadUtil.fileUpload(path, file);
-
                 String originalName = file.getOriginalFilename();
-
-                BoardInsFileDto insFileDto = BoardInsFileDto.builder()
-                        .iboard(dto.getIboard())
-                        .originalName(originalName)
-                        .uuidName(uploadPath)
-                        .build();
-
-                int rows = service.insPostFile(insFileDto);
+                int rows = service.insPostFile(BoardInsFileDto.builder()
+                                                              .iboard(dto.getIboard())
+                                                              .originalName(originalName)
+                                                              .uuidName(uploadPath)
+                                                              .build());
             }
 
             // >>>>> 이미지 수정 fl
@@ -176,9 +171,9 @@ public class BoardController {
             List<String> getPostPics = service.getPostPics(dto.getIboard());
             // 해당 게시글에 없는 사진만 뽑아냄(db, 디렉토리 정리용)
             List<String> isNullPics = getPostPics.stream()
-                    // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
-                    .filter(pic -> !dto.getContents().contains(pic))
-                    .toList(); // 후처리
+                                                 // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
+                                                 .filter(pic -> !dto.getContents().contains(pic))
+                                                 .toList(); // 후처리
 
             if (Util.isNotNull(isNullPics.size())) {
                 // 해당 게시글에 없는 사진만 삭제
@@ -196,14 +191,14 @@ public class BoardController {
 
     @ResponseBody
     @DeleteMapping
-    public int delPost(@RequestParam(name = "iboard") int iboard) throws Exception {
+    public int delPost(@RequestParam(name = "iboard") int iboard) {
         try {
             if (Util.isNotNull(service.delPost(iboard))) {
                 uploadUtil.delDirTrigger("/image/" + iboard);
                 uploadUtil.delDirTrigger("/file/" + iboard);
                 return SUCCESS;
             } else {
-                return FAIL;
+                throw new Exception();
             }
         } catch (Exception e) {
             return FAIL;

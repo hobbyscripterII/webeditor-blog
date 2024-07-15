@@ -7,11 +7,13 @@ import com.jy.myblog.common.UploadUtil;
 import com.jy.myblog.common.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.jy.myblog.common.Const.FAIL;
 import static com.jy.myblog.common.Const.SUCCESS;
 
 @Slf4j
@@ -35,12 +37,10 @@ public class BoardService {
     public BoardSelVo selPost(int iboard) {
         BoardSelVo vo = mapper.selPost(iboard);
         List<BoardSelVo.File> files = mapper.getPostFile(iboard);
+        List<BoardCommentGetVo> comments = mapper.getComment(iboard);
 
-        if (files.size() > 0) {
-            vo.setFiles(files);
-            log.info("files = {}", files);
-            log.info("vo.getFiles = {}", vo.getFiles());
-        }
+        if (files.size() > 0) { vo.setFiles(files); }
+        else if(comments.size() > 0) { vo.setComments(comments); }
 
         return vo;
     }
@@ -53,11 +53,6 @@ public class BoardService {
     public int insNullPost(BoardInsDto dto) {
         return mapper.insNullPost(dto);
     }
-
-//    @Transactional
-//    public int insPost(BoardInsDto dto) {
-//        return mapper.insPost(dto);
-//    }
 
     @Transactional
     public int insPostPic(BoardInsPicDto dto) {
@@ -72,15 +67,10 @@ public class BoardService {
     @Transactional
     public int updPost(BoardUpdDto dto) throws Exception {
         try {
-            int rows = mapper.updPost(dto);
-
-            if (Util.isNotNull(rows)) {
-                return SUCCESS;
-            } else {
-                throw new Exception();
-            }
+            if (Util.isNotNull(mapper.updPost(dto))) { return SUCCESS; }
+            else { throw new Exception(); }
         } catch (Exception e) {
-            throw new Exception();
+            return FAIL;
         }
     }
 
@@ -91,8 +81,7 @@ public class BoardService {
             mapper.delPostPics(iboard);
             return SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception();
+            return FAIL;
         }
     }
 
@@ -101,11 +90,32 @@ public class BoardService {
         return mapper.delPostPic(uuidName);
     }
 
-    public List<BoardTagGetVo> getTag(String tag) {
-        return mapper.getTag(tag);
-    }
-
     public int getPostCnt(BoardGetCntDto dto) {
         return mapper.getPostCnt(dto);
     }
+
+    public int insComment(BoardCommentInsDto dto) {
+        try {
+            String hashedPwd = BCrypt.hashpw(dto.getUpw(), BCrypt.gensalt());
+
+            log.info("hashedPwd = {}", hashedPwd);
+
+            dto.setUpw(hashedPwd);
+
+            log.info("dto = {}", dto);
+
+            if(Util.isNotNull(mapper.insComment(dto))) {
+                return SUCCESS;
+            } else {
+                throw new Exception();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            return FAIL;
+        }
+    }
+
+//        public List<BoardTagGetVo> getTag(String tag) {
+//        return mapper.getTag(tag);
+//    }
 }

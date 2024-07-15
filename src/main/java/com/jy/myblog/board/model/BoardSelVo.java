@@ -9,10 +9,11 @@ public class BoardSelVo {
     private int iboard;
     private int icategory;
     private String title;
-    private String contents;
-    private List<BoardSelVo.File> files;
     private String nm;
+    private String contents;
     private String createdAt;
+    private List<BoardSelVo.File> files;
+    private List<BoardCommentGetVo> comments;
 
     @Data
     public static class File {
