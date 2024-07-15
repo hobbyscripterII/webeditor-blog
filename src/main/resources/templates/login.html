@@ -14,7 +14,7 @@
             <tbody>
             <!-- >>>>> spring security 자격 증명 실패 시 출력되는 메세지 -->
             <tr class="alert alert-dismissible alert-danger center" role="alert" th:if="${param.error != null}" style="margin-bottom: 20px">
-                <td colspan="2" style="background-color: #f7dddc !important">자격 증명에 실패하였습니다.</td>
+                <td colspan="2" style="background-color: #f7dddc !important">아이디 혹은 패스워드를 확인해주세요.</td>
             </tr>
             <tr>
                 <td>아이디</td>
@@ -35,6 +35,12 @@
 </section>
 
 <script>
+    document.addEventListener('keyup', (e) => {
+        if (e.keyCode == 13) {
+            login();
+        }
+    });
+
     function login() {
         const uid = $('#uid');
         const upw = $('#upw');
