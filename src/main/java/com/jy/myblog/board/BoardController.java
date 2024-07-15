@@ -36,8 +36,8 @@ public class BoardController {
     private final BoardService service;
     private final UploadUtil uploadUtil;
 
-    @GetMapping("/file/download")
-    public ResponseEntity<Resource> download(@RequestParam(name = "iboardfile") int iboardfile) {
+    @GetMapping("/file/download/{iboardfile}")
+    public ResponseEntity<Resource> download(@PathVariable(name = "iboardfile") int iboardfile) {
         try {
             BoardSelVo.File file = service.selPostFile(iboardfile);
             String downloadPath = uploadUtil.getDownloadPath(file.getUuidName());
@@ -51,7 +51,7 @@ public class BoardController {
         }
     }
 
-    // 웹에디터 이미지 첨부 시 해당 controller로 이동
+    // 웹에디터 이미지 첨부 시
     @RequestMapping("/imageupload")
     public ModelAndView imageUpload(@RequestParam(name = "iboard") int iboard, MultipartHttpServletRequest request) throws Exception {
         try {
