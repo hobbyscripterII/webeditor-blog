@@ -10,4 +10,5 @@ import lombok.ToString;
 public class BoardCommentUpdDto {
     private int icomment;
     private String contents;
+    private String upw;
 }

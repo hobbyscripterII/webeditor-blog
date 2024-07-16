@@ -11,10 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
-import static com.jy.myblog.common.Const.FAIL;
-import static com.jy.myblog.common.Const.SUCCESS;
+import static com.jy.myblog.common.Const.*;
 
 @Slf4j
 @Service
@@ -26,14 +26,6 @@ public class BoardService {
         return mapper.getPost(criteria);
     }
 
-    public List<String> getPostPics(int iboard) {
-        return mapper.getPostPics(iboard);
-    }
-
-//    public List<BoardSelVo.File> getPostFile(int iboard) {
-//        return mapper.getPostFile(iboard);
-//    }
-
     public BoardSelVo selPost(int iboard) {
         BoardSelVo vo = mapper.selPost(iboard);
 
@@ -41,10 +33,6 @@ public class BoardService {
         else if(vo.getCommentCnt() > 0) { vo.setComments(mapper.getComment(iboard)); }
 
         return vo;
-    }
-
-    public BoardSelVo.File selPostFile(int iboardfile) {
-        return mapper.selPostFile(iboardfile);
     }
 
     @Transactional
@@ -57,13 +45,17 @@ public class BoardService {
         return mapper.insPostPic(dto);
     }
 
+    public BoardSelVo.File selPostFile(int iboardfile) {
+        return mapper.selPostFile(iboardfile);
+    }
+
     @Transactional
     public int insPostFile(BoardInsFileDto dto) {
         return mapper.insPostFile(dto);
     }
 
     @Transactional
-    public int updPost(BoardUpdDto dto) throws Exception {
+    public int updPost(BoardUpdDto dto) {
         try {
             if (Util.isNotNull(mapper.updPost(dto))) { return SUCCESS; }
             else { throw new Exception(); }
@@ -73,7 +65,7 @@ public class BoardService {
     }
 
     @Transactional
-    public int delPost(int iboard) throws Exception {
+    public int delPost(int iboard) {
         try {
             mapper.delPost(iboard);
             mapper.delPostPics(iboard);
@@ -83,28 +75,61 @@ public class BoardService {
         }
     }
 
+    public List<String> getPostPics(int iboard) {
+        return mapper.getPostPics(iboard);
+    }
+
     @Transactional
     public int delPostPic(String uuidName) {
         return mapper.delPostPic(uuidName);
     }
 
-    public int getPostCnt(BoardGetCntDto dto) {
-        return mapper.getPostCnt(dto);
+    // 중복 메소드 제거
+    private boolean passwordCheck(int icomment, String upw) {
+        // mapper.getCommentPassword(icomment) - DB에 저장되어 있던 댓글 패스워드 가져옴
+        // BCrypt.checkpw - Security 내장 BCrypt로 패스워드 확인
+        return BCrypt.checkpw(upw, mapper.getCommentPassword(icomment));
+    }
+
+    public int delComment(BoardCommentDelDto dto) {
+        try {
+            if (passwordCheck(dto.getIcomment(), dto.getUpw())) {
+                if (Util.isNotNull(mapper.delComment(dto.getIcomment()))) { return SUCCESS; }
+                else { throw new SQLException(); }
+            } else {
+                return PASSWORD_MISMATCH_ERROR;
+            }
+        } catch (SQLException e) {
+            return FAIL;
+        }
+    }
+
+    public int updComment(BoardCommentUpdDto dto) {
+        try {
+            if (passwordCheck(dto.getIcomment(), dto.getUpw())) {
+                if (Util.isNotNull(mapper.updComment(dto))) { return SUCCESS; }
+                else { throw new SQLException(); }
+            } else {
+                return PASSWORD_MISMATCH_ERROR;
+            }
+        } catch (SQLException e) {
+            return FAIL;
+        }
     }
 
     public int insComment(BoardCommentInsDto dto) {
         try {
             dto.setUpw(BCrypt.hashpw(dto.getUpw(), BCrypt.gensalt()));
 
-            if(Util.isNotNull(mapper.insComment(dto))) {
-                return SUCCESS;
-            } else {
-                throw new Exception();
-            }
+            if(Util.isNotNull(mapper.insComment(dto))) { return SUCCESS; }
+            else { return FAIL; }
         } catch(Exception e) {
-            e.printStackTrace();
             return FAIL;
         }
+    }
+
+    public int getPostCnt(BoardGetCntDto dto) {
+        return mapper.getPostCnt(dto);
     }
 
 //        public List<BoardTagGetVo> getTag(String tag) {

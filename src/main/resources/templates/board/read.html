@@ -20,12 +20,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p><textarea class="form-control" id="comment-contents-update" rows="3" style="resize: none"></textarea></p>
-                <p><input class="form-control form-control-sm" id="comment-contents-update-upw" type="password" placeholder="작성 시 등록했던 패스워드를 입력해주세요."></p>
+                <p><textarea class="form-control" id="comment-update-contents" rows="3" style="resize: none"></textarea></p>
+                <p><input class="form-control form-control-sm" id="comment-update-contents-upw" type="password" placeholder="작성 시 등록했던 패스워드를 입력해주세요."></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary btn-modal-confirm">확인</button>
+                <button type="button" class="btn btn-primary" onclick="updComment()">확인</button>
             </div>
         </div>
     </div>
@@ -39,11 +39,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p><input class="form-control form-control-sm" id="comment-contents-delete-upw" type="password" placeholder="작성 시 등록했던 패스워드를 입력해주세요."></p>
+                <p><input class="form-control form-control-sm" id="comment-delete-contents-upw" type="password" placeholder="작성 시 등록했던 패스워드를 입력해주세요."></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                <button type="button" class="btn btn-primary btn-modal-confirm">확인</button>
+                <button type="button" class="btn btn-primary" onclick="delComment()">확인</button>
             </div>
         </div>
     </div>
@@ -110,7 +110,7 @@
                             <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-comment-update-modal-open" data-bs-toggle="modal" data-bs-target="#modal-comment-update" style="margin-left: 10px">수정</button>
                             <button type="button" class="btn btn-outline-danger btn-sm" id="btn-comment-delete-modal-open" data-bs-toggle="modal" data-bs-target="#modal-comment-delete" style="margin-left: 10px">삭제</button>
                         </p>
-                        <p class="p-comment-contents" th:text="${c.contents}"></p>
+                        <p class="p-comment-contents" th:data-icomment="${c.icomment }" th:text="${c.contents}"></p>
                     </th:block>
                 </div>
             </th:block>
@@ -134,23 +134,96 @@
 </section>
 
 <script th:inline="javascript">
+    let icomment; // 댓글 수정 모달 창 열릴 때 해당 댓글 pk를 담기위한 용도
+
     // 게시글 출력(html 코드이기 때문에 innerHTML로 객체에 있는 값을 출력)
     $(document).ready(function () {
         document.getElementById('contents').innerHTML = [[${post.contents}]];
     });
 
     $(document).click((e) => {
-        // 댓글 수정 플래그
+        // 댓글 수정 모달창 세팅
        if(e.target.id == 'btn-comment-update-modal-open') {
-           let copyNode = e.target.parentNode.nextSibling.nextSibling; // 댓글 내용이 있는 <p> 요소 접근
-           let copyText = copyNode.textContent; // <p>의 text를 빼옴
-           let commentContentsUpdate = document.getElementById('comment-contents-update'); // text를 넣을 요소의 id 가져오기
-           commentContentsUpdate.value = copyText; // text 넣기
+           let copyNode = $(e.target).parent().next(); // 댓글 내용이 있는 <p> 요소 접근
+           console.log(copyNode);
+           let copyText = copyNode.text(); // <p>의 text를 빼옴
+           let commentContentsUpdate = $('#comment-update-contents'); // text를 넣을 요소의 id 가져오기
+           commentContentsUpdate.val(copyText); // text 넣기
+           icomment = copyNode.data('icomment'); // 댓글 pk 가져와 icomment 변수에 참조
        }
 
-        // 댓글 삭제 플래그
-        // ...
+        // 댓글 삭제 모달창 세팅
+        if(e.target.id == 'btn-comment-delete-modal-open') {
+            let copyNode = $(e.target).parent().next();
+            icomment = copyNode.data('icomment');
+        }
     });
+
+    // 댓글 삭제
+    function delComment() {
+        let commentDeleteContentsUpw = $('#comment-delete-contents-upw');
+
+        if(!commentDeleteContentsUpw.val()) {
+            alert('패스워드를 입력해주세요.');
+            return false;
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '/board/comment/delete',
+                data: { 'icomment' : icomment, 'upw' : commentDeleteContentsUpw.val() },
+                success: function (result) {
+                    const SUCCESS = 1;
+                    const PASSWORD_MISMATCH_ERROR = -1;
+                    if(result == SUCCESS) {
+                        alert('댓글 삭제가 완료되었습니다.');
+                        location.reload();
+                    } else if(result == PASSWORD_MISMATCH_ERROR) {
+                        alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+                        return false;
+                    } else {
+                        alert('일시적인 오류로 인해 댓글 수정에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+                        return false;
+                    }
+                }
+            });
+        }
+    }
+
+    // 댓글 수정
+    function updComment() {
+        let commentUpdateContents = $('#comment-update-contents');
+        let commentUpdateContentsUpw = $('#comment-update-contents-upw');
+
+        if(!commentUpdateContents.val()) {
+            alert('내용을 입력해주세요.');
+            commentUpdateContents.focus();
+            return false;
+        } else if(!commentUpdateContentsUpw.val()) {
+            alert('패스워드를 입력해주세요.');
+            commentUpdateContentsUpw.focus();
+            return false;
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '/board/comment/update',
+                data: { 'icomment' : icomment, 'contents' : commentUpdateContents.val(), 'upw' : commentUpdateContentsUpw.val() },
+                success: function (result) {
+                    const SUCCESS = 1;
+                    const PASSWORD_MISMATCH_ERROR = -1;
+                    if(result == SUCCESS) {
+                        alert('댓글 수정이 완료되었습니다.');
+                        location.reload();
+                    } else if(result == PASSWORD_MISMATCH_ERROR) {
+                        alert('비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+                        return false;
+                    } else {
+                        alert('일시적인 오류로 인해 댓글 수정에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+                        return false;
+                    }
+                }
+            });
+        }
+    }
 
     // 댓글 작성
     function insComment() {

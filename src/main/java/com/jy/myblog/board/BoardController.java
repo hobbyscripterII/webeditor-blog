@@ -78,16 +78,22 @@ public class BoardController {
         }
     }
 
+    @PostMapping("/comment/delete")
+    @ResponseBody
+    public int delComment(BoardCommentDelDto dto) {
+        return service.delComment(dto);
+    }
+
+    @PostMapping("/comment/update")
+    @ResponseBody
+    public int updComment(BoardCommentUpdDto dto) {
+        return service.updComment(dto);
+    }
+
     @PostMapping("/comment/write")
     @ResponseBody
     public int insComment(BoardCommentInsDto dto) {
-        int insCommentRows = service.insComment(dto);
-
-        if(Util.isNotNull(insCommentRows)) {
-            return SUCCESS;
-        } else {
-            return FAIL;
-        }
+        return service.insComment(dto);
     }
 
     @GetMapping("/list")
@@ -95,11 +101,8 @@ public class BoardController {
         String title = null;
         criteria.setIcategory(icategory);
 
-        if (Util.isNotNull(icategory)) {
-            title = categoryToStringConverter(icategory);
-        } else {
-            title = "\'" + criteria.getKeyword() + "\' 검색 결과";
-        }
+        if (Util.isNotNull(icategory)) { title = categoryToStringConverter(icategory); }
+        else { title = "\'" + criteria.getKeyword() + "\' 검색 결과"; }
 
         List<BoardGetVo.Post> posts = service.getPost(criteria);
         BoardGetVo list = new BoardGetVo(icategory, title, criteria.getKeyword(), posts);
@@ -149,8 +152,8 @@ public class BoardController {
         return "board/write";
     }
 
-    @ResponseBody
     @PutMapping
+    @ResponseBody
     public int updPost(@RequestPart("dto") BoardUpdDto dto, @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
             int result = service.updPost(dto); // 수정 필요
@@ -189,8 +192,8 @@ public class BoardController {
         }
     }
 
-    @ResponseBody
     @DeleteMapping
+    @ResponseBody
     public int delPost(@RequestParam(name = "iboard") int iboard) {
         try {
             if (Util.isNotNull(service.delPost(iboard))) {

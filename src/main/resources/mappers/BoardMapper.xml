@@ -98,13 +98,13 @@
         </where>
     </select>
 
-    <insert id="insComment">
-        INSERT board_comment(iboard, unm, upw, contents) VALUES(#{iboard}, #{unm}, #{upw}, #{contents})
-    </insert>
-
     <select id="getComment">
         SELECT icomment, unm, upw, contents, created_at FROM board_comment WHERE iboard = #{iboard} AND public_fl = 'Y'
     </select>
+
+    <insert id="insComment">
+        INSERT board_comment(iboard, unm, upw, contents) VALUES(#{iboard}, #{unm}, #{upw}, #{contents})
+    </insert>
 
     <update id="updComment">
         UPDATE board_comment SET contents = #{contents} WHERE icomment = #{icomment}
