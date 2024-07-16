@@ -9,7 +9,46 @@
     section { height: auto; }
     footer { position: relative; top: 44px; }
     .card-text:last-child { margin-bottom: auto; !important; }
+    .fade:not(.show) { display: none; }
 </style>
+
+<div class="modal fade modal-dialog-centered" id="modal-comment-update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">알림</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><textarea class="form-control" id="comment-contents-update" rows="3" style="resize: none"></textarea></p>
+                <p><input class="form-control form-control-sm" id="comment-contents-update-upw" type="password" placeholder="작성 시 등록했던 패스워드를 입력해주세요."></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary btn-modal-confirm">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-dialog-centered" id="modal-comment-delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">알림</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><input class="form-control form-control-sm" id="comment-contents-delete-upw" type="password" placeholder="작성 시 등록했던 패스워드를 입력해주세요."></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary btn-modal-confirm">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <section>
     <div class="title" th:text="${title}">TITLE</div>
     <table class="table table-post-read">
@@ -68,10 +107,10 @@
                     <th:block th:each="c : ${post.comments}">
                         <p class="card-text">
                             <span th:text="'닉네임:' + ${c.unm}"></span> &nbsp; <span style="font-size: small; color: gray" th:text="${c.created_at}"></span>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" style="margin-left: 10px">수정</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm" style="margin-left: 10px">삭제</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-comment-update-modal-open" data-bs-toggle="modal" data-bs-target="#modal-comment-update" style="margin-left: 10px">수정</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" id="btn-comment-delete-modal-open" data-bs-toggle="modal" data-bs-target="#modal-comment-delete" style="margin-left: 10px">삭제</button>
                         </p>
-                        <p th:text="${c.contents}"></p>
+                        <p class="p-comment-contents" th:text="${c.contents}"></p>
                     </th:block>
                 </div>
             </th:block>
@@ -100,6 +139,19 @@
         document.getElementById('contents').innerHTML = [[${post.contents}]];
     });
 
+    $(document).click((e) => {
+        // 댓글 수정 플래그
+       if(e.target.id == 'btn-comment-update-modal-open') {
+           let copyNode = e.target.parentNode.nextSibling.nextSibling; // 댓글 내용이 있는 <p> 요소 접근
+           let copyText = copyNode.textContent; // <p>의 text를 빼옴
+           let commentContentsUpdate = document.getElementById('comment-contents-update'); // text를 넣을 요소의 id 가져오기
+           commentContentsUpdate.value = copyText; // text 넣기
+       }
+
+        // 댓글 삭제 플래그
+        // ...
+    });
+
     // 댓글 작성
     function insComment() {
         let unm = $('#unm');
@@ -124,7 +176,7 @@
                 $.ajax({
                     type: 'post',
                     url: '/board/comment/write',
-                    data: {'iboard' : iboard, 'unm' : unm.val(), 'upw' : upw.val(), 'contents' : commentContents.val() },
+                    data: { 'iboard' : iboard, 'unm' : unm.val(), 'upw' : upw.val(), 'contents' : commentContents.val() },
                     success: function (result) {
                         const SUCCESS = 1;
 
