@@ -19,6 +19,7 @@ public class BoardGetVo {
     public static class Post {
         private int iboard;
         private String nm;
+        private String subCategoryNm;
         private String title;
         private int commentCnt;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
