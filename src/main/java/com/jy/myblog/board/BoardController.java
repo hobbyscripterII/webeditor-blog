@@ -135,10 +135,12 @@ public class BoardController {
                                          .icategory(icategory)
                                          .build();
             service.insNullPost(dto);
+
             model.addAttribute("dto", new BoardInsDto());
             model.addAttribute("title", title);
             model.addAttribute("iboard", dto.getIboard());
             model.addAttribute("category", icategory);
+            model.addAttribute("subcategory", service.getSubCategory(icategory));
 
             return "board/write";
         } catch (Exception e) {

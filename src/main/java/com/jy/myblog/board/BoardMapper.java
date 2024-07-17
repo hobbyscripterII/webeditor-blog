@@ -23,7 +23,7 @@ public interface BoardMapper {
     int delPostPic(String uuidName);
     int delPostPics(int iboard);
     int getPostCnt(BoardGetCntDto dto);
-
+    List<BoardSubCategoryGetVo> getSubCategory(int icategory);
     List<BoardTagGetVo> getTag(String tag);
 
     // 댓글

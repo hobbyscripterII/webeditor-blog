@@ -25,7 +25,7 @@
             </thead>
             <tbody>
             <tr th:each="l : ${list.posts}">
-                <td th:text="${l.subCategoryNm}">카테고리명</td>
+                <td th:text="${l.subCategoryNm}" style="font-weight: bold">카테고리명</td>
                 <td>
                     <a th:href="@{/board/read(category=${list.icategory}, post=${l.iboard})}"><th:block th:text="${l.title}" /></a>
                     <th:block th:if="${l.commentCnt != 0}">

@@ -42,7 +42,7 @@
     <select id="selPost">
         SELECT a.iboard, a.icategory, a.title, b.nm, a.contents, a.created_at createdAt,
         (SELECT COUNT(*) FROM board_file WHERE iboard = a.iboard) fileCnt,
-        (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard) commentCnt
+        (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard AND public_fl = 'Y') commentCnt
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
@@ -50,8 +50,8 @@
     </select>
 
     <insert id="insNullPost" useGeneratedKeys="true" keyProperty="iboard">
-        INSERT INTO board(icategory, iuser, title, contents) VALUES
-        (#{icategory}, #{iuser}, ' ', ' ')
+        INSERT INTO board(icategory, isubcategory, iuser, title, contents) VALUES
+        (#{icategory}, 1, #{iuser}, ' ', ' ')
     </insert>
 
     <insert id="insPostPic">
@@ -118,5 +118,9 @@
 
     <select id="getCommentPassword">
         SELECT upw FROM board_comment WHERE icomment = #{icomment}
+    </select>
+
+    <select id="getSubCategory">
+        SELECT isubcategory, name FROM board_subcategory WHERE icategory = #{icategory} ORDER BY name
     </select>
 </mapper>

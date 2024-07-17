@@ -29,8 +29,12 @@ public class BoardService {
     public BoardSelVo selPost(int iboard) {
         BoardSelVo vo = mapper.selPost(iboard);
 
+        log.info("vo.getCommentCnt() = {}", vo.getCommentCnt());
+
         if (vo.getFileCnt() > 0) { vo.setFiles(mapper.getPostFile(iboard)); }
         else if(vo.getCommentCnt() > 0) { vo.setComments(mapper.getComment(iboard)); }
+
+        log.info("vo = {}", vo);
 
         return vo;
     }
@@ -130,6 +134,10 @@ public class BoardService {
 
     public int getPostCnt(BoardGetCntDto dto) {
         return mapper.getPostCnt(dto);
+    }
+
+    public List<BoardSubCategoryGetVo> getSubCategory(int icategory) {
+        return mapper.getSubCategory(icategory);
     }
 
 //        public List<BoardTagGetVo> getTag(String tag) {

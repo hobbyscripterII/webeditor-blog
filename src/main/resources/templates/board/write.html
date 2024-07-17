@@ -8,14 +8,25 @@
 <style>
     .ck.ck-editor { position: static; }
     .ck.ck-editor__editable.ck-rounded-corners:not(.ck-editor__nested-editable) { border: 1px solid lightgray; height: 585px; }
+    footer { bottom: auto; margin-top: 30px; }
+    .td-info { text-align: center; margin: auto; width: 90px; }
 </style>
 
 <section>
     <div class="title" th:text="${title}">TITLE</div>
     <div class="" th:object="${dto}">
         <div style="display: flex; margin-bottom: 10px">
-            <label class="td-info" style="text-align: center; margin: auto">제목</label>
+            <label class="td-info">제목</label>
             <input type="text" id="title" th:field="*{title}" class="form-control">
+        </div>
+
+        <div style="display: flex; margin-bottom: 10px">
+            <label class="td-info">카테고리</label>
+            <select class="form-select">
+                <th:block th:each="s : ${subcategory}">
+                    <option th:value="${s.isubcategory}"><span th:text="${s.name}" /></option>
+                </th:block>
+            </select>
         </div>
 
         <!--        <tr>-->
