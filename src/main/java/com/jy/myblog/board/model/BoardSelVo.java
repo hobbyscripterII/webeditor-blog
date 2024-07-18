@@ -8,6 +8,8 @@ import java.util.List;
 public class BoardSelVo {
     private int iboard;
     private int icategory;
+    private int isubcategory;
+    private String subCategoryNm;
     private String title;
     private String nm;
     private String contents;

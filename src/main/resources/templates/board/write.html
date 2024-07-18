@@ -22,7 +22,8 @@
 
         <div style="display: flex; margin-bottom: 10px">
             <label class="td-info">카테고리</label>
-            <select class="form-select">
+            <select class="form-select" id="isubcategory">
+                <option th:value="${dto.isubcategory}"><span th:text="${dto.subCategoryNm}" /></option>
                 <th:block th:each="s : ${subcategory}">
                     <option th:value="${s.isubcategory}"><span th:text="${s.name}" /></option>
                 </th:block>
@@ -93,7 +94,7 @@
 
         // form id 접근 -> input type - file인 0번째 요소 접근 -> 해당 file에 접근
         const file = $('#f input[type=file]')[0].files[0];
-        const dto = { "iboard" : iboard, "title" : $('#title').val(), "contents" : editor.getData() };
+        const dto = { "iboard" : iboard, "isubcategory" : $('#isubcategory').val(), "title" : $('#title').val(), "contents" : editor.getData() };
 
         const formData = new FormData(); // controller에서 @RequestPart로 받아야 함
         formData.append("file", file); // @RequestPart의 value 속성으로 key 값을 가져올 수 있음

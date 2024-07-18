@@ -40,12 +40,14 @@
     </select>
 
     <select id="selPost">
-        SELECT a.iboard, a.icategory, a.title, b.nm, a.contents, a.created_at createdAt,
+        SELECT a.iboard, a.icategory, c.isubcategory, c.name subCategoryNm, a.title, b.nm, a.contents, a.created_at createdAt,
         (SELECT COUNT(*) FROM board_file WHERE iboard = a.iboard) fileCnt,
         (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard AND public_fl = 'Y') commentCnt
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
+        INNER JOIN board_subcategory c
+        ON a.isubcategory = c.isubcategory
         WHERE a.iboard = #{iboard}
     </select>
 
@@ -64,6 +66,7 @@
 
     <update id="updPost">
         UPDATE board SET
+        isubcategory = ${isubcategory},
         title = #{title},
         contents = #{contents}
         WHERE iboard = #{iboard}

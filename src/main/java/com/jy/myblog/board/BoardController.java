@@ -149,8 +149,11 @@ public class BoardController {
     }
 
     @GetMapping("/update")
-    public String updPost(@RequestParam(name = "board") int iboard, Model model) {
+    public String updPost(@RequestParam(name = "board") int iboard, @RequestParam(name = "category") int icategory, Model model) {
         model.addAttribute("dto", service.selPost(iboard));
+        model.addAttribute("category", icategory);
+        model.addAttribute("subcategory", service.getSubCategory(icategory));
+
         return "board/write";
     }
 
@@ -158,37 +161,41 @@ public class BoardController {
     @ResponseBody
     public int updPost(@RequestPart("dto") BoardUpdDto dto, @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
-            int result = service.updPost(dto); // 수정 필요
+            int updPostRows = service.updPost(dto);
 
-            if (file != null) {
-                String path = "file/" + dto.getIboard();
-                String uploadPath = uploadUtil.fileUpload(path, file);
-                String originalName = file.getOriginalFilename();
-                int rows = service.insPostFile(BoardInsFileDto.builder()
-                                                              .iboard(dto.getIboard())
-                                                              .originalName(originalName)
-                                                              .uuidName(uploadPath)
-                                                              .build());
-            }
-
-            // >>>>> 이미지 수정 fl
-            // pk로 db에 저장된 사진 uuid 가져옴
-            List<String> getPostPics = service.getPostPics(dto.getIboard());
-            // 해당 게시글에 없는 사진만 뽑아냄(db, 디렉토리 정리용)
-            List<String> isNullPics = getPostPics.stream()
-                                                 // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
-                                                 .filter(pic -> !dto.getContents().contains(pic))
-                                                 .toList(); // 후처리
-
-            if (Util.isNotNull(isNullPics.size())) {
-                // 해당 게시글에 없는 사진만 삭제
-                for (String pic : isNullPics) {
-                    service.delPostPic(pic); // DB 사진 삭제
-                    uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
+            if (Util.isNotNull(updPostRows)) {
+                if (file != null) {
+                    String path = "file/" + dto.getIboard();
+                    String uploadPath = uploadUtil.fileUpload(path, file);
+                    String originalName = file.getOriginalFilename();
+                    int rows = service.insPostFile(BoardInsFileDto.builder()
+                            .iboard(dto.getIboard())
+                            .originalName(originalName)
+                            .uuidName(uploadPath)
+                            .build());
                 }
-            }
 
-            return dto.getIboard();
+                // >>>>> 이미지 수정 fl
+                // pk로 db에 저장된 사진 uuid 가져옴
+                List<String> getPostPics = service.getPostPics(dto.getIboard());
+                // 해당 게시글에 없는 사진만 뽑아냄(db, 디렉토리 정리용)
+                List<String> isNullPics = getPostPics.stream()
+                        // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
+                        .filter(pic -> !dto.getContents().contains(pic))
+                        .toList(); // 후처리
+
+                if (Util.isNotNull(isNullPics.size())) {
+                    // 해당 게시글에 없는 사진만 삭제
+                    for (String pic : isNullPics) {
+                        service.delPostPic(pic); // DB 사진 삭제
+                        uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
+                    }
+                }
+
+                return dto.getIboard();
+            } else {
+                throw new Exception();
+            }
         } catch (Exception e) {
             return FAIL;
         }

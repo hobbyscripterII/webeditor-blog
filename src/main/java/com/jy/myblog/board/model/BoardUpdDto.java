@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class BoardUpdDto {
-    private int isubject;
     private int iboard;
+    private int isubcategory;
     private String title;
     private String contents;
 }
