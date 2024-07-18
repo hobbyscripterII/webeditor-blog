@@ -11,7 +11,8 @@ public class AdminGetPostVo {
     private int iboard;
     private int icategory;
     private String publicFl;
-    public String category;
+    public String categoryNm;
+    public String subCategoryNm;
     private String nm;
     private String title;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
