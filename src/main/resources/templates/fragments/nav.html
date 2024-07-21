@@ -3,22 +3,29 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="nav">
-<nav>
-    <a href="/" id="nav-title">My Blog.</a>
-    <a th:href="@{/board/list?category=1}" class="nav-menu">NOTICE</a>
-    <a th:href="@{/board/list?category=2}" class="nav-menu">DEV</a>
-    <a th:href="@{/board/list?category=3}" class="nav-menu">DIARY</a>
-    <a th:href="@{/board/list?category=4}" class="nav-menu">SONY A6000</a>
-    <a th:href="@{/board/list?category=5}" class="nav-menu">GUEST BOOK</a>
-    <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
-        <a th:href="@{/admin}" class="nav-menu">ADMIN</a>
-    </th:block>
-    <th:block sec:authorize="isAnonymous()"> <!-- 익명 사용자일 경우 로그인 버튼 출력 -->
-        <a th:href="@{/login}" class="nav-menu">LOGIN</a>
-    </th:block>
-    <th:block sec:authorize="isAuthenticated()"> <!-- 권한 관계없이 인증 완료 후 로그아웃 버튼 출력 -->
-        <a class="nav-menu" th:onclick="logout()">LOGOUT</a>
-    </th:block>
+
+<!-- Responsive navbar-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">Blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" aria-current="page" href="/board/">Blog</a></li>
+                <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <li class="nav-item"><a class="nav-link" aria-current="page" th:href="@{/admin}">Admin</a></li>
+                </th:block>
+                <th:block sec:authorize="isAnonymous()"> <!-- 익명 사용자일 경우 로그인 버튼 출력 -->
+                    <li class="nav-item"><a class="nav-link" aria-current="page" th:href="@{/login}">Login</a></li>
+                </th:block>
+                <th:block sec:authorize="isAuthenticated()"> <!-- 권한 관계없이 인증 완료 후 로그아웃 버튼 출력 -->
+                    <li class="nav-item"><a class="nav-link" aria-current="page" onclick="logout()">Logout</a></li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
 </nav>
 
 <script th:inline="javascript">

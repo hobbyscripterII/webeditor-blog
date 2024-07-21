@@ -8,68 +8,86 @@
 <style> .btn-group { margin-right: 2px; } </style>
 
 <section>
-    <div class="title">ADMIN</div>
-    <div class="div-btn-wrap" style="text-align: left; display: flex">
-        <div class="form-group">
-            <select class="form-select" id="select-category">
-                <th:block th:if="${category == 0}"><option>게시판 선택</option></th:block>
-                <th:block th:if="${category == 1}"><option>NOTICE</option></th:block>
-                <th:block th:if="${category == 2}"><option>DEV</option></th:block>
-                <th:block th:if="${category == 3}"><option>DIARY</option></th:block>
-                <th:block th:if="${category == 4}"><option>SONY A6000</option></th:block>
-                <th:block th:if="${category == 5}"><option>GUEST BOOK</option></th:block>
-                <th:block th:each="c : ${categories}">
-                    <option id="option-category" th:value="${c.icategory}" th:text="${c.category}"></option>
-                </th:block>
-            </select>
-        </div>
-
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <button type="button" class="btn btn-success">공개 여부</button>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-success dropdown-toggle show" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
-                <div class="dropdown-menu" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 50px);" data-popper-placement="bottom-start">
-                    <a class="dropdown-item" th:onclick="publicFl('Y')">공개</a>
-                    <a class="dropdown-item" th:onclick="publicFl('N')">비공개</a>
-                </div>
+    <!-- Page header with logo and tagline-->
+    <header class="py-5 bg-light border-bottom mb-4">
+        <div class="container">
+            <div class="text-center my-5">
+                <h1 class="fw-bolder">관리자 페이지 메인</h1>
+                <p class="lead mb-0">관리자 페이지 메인 화면입니다.</p>
             </div>
         </div>
-        <button type="button" class="btn btn-danger" th:onclick="deleteFl()">게시글 삭제</button>
-    </div>
+    </header>
+    <!-- Page content-->
+    <div class="container">
+        <div class="row">
+            <!-- Blog entries-->
+            <div class="col-lg-8">
+                <div class="div-btn-wrap" style="text-align: left; display: flex">
+                    <div class="form-group">
+                        <select class="form-select" id="select-category">
+                            <th:block th:if="${category == 0}"><option>게시판 선택</option></th:block>
+                            <th:block th:if="${category == 1}"><option>NOTICE</option></th:block>
+                            <th:block th:if="${category == 2}"><option>DEV</option></th:block>
+                            <th:block th:if="${category == 3}"><option>DIARY</option></th:block>
+                            <th:block th:if="${category == 4}"><option>SONY A6000</option></th:block>
+                            <th:block th:if="${category == 5}"><option>GUEST BOOK</option></th:block>
+                            <th:block th:each="c : ${categories}">
+                                <option id="option-category" th:value="${c.icategory}" th:text="${c.category}"></option>
+                            </th:block>
+                        </select>
+                    </div>
 
-    <table class="table table-hover table-admin">
-        <thead>
-        <tr>
-            <th style="width: 110px">전체 선택 <input type="checkbox" class="form-check-input" id="input-check-flag" th:onclick="checkFl()"> </th>
-            <th>글 번호</th>
-            <th>게시판</th>
-            <th>카테고리</th>
-            <th>공개 여부</th>
-            <th>제목</th>
-            <th>작성일</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="l : ${list}">
-            <td><input class="form-check-input" name="check-iboard" type="checkbox" th:value="${l.iboard}"></td>
-            <td th:text="${l.iboard}">글 번호</td>
-            <td th:text="${l.categoryNm}">게시판</td>
-            <td th:text="${l.subCategoryNm}">카테고리</td>
-            <td th:text="${l.publicFl}">공개 여부</td>
-            <td><a th:href="@{/board/read(category=${l.icategory}, post=${l.iboard})}"><th:block th:text="${l.title}"></th:block></a></td>
-            <td th:text="${l.createdAt}">작성일</td>
-        </tr>
-        </tbody>
-    </table>
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button type="button" class="btn btn-success">공개 여부</button>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-success dropdown-toggle show" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
+                            <div class="dropdown-menu" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 50px);" data-popper-placement="bottom-start">
+                                <a class="dropdown-item" th:onclick="publicFl('Y')">공개</a>
+                                <a class="dropdown-item" th:onclick="publicFl('N')">비공개</a>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger" th:onclick="deleteFl()">게시글 삭제</button>
+                </div>
 
-    <div class="pagination">
-        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=1, category=${category})}">&laquo;</a>
-        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=${pagination.start - pagination.pageCnt}, category=${category})}">&lt;</a>
-        <div class="page-item" th:each="page, i : ${#numbers.sequence(pagination.start, pagination.end)}">
-            <a class="page-link" th:href="@{/admin(page=${i.current}, category=${category})}" th:text="${i.current}"></a>
+                <table class="table table-hover table-admin">
+                    <thead>
+                    <tr>
+                        <th style="width: 110px">전체 선택 <input type="checkbox" class="form-check-input" id="input-check-flag" th:onclick="checkFl()"> </th>
+                        <th>글 번호</th>
+                        <th>게시판</th>
+                        <th>카테고리</th>
+                        <th>공개 여부</th>
+                        <th>제목</th>
+                        <th>작성일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="l : ${list}">
+                        <td><input class="form-check-input" name="check-iboard" type="checkbox" th:value="${l.iboard}"></td>
+                        <td th:text="${l.iboard}">글 번호</td>
+                        <td th:text="${l.categoryNm}">게시판</td>
+                        <td th:text="${l.subCategoryNm}">카테고리</td>
+                        <td th:text="${l.publicFl}">공개 여부</td>
+                        <td><a th:href="@{/board/read(category=${l.icategory}, post=${l.iboard})}"><th:block th:text="${l.title}"></th:block></a></td>
+                        <td th:text="${l.createdAt}">작성일</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=1, category=${category})}">&laquo;</a>
+                    <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/admin(page=${pagination.start - pagination.pageCnt}, category=${category})}">&lt;</a>
+                    <div class="page-item" th:each="page, i : ${#numbers.sequence(pagination.start, pagination.end)}">
+                        <a class="page-link" th:href="@{/admin(page=${i.current}, category=${category})}" th:text="${i.current}"></a>
+                    </div>
+                    <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.end + 1}, amount=${pagination.amount}, category=${category})}">&gt;</a>
+                    <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.realEnd}, amount=${pagination.amount}, category=${category})}">&raquo;</a>
+                </div>
+            </div>
+
+            <aside th:replace="~{fragments/sidebar :: sidebar}" />
         </div>
-        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.end + 1}, amount=${pagination.amount}, category=${category})}">&gt;</a>
-        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/admin(page=${pagination.realEnd}, amount=${pagination.amount}, category=${category})}">&raquo;</a>
     </div>
 </section>
 

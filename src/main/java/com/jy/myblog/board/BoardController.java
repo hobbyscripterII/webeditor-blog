@@ -96,6 +96,11 @@ public class BoardController {
         return service.insComment(dto);
     }
 
+    @GetMapping("/")
+    public String home() {
+        return "board/home";
+    }
+
     @GetMapping("/list")
     public String getPost(@RequestParam(name = "category", required = false, defaultValue = "0") int icategory, Pagination.Criteria criteria, Model model) {
         String title = null;

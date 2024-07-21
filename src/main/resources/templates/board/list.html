@@ -6,62 +6,83 @@
       layout:decorate="~{layout/default-layout}"
       layout:fragment="section">
 <style>
+    /*nav { background-color: #000 !important; }*/
     .active>.page-link, .page-link.active { color: #FFF !important; }
+    .py-5 { padding-top: 4rem !important; padding-bottom: 0rem !important; }
 </style>
 <section>
-    <div class="title" th:text="${list.title}">TITLE</div>
-    <th:block th:if="${#lists.size(list.posts) == 0}">
-        작성된 게시글이 없습니다.
-    </th:block>
-    <th:block th:if="${#lists.size(list.posts) >= 1}">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th style="width: 10%">카테고리</th>
-                <th style="width: 50%">제목</th>
-                <th style="width: 25%">작성자</th>
-                <th style="width: 25%">작성일</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="l : ${list.posts}">
-                <td th:text="${l.subCategoryNm}" style="font-weight: bold">카테고리명</td>
-                <td>
-                    <a th:href="@{/board/read(category=${list.icategory}, post=${l.iboard})}"><th:block th:text="${l.title}" /></a>
-                    <th:block th:if="${l.commentCnt != 0}">
-                        <span id="span-comment-cnt" th:text="'(' + ${l.commentCnt} + ')'" />
-                    </th:block>
-                </td>
-                <td th:text="${l.nm}">작성자</td>
-                <td th:text="${l.createdAt}">작성일</td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="pagination">
-            <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/board/list(category=${list.icategory}, page=1, keyword=${list.keyword})}">&laquo;</a>
-            <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/board/list(category=${list.icategory}, page=${pagination.start - pagination.pageCnt}, keyword=${list.keyword})}">&lt;</a>
-            <div class="page-item" th:each="page, i : ${#numbers.sequence(pagination.start, pagination.end)}">
-                <a class="page-link" th:href="@{/board/list(category=${list.icategory}, page=${i.current}, keyword=${list.keyword})}" th:text="${i.current}"></a>
+    <!-- Page header with logo and tagline-->
+    <header class="py-5 bg-light border-bottom mb-4">
+        <div class="container">
+            <div class="text-center my-5">
+                <h1 class="fw-bolder">블로그 메인</h1>
+                <p class="lead mb-0">블로그 메인 화면입니다.</p>
             </div>
-            <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/board/list(category=${list.icategory}, page=${pagination.end + 1}, amount=${pagination.amount}, keyword=${list.keyword})}">&gt;</a>
-            <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/board/list(category=${list.icategory}, page=${pagination.realEnd}, amount=${pagination.amount}, keyword=${list.keyword})}">&raquo;</a>
         </div>
-    </th:block>
+    </header>
+    <!-- Page content-->
+    <div class="container">
+        <div class="row">
+            <!-- Blog entries-->
+            <div class="col-lg-8">
+                <div class="title" th:text="${list.title}">TITLE</div>
+                <th:block th:if="${#lists.size(list.posts) == 0}">
+                    작성된 게시글이 없습니다.
+                </th:block>
+                <th:block th:if="${#lists.size(list.posts) >= 1}">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th style="width: 10%">카테고리</th>
+                            <th style="width: 50%">제목</th>
+                            <th style="width: 25%">작성자</th>
+                            <th style="width: 25%">작성일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="l : ${list.posts}">
+                            <td th:text="${l.subCategoryNm}" style="font-weight: bold">카테고리명</td>
+                            <td>
+                                <a th:href="@{/board/read(category=${list.icategory}, post=${l.iboard})}"><th:block th:text="${l.title}" /></a>
+                                <th:block th:if="${l.commentCnt != 0}">
+                                    <span id="span-comment-cnt" th:text="'(' + ${l.commentCnt} + ')'" />
+                                </th:block>
+                            </td>
+                            <td th:text="${l.nm}">작성자</td>
+                            <td th:text="${l.createdAt}">작성일</td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-    <div style="width: 100%; display: flex; justify-content: center">
-        <div class="input-group mb-3" style="width: 500px">
-            <input type="search" class="form-control" id="keyword" placeholder="검색어를 입력해주세요." aria-describedby="button-addon2" style="margin-right: 5px">
-            <button class="btn btn-primary" type="button" id="button-addon2" th:onclick="search()">SEARCH</button>
+                    <div class="pagination">
+                        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/board/list(category=${list.icategory}, page=1, keyword=${list.keyword})}">&laquo;</a>
+                        <a class="page-link" th:if="${1 < pagination.start}" th:href="@{/board/list(category=${list.icategory}, page=${pagination.start - pagination.pageCnt}, keyword=${list.keyword})}">&lt;</a>
+                        <div class="page-item" th:each="page, i : ${#numbers.sequence(pagination.start, pagination.end)}">
+                            <a class="page-link" th:href="@{/board/list(category=${list.icategory}, page=${i.current}, keyword=${list.keyword})}" th:text="${i.current}"></a>
+                        </div>
+                        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/board/list(category=${list.icategory}, page=${pagination.end + 1}, amount=${pagination.amount}, keyword=${list.keyword})}">&gt;</a>
+                        <a class="page-link" th:if="${pagination.end < pagination.realEnd}" th:href="@{/board/list(category=${list.icategory}, page=${pagination.realEnd}, amount=${pagination.amount}, keyword=${list.keyword})}">&raquo;</a>
+                    </div>
+                </th:block>
+
+                <div style="width: 100%; display: flex; justify-content: center">
+                    <div class="input-group mb-3" style="width: 500px">
+                        <input type="search" class="form-control" id="keyword" placeholder="검색어를 입력해주세요." aria-describedby="button-addon2" style="margin-right: 5px">
+                        <button class="btn btn-primary" type="button" id="button-addon2" th:onclick="search()">SEARCH</button>
+                    </div>
+                </div>
+
+                <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <div class="div-btn-wrap">
+                        <!-- "|location.href='@{/login}'|" -->
+                        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/write(category=${list.icategory})}'|">WRITE</button>
+                    </div>
+                </th:block>
+            </div>
+
+            <aside th:replace="~{fragments/sidebar :: sidebar}" />
         </div>
     </div>
-
-    <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
-        <div class="div-btn-wrap">
-            <!-- "|location.href='@{/login}'|" -->
-            <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/write(category=${list.icategory})}'|">WRITE</button>
-        </div>
-    </th:block>
 </section>
 
 <script th:inline="javascript">

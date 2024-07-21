@@ -4,10 +4,22 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}"
       layout:fragment="section">
-
+<style>
+    #f { width: 100%; display: flex; justify-content: center; }
+    table { width: 400px !important; }
+    footer { width: 100%; position: absolute; bottom: 0; }
+</style>
 <section>
-    <div class="title">LOGIN</div>
-    <form id="f" th:action="@{/login}" th:method="post" style="width: 350px">
+    <!-- Page header with logo and tagline-->
+    <header class="py-5 bg-light border-bottom mb-4">
+        <div class="container">
+            <div class="text-center my-5">
+                <h1 class="fw-bolder">로그인</h1>
+                <p class="lead mb-0">로그인을 위한 페이지입니다.</p>
+            </div>
+        </div>
+    </header>
+    <form id="f" th:action="@{/login}" th:method="post">
         <table class="table" th:object="${dto}">
             <!-- >>>>> sprint security 적용 전(BindingResult 사용) -->
 <!--            <div id="div-error-msg" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.globalErrors()}" th:text="${error}">아이디 혹은 패스워드를 확인해주세요.</div>-->

@@ -23,7 +23,9 @@
         <div style="display: flex; margin-bottom: 10px">
             <label class="td-info">카테고리</label>
             <select class="form-select" id="isubcategory">
-                <option th:value="${dto.isubcategory}"><span th:text="${dto.subCategoryNm}" /></option>
+                <th:block th:if="${dto.title != '' && dto.contents != ''}">
+                    <option th:value="${dto.isubcategory}"><span th:text="${dto.subCategoryNm}" /></option>
+                </th:block>
                 <th:block th:each="s : ${subcategory}">
                     <option th:value="${s.isubcategory}"><span th:text="${s.name}" /></option>
                 </th:block>
