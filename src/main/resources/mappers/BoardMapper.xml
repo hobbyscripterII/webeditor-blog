@@ -72,9 +72,10 @@
         WHERE iboard = #{iboard}
     </update>
 
-    <delete id="delPost">
-        DELETE FROM board WHERE iboard = #{iboard}
-    </delete>
+    <update id="delPost">
+        UPDATE board SET public_fl = 'N'
+        WHERE iboard = #{iboard}
+    </update>
 
     <delete id="delPostPics">
         DELETE FROM board_pic WHERE iboard = #{iboard}

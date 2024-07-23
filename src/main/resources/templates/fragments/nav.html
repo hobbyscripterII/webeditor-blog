@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="nav">
+<style>
+    .navbar { font-weight: 800; padding: 0.4rem 1rem !important; }
+    .bg-dark { background-color: #000 !important; }
+</style>
 
-<!-- Responsive navbar-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="/">Blog</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
                 <li class="nav-item"><a class="nav-link" aria-current="page" href="/board/">Blog</a></li>
                 <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
                     <li class="nav-item"><a class="nav-link" aria-current="page" th:href="@{/admin}">Admin</a></li>
@@ -19,7 +22,7 @@
                     <li class="nav-item"><a class="nav-link" aria-current="page" th:href="@{/login}">Login</a></li>
                 </th:block>
                 <th:block sec:authorize="isAuthenticated()"> <!-- 권한 관계없이 인증 완료 후 로그아웃 버튼 출력 -->
-                    <li class="nav-item"><a class="nav-link" aria-current="page" onclick="logout()">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" aria-current="page" onclick="logout()" style="cursor:pointer;">Logout</a></li>
                 </th:block>
             </ul>
         </div>

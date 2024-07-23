@@ -17,4 +17,14 @@ public class HomeController {
         model.addAttribute(POST, service.getPost());
         return "home";
     }
+
+    @GetMapping("/about")
+    public String about() {
+        return "about";
+    }
+
+    @GetMapping("/contact")
+    public String contact() {
+        return "contact";
+    }
 }

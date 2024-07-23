@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                         // 권한없이 접근 o
                         .requestMatchers(
                                 "/", "/css/**", "/js/**", "/img/**", "/error/**",
-                                "/login", "/logout", "/access-denied?error",
+                                "/login", "/logout", "/access-denied?error", "/about", "/contact",
                                 "/board/", "/board/list/**", "/board/read/**", "/board/comment/**", "/board/file/download/**",
                                 "/upload/**", "/download/**", "/file/**"
                         ).permitAll()
