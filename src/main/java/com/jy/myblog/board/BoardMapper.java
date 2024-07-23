@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface BoardMapper {
+    List<BoardHomePostGetVo> getBoardHomePost();
     List<BoardGetVo.Post> getPost(Pagination.Criteria criteria);
     List<String> getPostPics(int iboard);
     List<BoardSelVo.File> getPostFile(int iboard);

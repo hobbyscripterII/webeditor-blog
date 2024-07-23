@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jy.myblog.board.BoardMapper">
+    <select id="getBoardHomePost">
+        SELECT a.iboard, a.icategory, (SELECT uuid_name FROM board_file WHERE iboard = a.iboard) pics, a.title, a.contents, a.created_at createdAt
+        FROM board a
+        LEFT JOIN board_file b
+        ON a.iboard = b.iboard
+        WHERE a.public_fl = 'Y' AND a.title != ' ' AND a.contents != ' '
+        LIMIT 5
+    </select>
     <select id="getPost" resultType="com.jy.myblog.board.model.BoardGetVo$Post">
         SELECT a.iboard, a.icategory, a.isubcategory, c.name subCategoryNm, b.nm, a.title, (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard AND public_fl = 'Y') commentCnt, a.created_at createdAt
         FROM board a

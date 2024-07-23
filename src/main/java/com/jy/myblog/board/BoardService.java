@@ -22,6 +22,10 @@ import static com.jy.myblog.common.Const.*;
 public class BoardService {
     private final BoardMapper mapper;
 
+    public List<BoardHomePostGetVo> getBoardHomePost() {
+        return mapper.getBoardHomePost();
+    }
+
     public List<BoardGetVo.Post> getPost(Pagination.Criteria criteria) {
         return mapper.getPost(criteria);
     }

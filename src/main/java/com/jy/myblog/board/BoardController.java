@@ -23,8 +23,7 @@ import org.springframework.web.util.UriUtils;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static com.jy.myblog.common.Const.FAIL;
-import static com.jy.myblog.common.Const.SUCCESS;
+import static com.jy.myblog.common.Const.*;
 
 // * 예외 처리 수정 필요
 
@@ -97,7 +96,8 @@ public class BoardController {
     }
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        model.addAttribute(VO, service.getBoardHomePost());
         return "board/home";
     }
 
