@@ -6,6 +6,8 @@
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
+        WHERE a.title != ' ' AND a.contents != ' ' AND a.public_fl = 'Y'
+        ORDER BY a.iboard DESC
         LIMIT 3
     </select>
 </mapper>

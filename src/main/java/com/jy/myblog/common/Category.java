@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Category {
     NOTICE(1, Const.NOTICE),
-    DEV(2, Const.DEV),
+    STUDY(2, Const.STUDY),
     DIARY(3, Const.DIARY),
     SONY_A6000(4, Const.SONY_A6000),
     GUEST_BOOK(5, Const.GUEST_BOOK);

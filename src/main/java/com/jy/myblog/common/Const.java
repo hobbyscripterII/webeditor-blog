@@ -8,7 +8,7 @@ public class Const {
     public static final int PASSWORD_MISMATCH_ERROR = -1;
 
     public static final String NOTICE = "NOTICE";
-    public static final String DEV = "DEV";
+    public static final String STUDY = "STUDY";
     public static final String DIARY = "DIARY";
     public static final String SONY_A6000 = "SONY_A6000";
     public static final String GUEST_BOOK = "GUEST_BOOK";

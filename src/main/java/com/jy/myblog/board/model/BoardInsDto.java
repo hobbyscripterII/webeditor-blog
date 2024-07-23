@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 public class BoardInsDto {
     private int iboard;
     private int icategory;
+    private int isubcategory;
     private int iuser;
+    private String subCategoryNm;
     private String title;
     private String contents;
 }

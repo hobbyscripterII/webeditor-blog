@@ -20,7 +20,7 @@
         <div style="display: flex; margin-bottom: 10px">
             <label class="td-info">카테고리</label>
             <select class="form-select" id="isubcategory">
-                <th:block th:if="${dto.title != '' && dto.contents != ''}">
+                <th:block th:if="${dto.title != ' ' && dto.contents != ' '}">
                     <option th:value="${dto.isubcategory}"><span th:text="${dto.subCategoryNm}" /></option>
                 </th:block>
                 <th:block th:each="s : ${subcategory}">
@@ -110,9 +110,9 @@
                     alert("게시글 ' + msg +'에 실패하였습니다. 잠시 후 다시 시도해주세요.");
                 } else if(iboard !== 0) {
                     if(confirm('게시글 ' + msg +'이 완료되었습니다. ' + msg +'된 게시글을 확인하시겠습니까?')) {
-                        location.href='/board/read?category=' + [[${dto.icategory}]] + '&post=' + iboard;
+                        location.href='/board/read?category=' + [[${category}]] + '&post=' + iboard;
                     } else {
-                        location.href='/board/list?category=' + [[${dto.icategory}]]
+                        location.href='/board/list?category=' + [[${category}]]
                     }
                 }
             }

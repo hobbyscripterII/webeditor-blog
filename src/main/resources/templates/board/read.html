@@ -6,6 +6,7 @@
     footer { position: relative; top: 44px; }
     .card-text:last-child { margin-bottom: auto; !important; }
     .fade:not(.show) { display: none; }
+    .py-5 { padding-top: 4rem !important; padding-bottom: 2rem !important; }
 </style>
 
 <div class="modal fade modal-dialog-centered" id="modal-comment-update" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -46,87 +47,106 @@
 </div>
 
 <section>
-    <div class="title" th:text="${title}">TITLE</div>
-    <table class="table table-post-read">
-        <tr>
-            <td class="td-info">제목</td>
-            <td th:text="${post.title}">제목</td>
-        </tr>
-        <tr>
-            <td class="td-info">작성자</td>
-            <td th:text="${post.nm}">작성자</td>
-        </tr>
-        <tr>
-            <td class="td-info">작성일</td>
-            <td th:text="${post.createdAt}">작성일</td>
-        </tr>
-        <th:block th:if="${post.files != null}">
-            <tr>
-                <td class="td-info">첨부파일</td>
-                <td style="background-color: #f7f7f7">
-                    <th:block th:if="${#lists.size(post.files) != 0}"  th:each="f:${post.files}">
-                        <a th:href="@{'file/download/' + ${f.iboardfile}}" th:text="${f.originalName}"></a>
-                    </th:block>
-                </td>
-            </tr>
-        </th:block>
-        <tr>
-            <td colspan="2">
-                <div id="contents"></div>
-            </td>
-        </tr>
-    </table>
-
-    <div class="div-btn-wrap">
-        <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
-            <button type="button" class="btn btn-success" th:onclick="|location.href='@{/board/update(board=${post.iboard}, category=${post.icategory})}'|">수정</button>
-            <button type="button" class="btn btn-danger" onclick="delPost()">삭제</button>
-        </th:block>
-        <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/list(category=${post.icategory})}'|">목록</button>
-    </div>
-
-    <!-- 댓글 목록 -->
-    <div id="div-comment-list-wrap">
-        <div class="card border-secondary mb-3">
-            <div class="card-header">COMMENT LIST</div>
-
-            <th:block th:if="${post.comments == null}">
-                <div class="card-body">
-                    <p class="card-text">
-                        등록된 댓글이 없습니다.
-                    </p>
-                </div>
-            </th:block>
-
-            <th:block th:if="${post.comments != null}">
-                <div class="card-body">
-                    <th:block th:each="c : ${post.comments}">
-                        <p class="card-text">
-                            <span th:text="'닉네임:' + ${c.unm}"></span> &nbsp; <span style="font-size: small; color: gray" th:text="${c.created_at}"></span>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-comment-update-modal-open" data-bs-toggle="modal" data-bs-target="#modal-comment-update" style="margin-left: 10px">수정</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm" id="btn-comment-delete-modal-open" data-bs-toggle="modal" data-bs-target="#modal-comment-delete" style="margin-left: 10px">삭제</button>
-                        </p>
-                        <p class="p-comment-contents" th:data-icomment="${c.icomment }" th:text="${c.contents}"></p>
-                    </th:block>
-                </div>
-            </th:block>
-        </div>
-    </div>
-
-    <!-- 댓글 작성 -->
-    <div id="div-comment-wrap">
-        <div class="card border-secondary mb-3">
-            <div class="card-header">COMMENT</div>
-            <div class="card-body">
-                <p class="card-text">
-                    <span>닉네임: </span><span><input class="form-control form-control-sm" id="unm" type="text" placeholder="닉네임"></span>
-                    <span style="margin-left: 10px">패스워드: </span><span><input class="form-control form-control-sm" id="upw" type="password" placeholder="패스워드"></span>
-                    <button type="button" class="btn btn-outline-success btn-sm" style="margin-left: 10px" onclick="insComment()">등록</button>
-                </p>
-                <p><textarea class="form-control" id="comment-contents" rows="3" placeholder="내용을 입력해주세요." style="resize: none"></textarea></p>
+    <!-- Page header with logo and tagline-->
+    <header class="py-5 bg-light border-bottom mb-4">
+        <div class="container">
+            <div class="text-center my-5">
+                <h1 class="fw-bolder" th:text="${title}">제목</h1>
+                <p class="lead mb-0">카테고리 소제목입니다.</p>
             </div>
         </div>
+    </header>
+    <!-- Page content-->
+    <div class="container">
+        <div class="row">
+            <!-- Blog entries-->
+            <div class="col-lg-8">
+                <table class="table table-post-read">
+                    <tr>
+                        <td class="td-info">제목</td>
+                        <td th:text="${post.title}">제목</td>
+                    </tr>
+                    <tr>
+                        <td class="td-info">작성자</td>
+                        <td th:text="${post.nm}">작성자</td>
+                    </tr>
+                    <tr>
+                        <td class="td-info">작성일</td>
+                        <td th:text="${post.createdAt}">작성일</td>
+                    </tr>
+                    <th:block th:if="${post.files != null}">
+                        <tr>
+                            <td class="td-info">첨부파일</td>
+                            <td style="background-color: #f7f7f7">
+                                <th:block th:if="${#lists.size(post.files) != 0}"  th:each="f:${post.files}">
+                                    <a th:href="@{'file/download/' + ${f.iboardfile}}" th:text="${f.originalName}"></a>
+                                </th:block>
+                            </td>
+                        </tr>
+                    </th:block>
+                    <tr>
+                        <td colspan="2">
+                            <div id="contents"></div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="div-btn-wrap">
+                    <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <button type="button" class="btn btn-success" th:onclick="|location.href='@{/board/update(board=${post.iboard}, category=${post.icategory})}'|">수정</button>
+                        <button type="button" class="btn btn-danger" onclick="delPost()">삭제</button>
+                    </th:block>
+                    <button type="button" class="btn btn-primary" th:onclick="|location.href='@{/board/list(category=${post.icategory})}'|">목록</button>
+                </div>
+
+                <!-- 댓글 목록 -->
+                <div id="div-comment-list-wrap">
+                    <div class="card border-secondary mb-3">
+                        <div class="card-header">COMMENT LIST</div>
+
+                        <th:block th:if="${post.comments == null}">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    등록된 댓글이 없습니다.
+                                </p>
+                            </div>
+                        </th:block>
+
+                        <th:block th:if="${post.comments != null}">
+                            <div class="card-body">
+                                <th:block th:each="c : ${post.comments}">
+                                    <p class="card-text">
+                                        <span th:text="'닉네임:' + ${c.unm}"></span> &nbsp; <span style="font-size: small; color: gray" th:text="${c.created_at}"></span>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btn-comment-update-modal-open" data-bs-toggle="modal" data-bs-target="#modal-comment-update" style="margin-left: 10px">수정</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" id="btn-comment-delete-modal-open" data-bs-toggle="modal" data-bs-target="#modal-comment-delete" style="margin-left: 10px">삭제</button>
+                                    </p>
+                                    <p class="p-comment-contents" th:data-icomment="${c.icomment }" th:text="${c.contents}"></p>
+                                </th:block>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+
+                <!-- 댓글 작성 -->
+                <div id="div-comment-wrap">
+                    <div class="card border-secondary mb-3">
+                        <div class="card-header">COMMENT</div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <span>닉네임: </span><span><input class="form-control form-control-sm" id="unm" type="text" placeholder="닉네임"></span>
+                                <span style="margin-left: 10px">패스워드: </span><span><input class="form-control form-control-sm" id="upw" type="password" placeholder="패스워드"></span>
+                                <button type="button" class="btn btn-outline-success btn-sm" style="margin-left: 10px" onclick="insComment()">등록</button>
+                            </p>
+                            <p><textarea class="form-control" id="comment-contents" rows="3" placeholder="내용을 입력해주세요." style="resize: none"></textarea></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside th:replace="~{fragments/sidebar :: sidebar}" />
+        </div>
     </div>
+
 </section>
 
 <script th:inline="javascript">

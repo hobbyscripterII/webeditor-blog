@@ -25,9 +25,7 @@ public class UploadUtil {
 
     public String getDownloadPath(String uuidName) {
         uuidName = uuidName.substring(7);
-        log.info("uuidName = {}", uuidName);
         Path path = Paths.get(prefixPath, uuidName);
-        log.info("path = {}", path.toAbsolutePath());
         return String.valueOf(path.toAbsolutePath());
     }
 
@@ -40,7 +38,6 @@ public class UploadUtil {
         // webconfig에서 해당 경로로 접근하면 외부 리소스에 접근시켜놓음
         // 외부 리소스 접근 시 /upload/는 yaml에 설정한 경로까지만 접근하기 때문에 뒤에 이동 경로를 지정해주지 않으면 resource 접근 x
         String uploadPath = "/upload/" + path + "/" + fileName;
-        log.info("uploadPath = {}", uploadPath);
         uploadFile(savePath, uploadFile);
         return uploadPath;
     }
@@ -52,7 +49,6 @@ public class UploadUtil {
             Path savePath_ = Paths.get(realPath, fileName);
             String savePath = String.valueOf(savePath_);
             String uploadPath = "/upload/" + path + "/" + fileName;
-            log.info("uploadPath = {}", uploadPath);
             uploadFile(savePath, uploadFile);
             return uploadPath;
         } catch(Exception e) {
@@ -76,7 +72,6 @@ public class UploadUtil {
     private String getPath(String path) {
         Path directoryPath_ = Paths.get(prefixPath, path);
         String directoryPath = String.valueOf(directoryPath_.toAbsolutePath());
-        log.info("directoryPath = {}", directoryPath);
 
         if (!Files.exists(directoryPath_)) { // 해당 경로에 디렉토리 없으면 생성
             try {
@@ -102,7 +97,6 @@ public class UploadUtil {
     // '하위 디렉토리 > 파일' 삭제
     public void deleteDirectory(String path) { // path - 풀 경로
         File dir = new File(path); // 파일 객체 생성
-        log.info("path = {}", dir.getAbsolutePath());
         if (dir.exists()) { // exists() - 디렉토리 존재 여부 확인
 
             File[] files = dir.listFiles(); // 해당 디렉토리에 있는 모든 파일을 리스트에 담음

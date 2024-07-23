@@ -11,7 +11,7 @@ public class CategoryToStringConverter implements Converter<Integer, String> {
                 categoryNm = Category.NOTICE.getCategoryNm();
                 break;
             case 2:
-                categoryNm = Category.DEV.getCategoryNm();
+                categoryNm = Category.STUDY.getCategoryNm();
                 break;
             case 3:
                 categoryNm = Category.DIARY.getCategoryNm();
