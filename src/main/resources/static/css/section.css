@@ -1,33 +1,112 @@
-/*section { box-sizing: border-box; width: 100%; height: auto; position: relative; top: 44px; overflow: hidden; padding: 15px; }*/
-#img-profile { width: 260px; }
-.template { width: 100%; height: 100%; }
-.title { font-size: 50px; font-weight: bold; }
+/*section {*/
+/*    box-sizing: border-box;*/
+/*    width: 100%;*/
+/*    height: auto;*/
+/*    position: relative;*/
+/*    top: 44px;*/
+/*    overflow: hidden;*/
+/*    padding: 15px;*/
+/*}*/
 
-.div-btn-wrap { width: 100%; text-align: right; }
-#div-error-msg { height: 25px; line-height: 25px; color: red; font-weight: bold; }
-.td-contents { width: 50%; }
-.form-check-input { position: static; margin-top: 0; margin-left: 0; }
-.pagination { display: flex; justify-content: center; }
+#img-profile {
+    width: 260px;
+}
+
+.template {
+    width: 100%;
+    height: 100%;
+}
+
+.title {
+    font-size: 50px;
+    font-weight: bold;
+}
+
+.div-btn-wrap {
+    width: 100%;
+    text-align: right;
+}
+
+#div-error-msg {
+    height: 25px;
+    line-height: 25px;
+    color: red;
+    font-weight: bold;
+}
+
+.td-contents {
+    width: 50%;
+}
+
+.form-check-input {
+    position: static;
+    margin-top: 0;
+    margin-left: 0;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
 
 /* 게시판 */
-#contents { height: 100%; overflow: auto; }
-#span-comment-cnt { font-size: 12px; color: gray; }
+#contents {
+    height: 100%;
+    overflow: auto;
+}
+
+#span-comment-cnt {
+    font-size: 12px;
+    color: gray;
+}
 
 /* 댓글 */
-#div-comment-wrap, #div-comment-list-wrap { margin: 10px 0px 10px 10px; }
-/*.card-body { display: flex; }*/
-.card-header { font-size: 2rem; }
-.card-text { display: flex; }
-.card-text > span { align-content: center; }
-.card-text > button { font-size: 0.875rem; }
+#div-comment-wrap, #div-comment-list-wrap {
+    margin: 10px 0px 10px 10px;
+}
+
+.card-header {
+    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 800;
+}
+
+.card-text {
+    display: flex;
+}
+
+.card-text > span {
+    align-content: center;
+}
+
+.card-text > button {
+    font-size: 0.875rem;
+}
 
 /* 홈 화면 */
-.span-home-title { font-size: 1.5rem; text-decoration: underline; }
-.p-home-text { margin-left: 10px; }
+.span-home-title {
+    font-size: 1.5rem;
+    text-decoration: underline;
+}
+
+.p-home-text {
+    margin-left: 10px;
+}
 
 /* Spring Security 에러 메세지 */
-.table th, .table td { vertical-align: top; border-top: none !important; padding: 0.5rem !important; }
+.table th, .table td {
+    vertical-align: top;
+    border-top: none !important;
+    padding: 0.5rem !important;
+}
 
 /* 태그 */
-#tag-list { width: 100%; display: none; }
-.div-tag { background-color: blue; border-radius: 10px; color: white; }
+#tag-list {
+    width: 100%;
+    display: none;
+}
+
+.div-tag {
+    background-color: blue;
+    border-radius: 10px;
+    color: white;
+}

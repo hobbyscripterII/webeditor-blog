@@ -1,12 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/default-layout}"
-      layout:fragment="section">
-<style>
-    footer { width: 100%; position: absolute; bottom: 0; }
-</style>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default-layout}" layout:fragment="section">
 <section>
     <header class="masthead" style="background-image: url('/img/home-bg.jpg')">
         <div class="container position-relative px-4 px-lg-5">
@@ -20,5 +14,33 @@
             </div>
         </div>
     </header>
+    <!-- Main Content-->
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <!-- Post preview-->
+                <th:block th:each="s : ${POST}">
+                    <div class="post-preview">
+                        <a href="post.html">
+                            <a th:href="@{/board/read(category=${s.icategory}, post=${s.iboard})}"><h2 class="post-title" th:text="${s.title}">제목</h2></a>
+<!--                            <h3 class="post-subtitle" th:text="${s.contents}">내용</h3>-->
+                        </a>
+                        <p class="post-meta">
+                            Posted by
+                            <th:block th:text="${s.nm}" />
+                            <th:block th:text="${s.createdAt}" />
+                        </p>
+                    </div>
+                    <!-- Divider-->
+                    <hr class="my-4" />
+                </th:block>
+
+<!--                &lt;!&ndash; Divider&ndash;&gt;-->
+<!--                <hr class="my-4" />-->
+<!--                &lt;!&ndash; Pager&ndash;&gt;-->
+<!--                <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>-->
+            </div>
+        </div>
+    </div>
 </section>
 </html>

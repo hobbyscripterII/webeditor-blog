@@ -15,4 +15,6 @@ public class Const {
 
     public static final String PUBLIC = "공개";
     public static final String PRIVATE = "비공개";
+
+    public static final String POST = "POST";
 }
