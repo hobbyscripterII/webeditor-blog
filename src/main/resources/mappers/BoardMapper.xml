@@ -2,24 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jy.myblog.board.BoardMapper">
     <select id="getBoardHomePost">
-        SELECT a.iboard, a.icategory, (SELECT uuid_name FROM board_file WHERE iboard = a.iboard) pics, a.title, a.contents, a.created_at createdAt
+        SELECT a.iboard, (SELECT icategory FROM board_subcategory WHERE isubcategory = a.isubcategory) icategory, (SELECT uuid_name FROM board_file WHERE iboard = a.iboard) pics, a.title, a.contents, a.created_at createdAt
         FROM board a
         LEFT JOIN board_file b
         ON a.iboard = b.iboard
         WHERE a.public_fl = 'Y' AND a.title != ' ' AND a.contents != ' '
         LIMIT 5
     </select>
+
     <select id="getPost" resultType="com.jy.myblog.board.model.BoardGetVo$Post">
-        SELECT a.iboard, a.icategory, a.isubcategory, c.name subCategoryNm, b.nm, a.title, (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard AND public_fl = 'Y') commentCnt, a.created_at createdAt
+        SELECT a.iboard, (SELECT icategory FROM board_subcategory WHERE isubcategory = a.isubcategory) icategory, a.isubcategory, c.name subCategoryNm, b.nm, a.title, (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard AND public_fl = 'Y') commentCnt, a.created_at createdAt
         FROM board a
         INNER JOIN user b
         ON a.iuser = b.iuser
         INNER JOIN board_subcategory c
         ON a.isubcategory = c.isubcategory
         <where>
-            a.public_fl = 'Y' AND title != '' AND contents != ''
+            a.public_fl = 'Y'
             <if test="icategory != 0">
-                AND a.icategory = #{icategory}
+                AND icategory = #{icategory}
             </if>
             <if test="keyword != null and keyword != ''">
                 AND title LIKE ('%${keyword}%')
@@ -48,7 +49,7 @@
     </select>
 
     <select id="selPost">
-        SELECT a.iboard, a.icategory, c.isubcategory, c.name subCategoryNm, a.title, b.nm, a.contents, a.created_at createdAt,
+        SELECT a.iboard, (SELECT icategory FROM board_subcategory WHERE isubcategory = a.isubcategory) icategory, c.isubcategory, c.name subCategoryNm, a.title, b.nm, a.contents, a.created_at createdAt,
         (SELECT COUNT(*) FROM board_file WHERE iboard = a.iboard) fileCnt,
         (SELECT COUNT(*) FROM board_comment WHERE iboard = a.iboard AND public_fl = 'Y') commentCnt
         FROM board a
@@ -72,6 +73,10 @@
         INSERT INTO board_file(iboard, original_name, uuid_name) VALUES (#{iboard}, #{originalName}, #{uuidName})
     </insert>
 
+    <insert id="insPost" useGeneratedKeys="true" keyProperty="iboard">
+        INSERT INTO board(iuser, isubcategory, title, contents) VALUES (#{iuser}, #{isubcategory}, #{title}, #{contents})
+    </insert>
+
     <update id="updPost">
         UPDATE board SET
         isubcategory = ${isubcategory},
@@ -85,9 +90,9 @@
         WHERE iboard = #{iboard}
     </update>
 
-    <delete id="delPostPics">
-        DELETE FROM board_pic WHERE iboard = #{iboard}
-    </delete>
+<!--    <delete id="delPostPics">-->
+<!--        DELETE FROM board_pic WHERE iboard = #{iboard}-->
+<!--    </delete>-->
 
     <delete id="delPostPic">
         DELETE FROM board_pic WHERE uuid_name = #{uuidName}
@@ -100,14 +105,13 @@
     </select>
 
     <select id="getPostCnt">
-        SELECT COUNT(*)
-        FROM board
+        SELECT COUNT(*) FROM board WHERE isubcategory IN (SELECT isubcategory FROM board_subcategory
+
         <where>
-            <if test="icategory != 0">
-                icategory = #{icategory}
-            </if>
+            icategory = #{icategory})
+
             <if test="keyword != null and keyword != ''">
-                title LIKE '%${keyword}%'
+                AND title LIKE '%${keyword}%'
             </if>
         </where>
     </select>

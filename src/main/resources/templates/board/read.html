@@ -2,7 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}" layout:fragment="section">
 <style>
-    nav { background-color: #000 !important; }
     section { height: auto; }
     footer { position: relative; top: 44px; }
     .card-text:last-child { margin-bottom: auto; !important; }
@@ -285,7 +284,7 @@
         if(iboard !== 0) {
             if(confirm('삭제된 글은 복구할 수 없습니다. 정말 삭제하시겠습니까?')) {
                 $.ajax({
-                    type: 'delete',
+                    type: 'patch',
                     url: '/board',
                     data: { "iboard" : iboard },
                     success: function (result) {

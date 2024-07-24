@@ -20,7 +20,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriUtils;
 
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.jy.myblog.common.Const.*;
@@ -134,20 +136,12 @@ public class BoardController {
     @GetMapping("/write")
     public String insPost(@RequestParam(name = "category") int icategory, Model model) {
         try {
-            String title = categoryToStringConverter(icategory);
-            BoardInsDto dto = BoardInsDto.builder()
-                                         .iuser(getUserPk())
-                                         .icategory(icategory)
-                                         .build();
-            service.insNullPost(dto);
-
             model.addAttribute("dto", new BoardInsDto());
-            model.addAttribute("title", title);
-            model.addAttribute("iboard", dto.getIboard());
+            model.addAttribute("title", categoryToStringConverter(icategory));
             model.addAttribute("category", icategory);
             model.addAttribute("subcategory", service.getSubCategory(icategory));
 
-            return "board/write";
+            return "board/write-markdown";
         } catch (Exception e) {
             throw new RuntimeException("failed insert post", e); // 수정 필요
         }
@@ -159,54 +153,76 @@ public class BoardController {
         model.addAttribute("category", icategory);
         model.addAttribute("subcategory", service.getSubCategory(icategory));
 
-        return "board/write";
+        return "board/write-markdown";
+    }
+
+    @PostMapping
+    @ResponseBody
+    public int insPost(@RequestPart("dto") BoardInsDto dto, @RequestPart(value = "file", required = false) MultipartFile file) {
+        try {
+            dto.setIuser(getUserPk());
+
+            if (Util.isNotNull(service.insPost(dto))) {
+                return fileAndContentsSaveTask(dto.getIboard(), dto.getContents(), file);
+            } else {
+                throw new RuntimeException();
+            }
+        } catch (SQLException e) {
+            return SQL_ERROR;
+        } catch (RuntimeException e) {
+            return RUNTIME_ERROR;
+        }
     }
 
     @PutMapping
     @ResponseBody
     public int updPost(@RequestPart("dto") BoardUpdDto dto, @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
-            int updPostRows = service.updPost(dto);
-
-            if (Util.isNotNull(updPostRows)) {
-                if (file != null) {
-                    String path = "file/" + dto.getIboard();
-                    String uploadPath = uploadUtil.fileUpload(path, file);
-                    String originalName = file.getOriginalFilename();
-                    int rows = service.insPostFile(BoardInsFileDto.builder()
-                            .iboard(dto.getIboard())
-                            .originalName(originalName)
-                            .uuidName(uploadPath)
-                            .build());
-                }
-
-                // >>>>> 이미지 수정 fl
-                // pk로 db에 저장된 사진 uuid 가져옴
-                List<String> getPostPics = service.getPostPics(dto.getIboard());
-                // 해당 게시글에 없는 사진만 뽑아냄(db, 디렉토리 정리용)
-                List<String> isNullPics = getPostPics.stream()
-                        // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 list에 담음
-                        .filter(pic -> !dto.getContents().contains(pic))
-                        .toList(); // 후처리
-
-                if (Util.isNotNull(isNullPics.size())) {
-                    // 해당 게시글에 없는 사진만 삭제
-                    for (String pic : isNullPics) {
-                        service.delPostPic(pic); // DB 사진 삭제
-                        uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
-                    }
-                }
-
-                return dto.getIboard();
+            if (Util.isNotNull(service.updPost(dto))) {
+                return fileAndContentsSaveTask(dto.getIboard(), dto.getContents(), file);
             } else {
-                throw new Exception();
+                throw new RuntimeException();
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            return RUNTIME_ERROR;
+        } catch (SQLException e) {
+            return SQL_ERROR;
+        }
+    }
+
+    private int fileAndContentsSaveTask(int iboard, String contents, MultipartFile file) {
+        try {
+            if (file != null) {
+                int insPostFileRows = service.insPostFile(BoardInsFileDto.builder()
+                        .iboard(iboard)
+                        .originalName(file.getOriginalFilename())
+                        .uuidName(uploadUtil.fileUpload("file/" + iboard, file))
+                        .build());
+
+                if (Util.isNotNull(insPostFileRows)) {
+                    // >>>>> 이미지 수정 FL
+                    List<String> getPostPics = service.getPostPics(iboard); // DB에 저장된 사진 UUID 가져옴
+                    List<String> isNullPics = getPostPics.stream() // 해당 게시글에 없는 사진만 뽑아냄(DB, 디렉토리 정리용)
+                            .filter(pic -> !contents.contains(pic)) // 글 내용에 uuid가 없으면 사용자가 사진을 삭제한 것이므로 LIST에 담음
+                            .toList(); // 후처리
+
+                    if (Util.isNotNull(isNullPics.size())) {
+                        for (String pic : isNullPics) { // 해당 게시글에 없는 사진만 삭제
+                            service.delPostPic(pic); // DB 사진 삭제
+                            uploadUtil.deleteFile(String.valueOf(Paths.get(pic))); // 디렉토리 사진 삭제
+                        }
+                    }
+                } else {
+                    throw new RuntimeException();
+                }
+            }
+            return iboard;
+        } catch (RuntimeException | IOException | SQLException e) {
             return FAIL;
         }
     }
 
-    @DeleteMapping
+    @PatchMapping
     @ResponseBody
     public int delPost(@RequestParam(name = "iboard") int iboard) {
         try {

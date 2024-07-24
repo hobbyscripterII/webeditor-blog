@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,7 +53,6 @@ public class UploadUtil {
             uploadFile(savePath, uploadFile);
             return uploadPath;
         } catch(Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -114,14 +114,11 @@ public class UploadUtil {
         }
     }
 
-    public int deleteFile(String suffixPath) throws Exception {
-        try {
-            File file = new File(prefixPath + suffixPath);
-            file.delete();
-            return SUCCESS;
+    public void deleteFile(String suffixPath) throws IOException {
+        File file = new File(prefixPath + suffixPath);
 
-        } catch (Exception e) {
-            throw new Exception();
+        if(!Util.isTrue(file.delete())) {
+            throw new IOException();
         }
     }
 }

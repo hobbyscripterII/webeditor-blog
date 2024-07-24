@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}" layout:fragment="section">
-
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.css" />
 <style>
     footer { bottom: auto; margin-top: 30px; }
     .ck.ck-editor { position: static; }
@@ -38,8 +38,8 @@
         <!--            <td colspan="3"><div class="form-control" id="tag-list"><div id="tag-list-child"></div></div></td>-->
         <!--        </tr>-->
 
-        <div id="toolbar-container"></div>
-        <div id="editor" class="table table-post-read"></div>
+<!--        <div id="toolbar-container"></div>-->
+        <div id="editor"></div>
         <form id="f">
             <input class="form-control" type="file" style="margin-bottom: 15px">
         </form>
@@ -47,7 +47,7 @@
 
     <div class="div-btn-wrap">
         <!-- iboard는 String으로 넘어오기 때문에 null로 비교 o -->
-        <th:block th:if="${iboard != null}">
+        <th:block th:if="${dto.iboard == 0}">
             <button type="button" class="btn btn-success" onclick="updPost('insert')">등록</button>
         </th:block>
         <th:block th:if="${dto.iboard != 0}">
@@ -55,62 +55,59 @@
         </th:block>
     </div>
 </section>
-
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script th:inline="javascript">
-    let editor;
-    let iboard;
-    let dto = [[${dto}]];
     let contents = [[${dto.contents}]];
+    console.log(`contents = ${contents}`);
 
-    if([[${iboard}]] == null) { iboard = [[${dto.iboard}]]; }
-    else { iboard = [[${iboard}]]; }
+    const editor = new toastui.Editor({
+        el: document.querySelector('#editor'),
+        previewStyle: 'vertical',
+        height: '500px'
+    });
 
-    DecoupledEditor
-        .create(document.querySelector('#editor'), {
-            ckfinder: { uploadUrl: '/board/imageupload?iboard=' + iboard }
-        })
-        .then(e => {
-            editor = e;
-            const toolbarContainer = document.querySelector('#toolbar-container');
-            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
-
-            if(contents != null) { editor.setData(contents); }
-            console.log('editor was initialized');
-        })
-        .catch(error => { console.log(error); });
+    if(contents != ' ') {
+        editor.setHTML(contents);
+    }
 
     function updPost(flag) {
         let msg;
-        let iboard;
+        let type;
 
         if(flag === 'insert') {
             msg = '등록';
-            iboard = [[${iboard}]];
+            type = 'POST';
         } else {
             msg = '수정';
-            iboard = [[${dto.iboard}]];
+            type = 'PUT';
         }
 
         // form id 접근 -> input type - file인 0번째 요소 접근 -> 해당 file에 접근
         const file = $('#f input[type=file]')[0].files[0];
-        const dto = { "iboard" : iboard, "isubcategory" : $('#isubcategory').val(), "title" : $('#title').val(), "contents" : editor.getData() };
+        const dto = { "iboard" : [[${dto.iboard}]], "isubcategory" : $('#isubcategory').val(), "title" : $('#title').val(), "contents" : editor.getHTML() };
 
         const formData = new FormData(); // controller에서 @RequestPart로 받아야 함
         formData.append("file", file); // @RequestPart의 value 속성으로 key 값을 가져올 수 있음
         formData.append("dto", new Blob([JSON.stringify(dto)], {type: "application/json"}));
 
         $.ajax({
-            type: 'put',
+            type: type,
             url: '/board',
             contentType: false, // x-www-form-urlencoded로 파싱 x
             processData: false, // contentType false로 줬을 때 query string 생기는 것을 해제시킴
             data: formData,
-            success: function (iboard) {
-                if (iboard == 0) {
-                    alert("게시글 ' + msg +'에 실패하였습니다. 잠시 후 다시 시도해주세요.");
-                } else if(iboard !== 0) {
+            success: function (result) {
+                const SQL_ERROR = -2;
+                const RUNTIME_ERROR = -3;
+                if (result <= 0) {
+                    if(result == SQL_ERROR) {
+                        alert('데이터베이스 문제로 인해 게시글 등록에 실패했습니다.');
+                    } else if(result == RUNTIME_ERROR) {
+                        alert('서버 내부 문제로 인해 게시글 등록에 실패했습니다.');
+                    }
+                } else if(result !== 0) {
                     if(confirm('게시글 ' + msg +'이 완료되었습니다. ' + msg +'된 게시글을 확인하시겠습니까?')) {
-                        location.href='/board/read?category=' + [[${category}]] + '&post=' + iboard;
+                        location.href='/board/read?category=' + [[${category}]] + '&post=' + result;
                     } else {
                         location.href='/board/list?category=' + [[${category}]]
                     }

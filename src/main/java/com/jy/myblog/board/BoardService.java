@@ -1,9 +1,7 @@
 package com.jy.myblog.board;
 
 import com.jy.myblog.board.model.*;
-import com.jy.myblog.common.Const;
 import com.jy.myblog.common.Pagination;
-import com.jy.myblog.common.UploadUtil;
 import com.jy.myblog.common.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,20 +31,49 @@ public class BoardService {
     public BoardSelVo selPost(int iboard) {
         BoardSelVo vo = mapper.selPost(iboard);
 
-        log.info("vo.getCommentCnt() = {}", vo.getCommentCnt());
-
         if (vo.getFileCnt() > 0) { vo.setFiles(mapper.getPostFile(iboard)); }
         else if(vo.getCommentCnt() > 0) { vo.setComments(mapper.getComment(iboard)); }
-
-        log.info("vo = {}", vo);
 
         return vo;
     }
 
     @Transactional
-    public int insNullPost(BoardInsDto dto) {
-        return mapper.insNullPost(dto);
+    public int updPost(BoardUpdDto dto) throws SQLException {
+        log.info("dto = {}", dto);
+
+        if (Util.isNotNull(mapper.updPost(dto))) {
+            return SUCCESS;
+        } else {
+            throw new SQLException();
+        }
     }
+
+    @Transactional
+    public int delPost(int iboard) {
+        try {
+            if(Util.isNotNull(mapper.delPost(iboard))) {
+                return SUCCESS;
+            } else {
+                throw new SQLException();
+            }
+        } catch (SQLException e) {
+            return FAIL;
+        }
+    }
+
+    @Transactional
+    public int insPost(BoardInsDto dto) throws SQLException {
+        if (Util.isNotNull(mapper.insPost(dto))) {
+            return SUCCESS;
+        } else {
+            throw new SQLException();
+        }
+    }
+
+//    @Transactional
+//    public int insNullPost(BoardInsDto dto) {
+//        return mapper.insNullPost(dto);
+//    }
 
     @Transactional
     public int insPostPic(BoardInsPicDto dto) {
@@ -62,34 +89,21 @@ public class BoardService {
         return mapper.insPostFile(dto);
     }
 
-    @Transactional
-    public int updPost(BoardUpdDto dto) {
-        try {
-            if (Util.isNotNull(mapper.updPost(dto))) { return SUCCESS; }
-            else { throw new Exception(); }
-        } catch (Exception e) {
-            return FAIL;
-        }
-    }
 
-    @Transactional
-    public int delPost(int iboard) {
-        try {
-            mapper.delPost(iboard);
-            mapper.delPostPics(iboard);
-            return SUCCESS;
-        } catch (Exception e) {
-            return FAIL;
-        }
-    }
 
     public List<String> getPostPics(int iboard) {
         return mapper.getPostPics(iboard);
     }
 
     @Transactional
-    public int delPostPic(String uuidName) {
-        return mapper.delPostPic(uuidName);
+    public int delPostPic(String uuidName) throws SQLException {
+        int delPostPicRows = mapper.delPostPic(uuidName);
+
+        if(Util.isNotNull(delPostPicRows)) {
+            return SUCCESS;
+        } else {
+            throw new SQLException();
+        }
     }
 
     // 중복 메소드 제거

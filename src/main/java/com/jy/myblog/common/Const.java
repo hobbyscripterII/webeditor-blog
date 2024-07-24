@@ -6,6 +6,8 @@ public class Const {
     public static final int SUCCESS = 1;
     public static final int FAIL = 0;
     public static final int PASSWORD_MISMATCH_ERROR = -1;
+    public static final int SQL_ERROR = -2;
+    public static final int RUNTIME_ERROR = -3;
 
     public static final String NOTICE = "NOTICE";
     public static final String STUDY = "STUDY";

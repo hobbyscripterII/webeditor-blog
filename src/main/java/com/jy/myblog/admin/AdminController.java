@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.jy.myblog.common.Const.FAIL;
@@ -48,22 +49,16 @@ public class AdminController {
     }
 
     @ResponseBody
-    @DeleteMapping
+    @PatchMapping
     public int delPostFl(@RequestBody AdminUpdDto dto) throws Exception {
         try {
-            int result = service.delPostFl(dto);
-
-            if (Util.isNotNull(result)) {
-                for (Integer iboard : dto.getList()) {
-                    uploadUtil.delDirTrigger("/image/" + iboard);
-                    uploadUtil.delDirTrigger("/file/" + iboard);
-                }
+            if (Util.isNotNull(service.delPostFl(dto))) {
                 return SUCCESS;
             } else {
-                return FAIL;
+                throw new SQLException();
             }
-        } catch (Exception e) {
-            throw new Exception();
+        } catch (SQLException e) {
+            return FAIL;
         }
     }
 

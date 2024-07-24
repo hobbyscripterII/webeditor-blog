@@ -2,13 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="nav">
 <style>
+    nav a, nav button { color: #FFF !important; font-size: 1.5rem; font-family: 'Open Sans'; }
     .navbar { font-weight: 800; padding: 0.4rem 1rem !important; }
+    .navbar-expand-lg .navbar-nav .nav-link { font-size: 1rem; }
+    .navbar-toggler { font-family: 'Open Sans'; font-weight: 800; }
 </style>
 
 <!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+<nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+<!--<nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">-->
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="/">Blog</a>
+        <a href="/">Blog</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             Menu
             <i class="fas fa-bars"></i>

@@ -17,6 +17,7 @@ public interface BoardMapper {
     BoardSelVo selPost(int iboard);
     BoardSelVo.File selPostFile(int iboardfile);
     int insNullPost(BoardInsDto dto);
+    int insPost(BoardInsDto dto);
     int updPost(BoardUpdDto dto);
     int insPostPic(BoardInsPicDto dto);
     int insPostFile(BoardInsFileDto dto);

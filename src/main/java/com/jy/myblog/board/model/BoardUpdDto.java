@@ -1,8 +1,8 @@
 package com.jy.myblog.board.model;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class BoardUpdDto {
     private int iboard;
     private int isubcategory;
