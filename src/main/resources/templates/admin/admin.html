@@ -100,7 +100,7 @@
                 const dto = {"list" : arr};
 
                 $.ajax({
-                    type: 'delete',
+                    type: 'patch',
                     url: '/admin',
                     contentType: "application/json",
                     data: JSON.stringify(dto),

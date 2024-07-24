@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}" layout:fragment="section">
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.css" />
 <style>
     section { height: auto; }
     footer { position: relative; top: 44px; }
@@ -86,7 +87,8 @@
                     </th:block>
                     <tr>
                         <td colspan="2">
-                            <div id="contents"></div>
+                            <div id="viewer"></div>
+<!--                            <div id="contents"></div>-->
                         </td>
                     </tr>
                 </table>
@@ -146,22 +148,23 @@
             <aside th:replace="~{fragments/sidebar :: sidebar}" />
         </div>
     </div>
-
 </section>
 
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script th:inline="javascript">
     let icomment; // 댓글 수정 모달 창 열릴 때 해당 댓글 pk를 담기위한 용도
+    let contents = [[${post.contents}]];
 
-    // 게시글 출력(html 코드이기 때문에 innerHTML로 객체에 있는 값을 출력)
-    $(document).ready(function () {
-        document.getElementById('contents').innerHTML = [[${post.contents}]];
+    const viewer = toastui.Editor.factory({
+        el: document.querySelector('#viewer'),
+        viewer: true,
+        initialValue: contents
     });
 
     $(document).click((e) => {
         // 댓글 수정 모달창 세팅
        if(e.target.id == 'btn-comment-update-modal-open') {
            let copyNode = $(e.target).parent().next(); // 댓글 내용이 있는 <p> 요소 접근
-           console.log(copyNode);
            let copyText = copyNode.text(); // <p>의 text를 빼옴
            let commentContentsUpdate = $('#comment-update-contents'); // text를 넣을 요소의 id 가져오기
            commentContentsUpdate.val(copyText); // text 넣기

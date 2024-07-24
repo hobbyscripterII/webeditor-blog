@@ -58,7 +58,6 @@
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script th:inline="javascript">
     let contents = [[${dto.contents}]];
-    console.log(`contents = ${contents}`);
 
     const editor = new toastui.Editor({
         el: document.querySelector('#editor'),

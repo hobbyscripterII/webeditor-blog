@@ -9,8 +9,9 @@
         INNER JOIN board_subcategory d
         ON a.isubcategory = d.isubcategory
         <where>
+            a.public_fl = 'Y'
             <if test="icategory != 0">
-                d.icategory = #{icategory}
+                AND d.icategory = #{icategory}
             </if>
         </where>
         ORDER BY a.iboard DESC
