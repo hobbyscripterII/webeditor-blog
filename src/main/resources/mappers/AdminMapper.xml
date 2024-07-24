@@ -9,7 +9,6 @@
         INNER JOIN board_subcategory d
         ON a.isubcategory = d.isubcategory
         <where>
-            a.public_fl = 'Y'
             <if test="icategory != 0">
                 AND d.icategory = #{icategory}
             </if>
